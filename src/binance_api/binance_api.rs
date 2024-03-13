@@ -1,6 +1,7 @@
 use reqwest::Client;
 use serde::{Deserialize, Serialize};
 use std::io::{Error as IOError, ErrorKind};
+use std::time::{SystemTime, UNIX_EPOCH};
 use hmac::{Hmac, KeyInit, Mac};
 use sha2::Sha256;
 
@@ -71,6 +72,13 @@ impl BinanceAPI {
 
     pub fn get_client(&self) -> &Client {
         &self.client
+    }
+    pub fn generate_timestamp() -> Result<u64, IOError> {
+        let start = SystemTime::now();
+        let since_epoch = start
+            .duration_since(UNIX_EPOCH)
+            .map_err(|e| IOError::new(ErrorKind::Other, format!("Time error: {}", e)))?;
+        Ok(since_epoch.as_millis() as u64)
     }
 
     pub fn sign(&self, message: &str) -> String {
