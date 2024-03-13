@@ -538,11 +538,11 @@ Status | Description
 
 * `LIMIT`
 * `MARKET`
-* `STOP_LOSS`
-* `STOP_LOSS_LIMIT`
-* `TAKE_PROFIT`
-* `TAKE_PROFIT_LIMIT`
-* `LIMIT_MAKER`
+* `StopLoss`
+* `StopLossLimit`
+* `TakeProfit`
+* `TakeProfitLimit`
+* `LimitMaker`
 
 **Order Response Type (newOrderRespType):**
 
@@ -731,12 +731,12 @@ Memory
       "quoteCommissionPrecision": 8,
       "orderTypes": [
         "LIMIT",
-        "LIMIT_MAKER",
+        "LimitMaker",
         "MARKET",
-        "STOP_LOSS",
-        "STOP_LOSS_LIMIT",
-        "TAKE_PROFIT",
-        "TAKE_PROFIT_LIMIT"
+        "StopLoss",
+        "StopLossLimit",
+        "TakeProfit",
+        "TakeProfitLimit"
       ],
       "icebergAllowed": true,
       "ocoAllowed": true,
@@ -1823,9 +1823,9 @@ price | DECIMAL | NO |
 newClientOrderId | STRING | NO | A unique id among open orders. Automatically generated if not sent.<br/> Orders with the same `newClientOrderID` can be accepted only when the previous one is filled, otherwise the order will be rejected.
 strategyId |INT| NO|
 strategyType |INT| NO| The value cannot be less than `1000000`.
-stopPrice | DECIMAL | NO | Used with `STOP_LOSS`, `STOP_LOSS_LIMIT`, `TAKE_PROFIT`, and `TAKE_PROFIT_LIMIT` orders.
-trailingDelta|LONG|NO| Used with `STOP_LOSS`, `STOP_LOSS_LIMIT`, `TAKE_PROFIT`, and `TAKE_PROFIT_LIMIT` orders.
-icebergQty | DECIMAL | NO | Used with `LIMIT`, `STOP_LOSS_LIMIT`, and `TAKE_PROFIT_LIMIT` to create an iceberg order.
+stopPrice | DECIMAL | NO | Used with `StopLoss`, `StopLossLimit`, `TakeProfit`, and `TakeProfitLimit` orders.
+trailingDelta|LONG|NO| Used with `StopLoss`, `StopLossLimit`, `TakeProfit`, and `TakeProfitLimit` orders.
+icebergQty | DECIMAL | NO | Used with `LIMIT`, `StopLossLimit`, and `TakeProfitLimit` to create an iceberg order.
 newOrderRespType | ENUM | NO | Set the response JSON. `ACK`, `RESULT`, or `FULL`; `MARKET` and `LIMIT` order types default to `FULL`, all other orders default to `ACK`.
 selfTradePreventionMode |ENUM| NO | The allowed enums is dependent on what is configured on the symbol. The possible supported values are `EXPIRE_TAKER`, `EXPIRE_MAKER`, `EXPIRE_BOTH`, `NONE`.
 recvWindow | LONG | NO |The value cannot be greater than ```60000```
@@ -1838,22 +1838,22 @@ Type | Additional mandatory parameters | Additional Information
 ------------ | ------------| ------
 `LIMIT` | `timeInForce`, `quantity`, `price`|
 `MARKET` | `quantity` or `quoteOrderQty`| `MARKET` orders using the `quantity` field specifies the amount of the `base asset` the user wants to buy or sell at the market price. <br/> E.g. MARKET order on BTCUSDT will specify how much BTC the user is buying or selling. <br/><br/> `MARKET` orders using `quoteOrderQty` specifies the amount the user wants to spend (when buying) or receive (when selling) the `quote` asset; the correct `quantity` will be determined based on the market liquidity and `quoteOrderQty`. <br/> E.g. Using the symbol BTCUSDT: <br/> `BUY` side, the order will buy as many BTC as `quoteOrderQty` USDT can. <br/> `SELL` side, the order will sell as much BTC needed to receive `quoteOrderQty` USDT.
-`STOP_LOSS` | `quantity`, `stopPrice` or `trailingDelta`| This will execute a `MARKET` order when the conditions are met. (e.g. `stopPrice` is met or `trailingDelta` is activated)
-`STOP_LOSS_LIMIT` | `timeInForce`, `quantity`,  `price`, `stopPrice` or `trailingDelta`
-`TAKE_PROFIT` | `quantity`, `stopPrice` or `trailingDelta` | This will execute a `MARKET` order when the conditions are met. (e.g. `stopPrice` is met or `trailingDelta` is activated)
-`TAKE_PROFIT_LIMIT` | `timeInForce`, `quantity`, `price`, `stopPrice` or `trailingDelta` |
-`LIMIT_MAKER` | `quantity`, `price`| This is a `LIMIT` order that will be rejected if the order immediately matches and trades as a taker. <br/> This is also known as a POST-ONLY order.
+`StopLoss` | `quantity`, `stopPrice` or `trailingDelta`| This will execute a `MARKET` order when the conditions are met. (e.g. `stopPrice` is met or `trailingDelta` is activated)
+`StopLossLimit` | `timeInForce`, `quantity`,  `price`, `stopPrice` or `trailingDelta`
+`TakeProfit` | `quantity`, `stopPrice` or `trailingDelta` | This will execute a `MARKET` order when the conditions are met. (e.g. `stopPrice` is met or `trailingDelta` is activated)
+`TakeProfitLimit` | `timeInForce`, `quantity`, `price`, `stopPrice` or `trailingDelta` |
+`LimitMaker` | `quantity`, `price`| This is a `LIMIT` order that will be rejected if the order immediately matches and trades as a taker. <br/> This is also known as a POST-ONLY order.
 
 Other info:
 
-* Any `LIMIT` or `LIMIT_MAKER` type order can be made an iceberg order by sending an `icebergQty`.
+* Any `LIMIT` or `LimitMaker` type order can be made an iceberg order by sending an `icebergQty`.
 * Any order with an `icebergQty` MUST have `timeInForce` set to `GTC`.
-* For `STOP_LOSS`, `STOP_LOSS_LIMIT`, `TAKE_PROFIT_LIMIT` and `TAKE_PROFIT` orders, `trailingDelta` can be combined with `stopPrice`.
+* For `StopLoss`, `StopLossLimit`, `TakeProfitLimit` and `TakeProfit` orders, `trailingDelta` can be combined with `stopPrice`.
 * `MARKET` orders using `quoteOrderQty` will not break `LOT_SIZE` filter rules; the order will execute a `quantity` that will have the notional value as close as possible to `quoteOrderQty`.
 Trigger order price rules against market price for both MARKET and LIMIT versions:
 
-* Price above market price: `STOP_LOSS` `BUY`, `TAKE_PROFIT` `SELL`
-* Price below market price: `STOP_LOSS` `SELL`, `TAKE_PROFIT` `BUY`
+* Price above market price: `StopLoss` `BUY`, `TakeProfit` `SELL`
+* Price below market price: `StopLoss` `SELL`, `TakeProfit` `BUY`
 
 **Data Source:**
 Matching Engine
@@ -1961,7 +1961,7 @@ Field          |Description                                                     
 `icebergQty`   | Quantity for the iceberg order | Appears only if the parameter `icebergQty` was sent in the request.| `"icebergQty": "0.00000000"`
 `preventedMatchId` |  When used in combination with `symbol`, can be used to query a prevented match. | Appears only if the order expired due to STP.| `"preventedMatchId": 0`
 `preventedQuantity` | Order quantity that expired due to STP | Appears only if the order expired due to STP. | `"preventedQuantity": "1.200000"`
-`stopPrice`    | Price when the algorithmic order will be triggered | Appears for `STOP_LOSS`. `TAKE_PROFIT`, `STOP_LOSS_LIMIT` and `TAKE_PROFIT_LIMIT` orders.|`"stopPrice": "23500.00000000"`
+`stopPrice`    | Price when the algorithmic order will be triggered | Appears for `StopLoss`. `TakeProfit`, `StopLossLimit` and `TakeProfitLimit` orders.|`"stopPrice": "23500.00000000"`
 `strategyId`   | Can be used to label an order that's part of an order strategy. |Appears if the parameter was populated in the request.| `"strategyId": 37463720`
 `strategyType` | Can be used to label an order that is using an order strategy.|Appears if the parameter was populated in the request.| `"strategyType": 1000000`
 `trailingDelta`| Delta price change required before order activation| Appears for Trailing Stop Orders.|`"trailingDelta": 10`
@@ -2235,7 +2235,7 @@ Matching Engine
         "cummulativeQuoteQty": "0.000000",
         "status": "CANCELED",
         "timeInForce": "GTC",
-        "type": "STOP_LOSS_LIMIT",
+        "type": "StopLossLimit",
         "side": "BUY",
         "stopPrice": "0.378131",
         "icebergQty": "0.017083",
@@ -2254,7 +2254,7 @@ Matching Engine
         "cummulativeQuoteQty": "0.000000",
         "status": "CANCELED",
         "timeInForce": "GTC",
-        "type": "LIMIT_MAKER",
+        "type": "LimitMaker",
         "side": "BUY",
         "icebergQty": "0.639962",
         "selfTradePreventionMode": "NONE"
@@ -2395,7 +2395,7 @@ Matching Engine
       "cummulativeQuoteQty": "0.000000",
       "status": "CANCELED",
       "timeInForce": "GTC",
-      "type": "LIMIT_MAKER",
+      "type": "LimitMaker",
       "side": "SELL",
       "selfTradePreventionMode": "NONE"
     },
@@ -2587,14 +2587,14 @@ limitClientOrderId|STRING|NO| A unique Id for the limit order
 price|DECIMAL|YES|
 limitStrategyId |INT| NO
 limitStrategyType | INT| NO | The value cannot be less than `1000000`.
-limitIcebergQty|DECIMAL|NO| Used to make the `LIMIT_MAKER` leg an iceberg order.
+limitIcebergQty|DECIMAL|NO| Used to make the `LimitMaker` leg an iceberg order.
 trailingDelta|LONG|NO|
 stopClientOrderId |STRING|NO| A unique Id for the stop loss/stop loss limit leg
 stopPrice |DECIMAL| YES
 stopStrategyId |INT| NO
 stopStrategyType |INT| NO | The value cannot be less than `1000000`.
 stopLimitPrice|DECIMAL|NO | If provided, `stopLimitTimeInForce` is required.
-stopIcebergQty|DECIMAL|NO| Used with `STOP_LOSS_LIMIT` leg to make an iceberg order.
+stopIcebergQty|DECIMAL|NO| Used with `StopLossLimit` leg to make an iceberg order.
 stopLimitTimeInForce|ENUM|NO| Valid values are `GTC`/`FOK`/`IOC`
 newOrderRespType|ENUM|NO| Set the response JSON.
 selfTradePreventionMode |ENUM| NO | The allowed enums is dependent on what is configured on the symbol. The possible supported values are `EXPIRE_TAKER`, `EXPIRE_MAKER`, `EXPIRE_BOTH`, `NONE`.
@@ -2651,7 +2651,7 @@ Matching Engine
       "cummulativeQuoteQty": "0.000000",
       "status": "NEW",
       "timeInForce": "GTC",
-      "type": "STOP_LOSS",
+      "type": "StopLoss",
       "side": "BUY",
       "stopPrice": "0.960664",
       "workingTime": -1,
@@ -2669,7 +2669,7 @@ Matching Engine
       "cummulativeQuoteQty": "0.000000",
       "status": "NEW",
       "timeInForce": "GTC",
-      "type": "LIMIT_MAKER",
+      "type": "LimitMaker",
       "side": "BUY",
       "workingTime": 1563417480525,
       "selfTradePreventionMode": "NONE"
@@ -2744,7 +2744,7 @@ Matching Engine
       "cummulativeQuoteQty": "0.00000000",
       "status": "CANCELED",
       "timeInForce": "GTC",
-      "type": "STOP_LOSS_LIMIT",
+      "type": "StopLossLimit",
       "side": "SELL",
       "stopPrice": "1.00000000",
       "selfTradePreventionMode": "NONE"
@@ -2762,7 +2762,7 @@ Matching Engine
       "cummulativeQuoteQty": "0.00000000",
       "status": "CANCELED",
       "timeInForce": "GTC",
-      "type": "LIMIT_MAKER",
+      "type": "LimitMaker",
       "side": "SELL",
       "selfTradePreventionMode": "NONE"
     }

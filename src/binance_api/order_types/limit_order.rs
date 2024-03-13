@@ -8,7 +8,7 @@ pub struct LimitOrder {
     symbol: String,
     side: Side,
     #[serde(rename = "type")]
-    r#type: String,
+    r#type: OrderType,
     #[serde(rename = "timeInForce")]
     time_in_force: String,
     quantity: f64,
@@ -21,7 +21,7 @@ impl LimitOrder {
         LimitOrder {
             symbol,
             side,
-            r#type: OrderType::LIMIT.to_string(),
+            r#type: OrderType::Limit,
             time_in_force: TimeInForce::GTC.to_string(),
             quantity,
             price,

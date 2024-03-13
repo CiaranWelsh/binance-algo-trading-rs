@@ -5,3 +5,6 @@ pub mod order_type;
 pub mod market_order;
 pub mod time_in_force;
 pub mod side;
+mod response_type;
+mod open_order;
+mod order_info;
