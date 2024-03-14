@@ -12,6 +12,7 @@ use futures::StreamExt;
 use futures::FutureExt;
 use futures_util::SinkExt;
 use serde::de::DeserializeOwned;
+use serde_json::Value;
 use tokio::net::TcpStream;
 use tokio::sync::TryAcquireError::Closed;
 use tokio_websockets::{ClientBuilder, Error as WsError, Error, MaybeTlsStream, Message, WebSocketStream};
@@ -182,6 +183,33 @@ impl BinanceClient {
     pub async fn fetch_my_trades(&self, symbol: &str) -> Result<Vec<Trade>, IOError> {
         let params = format!("symbol={}&timestamp={}", symbol, Self::generate_timestamp().unwrap());
         self.fetch_from_api::<Trade>("/v3/myTrades", &params).await
+    }
+
+    pub async fn cancel_all_open_orders(&self, symbol: &str) -> Result<Vec<Value>, IOError> {
+        let endpoint = "/v3/openOrders";
+        let timestamp = Self::generate_timestamp()?;
+        let params = format!("symbol={}&timestamp={}", symbol, timestamp);
+        let signature = self.sign(&params);
+        let url = format!("{}{}?{}&signature={}", self.api_url, endpoint, params, signature);
+
+        let response = self.client
+            .delete(&url)
+            .header("X-MBX-APIKEY", self.api_key.clone())
+            .send()
+            .await
+            .map_err(|err| IOError::new(ErrorKind::Other, format!("HTTP request failed: {}", err)))?;
+
+        if response.status().is_success() {
+            let canceled_orders = response
+                .json::<Vec<Value>>() // Using `Value` to capture the response as it may vary
+                .await
+                .map_err(|err| IOError::new(ErrorKind::Other, format!("Failed to deserialize canceled orders response: {}", err)))?;
+            Ok(canceled_orders)
+        } else {
+            // Attempt to capture and log the error message from Binance
+            let error_msg = response.text().await.unwrap_or_else(|_| "Failed to read error message".to_string());
+            Err(IOError::new(ErrorKind::Other, format!("Failed to cancel open orders: {}", error_msg)))
+        }
     }
 
     pub async fn get_listen_key(&self) -> Result<String, IOError> {

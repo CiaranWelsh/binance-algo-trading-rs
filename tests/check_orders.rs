@@ -4,7 +4,6 @@ mod integration_tests {
     use std::env;
     use log::LevelFilter::Trace;
     use log::trace;
-    use binance_api::binance_api::auth::{TEST_NET_API_KEY, TEST_NET_API_SECRET};
     use binance_api::binance_api::binance_client::BinanceClient;
     use binance_api::binance_api::logger_conf::init_logger;
     use binance_api::binance_api::order_types::limit_order::LimitOrder;
@@ -14,6 +13,7 @@ mod integration_tests {
     use binance_api::binance_api::order_types::stop_limit_order::StopLimitOrder;
     use binance_api::binance_api::order_types::time_in_force::TimeInForce;
     use binance_api::binance_api::spot_orders::SpotOrders;
+    use binance_api::binance_api::load_env::EnvVars;
 
     #[tokio::test]
     async fn test_create_limit_order() {
@@ -21,10 +21,11 @@ mod integration_tests {
         // Load API keys from environment variables
 
         // Initialize BinanceAPI with testnet configuration
-        let binance_api = BinanceClient::new(TEST_NET_API_KEY.to_string(), TEST_NET_API_SECRET.to_string(), false);
+        let vars = EnvVars::new();
+        let binance_client = BinanceClient::new(vars.api_key, vars.api_secret, false).await;
 
         // Initialize SpotOrders
-        let spot_orders = SpotOrders::new(&binance_api);
+        let spot_orders = SpotOrders::new(&binance_client);
 
 
         // Define a limit order (replace with testnet compatible values)
@@ -53,10 +54,11 @@ mod integration_tests {
         init_logger(Trace);
 
         // Initialize BinanceAPI with testnet configuration
-        let binance_api = BinanceClient::new(TEST_NET_API_KEY.to_string(), TEST_NET_API_SECRET.to_string(), false);
+        let vars = EnvVars::new();
+        let binance_client = BinanceClient::new(vars.api_key, vars.api_secret, false).await;
 
         // Initialize SpotOrders
-        let spot_orders = SpotOrders::new(&binance_api);
+        let spot_orders = SpotOrders::new(&binance_client);
 
         // Generate a timestamp
         let timestamp = BinanceClient::generate_timestamp().unwrap();
@@ -86,10 +88,11 @@ mod integration_tests {
         init_logger(Trace);
 
         // Initialize BinanceAPI with testnet configuration
-        let binance_api = BinanceClient::new(TEST_NET_API_KEY.to_string(), TEST_NET_API_SECRET.to_string(), false);
+        let vars = EnvVars::new();
+        let binance_client = BinanceClient::new(vars.api_key, vars.api_secret, false).await;
 
         // Initialize SpotOrders
-        let spot_orders = SpotOrders::new(&binance_api);
+        let spot_orders = SpotOrders::new(&binance_client);
 
         // base asset is eth.
         let buy_market_order = MarketOrder::new_with_base_asset(
@@ -112,10 +115,11 @@ mod integration_tests {
         init_logger(Trace);
 
         // Initialize BinanceAPI with testnet configuration
-        let binance_api = BinanceClient::new(TEST_NET_API_KEY.to_string(), TEST_NET_API_SECRET.to_string(), false);
+        let vars = EnvVars::new();
+        let binance_client = BinanceClient::new(vars.api_key, vars.api_secret, false).await;
 
         // Initialize SpotOrders
-        let spot_orders = SpotOrders::new(&binance_api);
+        let spot_orders = SpotOrders::new(&binance_client);
 
         // Define a buy market order
         let buy_market_order = MarketOrder::new_with_quote_asset(
@@ -137,8 +141,9 @@ mod integration_tests {
     async fn test_create_sell_market_order_using_base_asset() {
         init_logger(Trace);
 
-        let binance_api = BinanceClient::new(TEST_NET_API_KEY.to_string(), TEST_NET_API_SECRET.to_string(), false);
-        let spot_orders = SpotOrders::new(&binance_api);
+        let vars = EnvVars::new();
+        let binance_client = BinanceClient::new(vars.api_key, vars.api_secret, false).await;
+        let spot_orders = SpotOrders::new(&binance_client);
 
         let sell_market_order = MarketOrder::new_with_base_asset(
             "ETHUSDT".to_string(),
@@ -155,8 +160,9 @@ mod integration_tests {
     async fn test_create_sell_market_order_using_quote_asset() {
         init_logger(Trace);
 
-        let binance_api = BinanceClient::new(TEST_NET_API_KEY.to_string(), TEST_NET_API_SECRET.to_string(), false);
-        let spot_orders = SpotOrders::new(&binance_api);
+        let vars = EnvVars::new();
+        let binance_client = BinanceClient::new(vars.api_key, vars.api_secret, false).await;
+        let spot_orders = SpotOrders::new(&binance_client);
 
         // This is a conceptual example; actual implementation requires calculating the ETH amount equivalent to 100 USDT beforehand
         let sell_market_order = MarketOrder::new_with_quote_asset(
@@ -175,8 +181,9 @@ mod integration_tests {
     async fn test_create_buy_stop_limit_order() {
         init_logger(Trace);
 
-        let binance_api = BinanceClient::new(TEST_NET_API_KEY.to_string(), TEST_NET_API_SECRET.to_string(), false);
-        let spot_orders = SpotOrders::new(&binance_api);
+        let vars = EnvVars::new();
+        let binance_client = BinanceClient::new(vars.api_key, vars.api_secret, false).await;
+        let spot_orders = SpotOrders::new(&binance_client);
 
         // Ensure these values are set correctly according to current market conditions
         let symbol = "ETHUSDT".to_string();
@@ -184,19 +191,21 @@ mod integration_tests {
         let stop_price = 10000.0; // Above current market price for buy stop-limit
         let limit_price = 9500.0; // The price at which you actually wish to buy
         let stop_limit_order = StopLimitOrder::new(
-            symbol, Side::Buy, quantity, limit_price, stop_price, TimeInForce::GTC
+            symbol, Side::Buy, quantity, limit_price, stop_price, TimeInForce::GTC,
         );
 
         let result = spot_orders.create_stop_limit_order(stop_limit_order).await;
         trace!("{:?}", result);
         assert!(result.is_ok(), "Failed to create buy stop-limit order: {:?}", result.err());
     }
+
     #[tokio::test]
     async fn test_create_sell_stop_limit_order() {
         init_logger(Trace);
 
-        let binance_api = BinanceClient::new(TEST_NET_API_KEY.to_string(), TEST_NET_API_SECRET.to_string(), false);
-        let spot_orders = SpotOrders::new(&binance_api);
+        let vars = EnvVars::new();
+        let binance_client = BinanceClient::new(vars.api_key, vars.api_secret, false).await;
+        let spot_orders = SpotOrders::new(&binance_client);
 
         // Ensure these values are set correctly according to current market conditions
         let symbol = "ETHUSDT".to_string();
@@ -204,15 +213,11 @@ mod integration_tests {
         let stop_price = 1500.0; // Above current market price for buy stop-limit
         let limit_price = 1550.0; // The price at which you actually wish to buy
         let stop_limit_order = StopLimitOrder::new(
-            symbol, Side::Sell, quantity, limit_price, stop_price, TimeInForce::GTC
+            symbol, Side::Sell, quantity, limit_price, stop_price, TimeInForce::GTC,
         );
 
         let result = spot_orders.create_stop_limit_order(stop_limit_order).await;
         trace!("{:?}", result);
         assert!(result.is_ok(), "Failed to create buy stop-limit order: {:?}", result.err());
     }
-
-
-
-
 }
