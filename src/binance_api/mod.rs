@@ -10,3 +10,4 @@ pub mod streams;
 pub mod database_client;
 pub mod database_config;
 pub mod load_env;
+mod binance_error;

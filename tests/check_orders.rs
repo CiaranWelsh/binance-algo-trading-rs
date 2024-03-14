@@ -12,7 +12,7 @@ mod integration_tests {
     use binance_api::binance_api::order_types::side::Side;
     use binance_api::binance_api::order_types::stop_limit_order::StopLimitOrder;
     use binance_api::binance_api::order_types::time_in_force::TimeInForce;
-    use binance_api::binance_api::spot_orders::SpotOrders;
+    use binance_api::binance_api::spot_orders::SpotClient;
     use binance_api::binance_api::load_env::EnvVars;
 
     #[tokio::test]
@@ -25,7 +25,8 @@ mod integration_tests {
         let binance_client = BinanceClient::new(vars.api_key, vars.api_secret, false).await;
 
         // Initialize SpotOrders
-        let spot_orders = SpotOrders::new(&binance_client);
+        let spot_orders = SpotClient::new(&binance_client);
+        binance_client.cancel_all_open_orders("ETHUSDT").await.expect("Nopey cancel orders");
 
 
         // Define a limit order (replace with testnet compatible values)
@@ -56,9 +57,10 @@ mod integration_tests {
         // Initialize BinanceAPI with testnet configuration
         let vars = EnvVars::new();
         let binance_client = BinanceClient::new(vars.api_key, vars.api_secret, false).await;
+        binance_client.cancel_all_open_orders("ETHUSDT").await.expect("Nopey cancel orders");
 
         // Initialize SpotOrders
-        let spot_orders = SpotOrders::new(&binance_client);
+        let spot_orders = SpotClient::new(&binance_client);
 
         // Generate a timestamp
         let timestamp = BinanceClient::generate_timestamp().unwrap();
@@ -90,9 +92,10 @@ mod integration_tests {
         // Initialize BinanceAPI with testnet configuration
         let vars = EnvVars::new();
         let binance_client = BinanceClient::new(vars.api_key, vars.api_secret, false).await;
+        binance_client.cancel_all_open_orders("ETHUSDT").await.expect("Nopey cancel orders");
 
         // Initialize SpotOrders
-        let spot_orders = SpotOrders::new(&binance_client);
+        let spot_orders = SpotClient::new(&binance_client);
 
         // base asset is eth.
         let buy_market_order = MarketOrder::new_with_base_asset(
@@ -117,9 +120,10 @@ mod integration_tests {
         // Initialize BinanceAPI with testnet configuration
         let vars = EnvVars::new();
         let binance_client = BinanceClient::new(vars.api_key, vars.api_secret, false).await;
+        binance_client.cancel_all_open_orders("ETHUSDT").await.expect("Nopey cancel orders");
 
         // Initialize SpotOrders
-        let spot_orders = SpotOrders::new(&binance_client);
+        let spot_orders = SpotClient::new(&binance_client);
 
         // Define a buy market order
         let buy_market_order = MarketOrder::new_with_quote_asset(
@@ -143,7 +147,8 @@ mod integration_tests {
 
         let vars = EnvVars::new();
         let binance_client = BinanceClient::new(vars.api_key, vars.api_secret, false).await;
-        let spot_orders = SpotOrders::new(&binance_client);
+        binance_client.cancel_all_open_orders("ETHUSDT").await.expect("Nopey cancel orders");
+        let spot_orders = SpotClient::new(&binance_client);
 
         let sell_market_order = MarketOrder::new_with_base_asset(
             "ETHUSDT".to_string(),
@@ -162,7 +167,8 @@ mod integration_tests {
 
         let vars = EnvVars::new();
         let binance_client = BinanceClient::new(vars.api_key, vars.api_secret, false).await;
-        let spot_orders = SpotOrders::new(&binance_client);
+        let spot_orders = SpotClient::new(&binance_client);
+        binance_client.cancel_all_open_orders("ETHUSDT").await.expect("Nopey cancel orders");
 
         // This is a conceptual example; actual implementation requires calculating the ETH amount equivalent to 100 USDT beforehand
         let sell_market_order = MarketOrder::new_with_quote_asset(
@@ -183,10 +189,11 @@ mod integration_tests {
 
         let vars = EnvVars::new();
         let binance_client = BinanceClient::new(vars.api_key, vars.api_secret, false).await;
-        let spot_orders = SpotOrders::new(&binance_client);
+        let spot_orders = SpotClient::new(&binance_client);
 
         // Ensure these values are set correctly according to current market conditions
         let symbol = "ETHUSDT".to_string();
+        binance_client.cancel_all_open_orders(symbol.as_str()).await.expect("Nopey cancel orders");
         let quantity = 0.01;
         let stop_price = 10000.0; // Above current market price for buy stop-limit
         let limit_price = 9500.0; // The price at which you actually wish to buy
@@ -205,10 +212,11 @@ mod integration_tests {
 
         let vars = EnvVars::new();
         let binance_client = BinanceClient::new(vars.api_key, vars.api_secret, false).await;
-        let spot_orders = SpotOrders::new(&binance_client);
+        let spot_orders = SpotClient::new(&binance_client);
 
         // Ensure these values are set correctly according to current market conditions
         let symbol = "ETHUSDT".to_string();
+        binance_client.cancel_all_open_orders(symbol.as_str()).await.expect("Nopey cancel orders");
         let quantity = 0.01;
         let stop_price = 1500.0; // Above current market price for buy stop-limit
         let limit_price = 1550.0; // The price at which you actually wish to buy

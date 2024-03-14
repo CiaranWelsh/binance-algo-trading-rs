@@ -17,9 +17,9 @@ pub struct LimitOrder {
 }
 
 impl LimitOrder {
-    pub fn new(symbol: String, side: Side, quantity: f64, price: f64, timestamp: u64) -> Self {
+    pub fn new(symbol: &str, side: Side, quantity: f64, price: f64, timestamp: u64) -> Self {
         LimitOrder {
-            symbol,
+            symbol: symbol.to_string(),
             side,
             r#type: OrderType::Limit,
             time_in_force: TimeInForce::GTC.to_string(),

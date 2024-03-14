@@ -9,13 +9,13 @@ use crate::binance_api::order_types::market_order::MarketOrder;
 use crate::binance_api::order_types::oco_order::OcoOrder;
 use crate::binance_api::order_types::stop_limit_order::StopLimitOrder;
 
-pub struct SpotOrders<'a> {
+pub struct SpotClient<'a> {
     api: &'a BinanceClient,
 }
 
-impl SpotOrders<'_> {
-    pub fn new(api: &BinanceClient) -> SpotOrders {
-        SpotOrders { api }
+impl SpotClient<'_> {
+    pub fn new(api: &BinanceClient) -> SpotClient {
+        SpotClient { api }
     }
 
 

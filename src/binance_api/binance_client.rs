@@ -23,6 +23,7 @@ use crate::binance_api::account::order::Order;
 use crate::binance_api::account::deserialization::deserialize_string_to_f64;
 use crate::binance_api::account::open_order::OpenOrder;
 use crate::binance_api::account::trades::Trade;
+use crate::binance_api::binance_error::BinanceError;
 use crate::binance_api::database_client::DatabaseClient;
 use crate::binance_api::streams::binance_stream::BinanceStreamTypes;
 use crate::binance_api::streams::kline_data::KlineMessage;
@@ -199,19 +200,30 @@ impl BinanceClient {
             .await
             .map_err(|err| IOError::new(ErrorKind::Other, format!("HTTP request failed: {}", err)))?;
 
-        if response.status().is_success() {
-            let canceled_orders = response
-                .json::<Vec<Value>>() // Using `Value` to capture the response as it may vary
-                .await
-                .map_err(|err| IOError::new(ErrorKind::Other, format!("Failed to deserialize canceled orders response: {}", err)))?;
-            Ok(canceled_orders)
-        } else {
-            // Attempt to capture and log the error message from Binance
-            let error_msg = response.text().await.unwrap_or_else(|_| "Failed to read error message".to_string());
-            Err(IOError::new(ErrorKind::Other, format!("Failed to cancel open orders: {}", error_msg)))
+        match response.status() {
+            reqwest::StatusCode::OK => {
+                let canceled_orders = response.json::<Vec<Value>>().await
+                    .map_err(|err| IOError::new(ErrorKind::Other, format!("Failed to deserialize canceled orders response: {}", err)))?;
+                Ok(canceled_orders)
+            },
+            reqwest::StatusCode::BAD_REQUEST => {
+                let error_body = response.text().await.unwrap_or_else(|_| "Failed to read error message".to_string());
+                if let Ok(error) = serde_json::from_str::<BinanceError>(&error_body) {
+                    match error.code {
+                        -2011 => Ok(vec![]), // Handle "Unknown order sent." as no orders to cancel
+                        _ => Err(IOError::new(ErrorKind::Other, format!("Failed to cancel open orders: {} - {}", error.code, error.msg))),
+                    }
+                } else {
+                    Err(IOError::new(ErrorKind::Other, format!("Failed to cancel open orders: Failed to parse error message")))
+                }
+            },
+            _ => {
+                // For all other unexpected status codes
+                let error_msg = response.text().await.unwrap_or_else(|_| "Failed to read error message".to_string());
+                Err(IOError::new(ErrorKind::Other, format!("Failed to cancel open orders: {}", error_msg)))
+            }
         }
     }
-
     pub async fn get_listen_key(&self) -> Result<String, IOError> {
         let url = format!("{}/v3/userDataStream", self.api_url);
         let res = self.client.post(&url)
@@ -254,10 +266,14 @@ mod tests {
     use log::LevelFilter::Trace;
     use super::*;
     use tokio;
+    use tokio_postgres::types::Format::Binary;
     use url::quirks::username;
     use crate::binance_api::account::account_info::AccountInfoClient;
     use crate::binance_api::load_env::{EnvVars};
     use crate::binance_api::logger_conf::init_logger;
+    use crate::binance_api::order_types::limit_order::LimitOrder;
+    use crate::binance_api::order_types::side::Side;
+    use crate::binance_api::spot_orders::SpotClient;
 
     #[tokio::test]
     async fn test_url_initialization() {
@@ -306,7 +322,7 @@ mod tests {
             .await;
 
         // Fetch all trades for a specific symbol
-        let result = api.fetch_all_trades("BTCUSDT").await;
+        let result = api.fetch_my_trades("ETHUSDT").await;
 
         match result {
             Ok(trades) => {
@@ -422,6 +438,48 @@ mod tests {
             }
             Err(e) => panic!("Failed to fetch open orders: {}", e),
         }
+    }
+
+    #[tokio::test]
+    async fn test_cancel_all_open_orders() {
+        init_logger(Trace);
+        let vars = EnvVars::new();
+        let client = BinanceClient::new(vars.api_key, vars.api_secret, false).await;
+        let spot = SpotClient::new(&client);
+
+        let ts = BinanceClient::generate_timestamp().unwrap();
+        spot.create_limit_order(
+            LimitOrder::new("ETHUSDT", Side::Buy, 0.2, 2500.0, ts)
+        ).await.unwrap();
+
+        trace!("{:?}", client.fetch_open_orders("ETHUSDT").await.unwrap());
+
+        // Ensure there's at least one open order for the test to be meaningful
+        // This part is skipped here but ensure to have an open order for "ETHUSDT" or change the symbol accordingly
+
+
+
+        // Attempt to cancel all open orders
+        let result = client.cancel_all_open_orders("ETHUSDT").await;
+
+        match result {
+            Ok(canceled_orders) => {
+                // If there are no open orders, the array may be empty
+                assert!(
+                    !canceled_orders.is_empty(),
+                    "Open orders should have been canceled but the canceled orders list is empty"
+                );
+                trace!("Canceled orders: {:?}", canceled_orders);
+            },
+            Err(e) => panic!("Failed to cancel open orders: {}", e),
+        }
+
+        // Optionally, you can verify that there are no more open orders for the symbol
+        let open_orders_result = client.fetch_open_orders("ETHUSDT").await;
+        assert!(
+            open_orders_result.unwrap().is_empty(),
+            "There should be no open orders after cancellation"
+        );
     }
 }
 
