@@ -2,15 +2,8 @@ use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use std::error::Error;
 use crate::binance_api::binance_api::BinanceAPI;
+use crate::binance_api::account::deserialization::deserialize_string_to_f64;
 
-
-fn deserialize_string_to_f64<'de, D>(deserializer: D) -> Result<f64, D::Error>
-    where
-        D: serde::Deserializer<'de>,
-{
-    let s: String = Deserialize::deserialize(deserializer)?;
-    s.parse().map_err(serde::de::Error::custom)
-}
 
 #[derive(Debug, Serialize, Deserialize, PartialEq)]
 pub struct AssetBalance {

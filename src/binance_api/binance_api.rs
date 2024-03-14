@@ -3,7 +3,10 @@ use serde::{Deserialize, Serialize};
 use std::io::{Error as IOError, ErrorKind};
 use std::time::{SystemTime, UNIX_EPOCH};
 use hmac::{Hmac, KeyInit, Mac};
+use log::trace;
 use sha2::Sha256;
+use crate::binance_api::account::order::Order;
+use crate::binance_api::account::deserialization::deserialize_string_to_f64;
 
 const BINANCE_API_URL: &str = "https://api.binance.com/api";
 const BINANCE_API_TEST_URL: &str = "https://testnet.binance.vision/api";
@@ -98,13 +101,49 @@ impl BinanceAPI {
     pub fn get_api_key(&self) -> &str {
         &self.api_key
     }
+
+    // Fetch all orders for a specific symbol
+    pub async fn fetch_all_orders(&self, symbol: &str) -> Result<Vec<Order>, IOError>{
+        let endpoint = "/v3/allOrders";
+        let timestamp = Self::generate_timestamp().unwrap();
+        let params = format!("symbol={}&timestamp={}", symbol, timestamp);
+        let signature = self.sign(&params);
+        let url = format!("{}{}?{}&signature={}", self.api_url, endpoint, params, signature);
+
+        let response = self.client
+            .get(&url)
+            .header("X-MBX-APIKEY", self.api_key.clone())
+            .send()
+            .await
+            .map_err(|err| IOError::new(ErrorKind::Other, format!("HTTP request failed: {}", err)))?;
+
+        match response.status() {
+            reqwest::StatusCode::OK => {
+                // let parsed_result: String= serde_json::from_str(&response.text().await.unwrap().clone()).unwrap();
+                // trace!("Parsed: {:?}", response.text().await);
+                //
+                // Ok(Vec::new())
+
+                let orders = response
+                    .json::<Vec<Order>>()
+                    .await
+                    .map_err(|err| IOError::new(ErrorKind::Other, format!("Failed to deserialize orders: {}", err)))?;
+                Ok(orders)
+            }
+            _ => Err(IOError::new(ErrorKind::Other, "Failed to fetch all orders"))
+        }
+    }
 }
 
 
 #[cfg(test)]
 mod tests {
+    use std::io::Error;
+    use log::LevelFilter::Trace;
     use super::*;
     use tokio;
+    use crate::binance_api::auth::{TEST_NET_API_KEY, TEST_NET_API_SECRET};
+    use crate::binance_api::logger_conf::init_logger;
 
     #[tokio::test]
     async fn test_url_initialization() {
@@ -125,6 +164,20 @@ mod tests {
 
         api.set_live_mode(false);
         assert_eq!(api.api_url, BINANCE_API_TEST_URL);
+    }
+
+    #[tokio::test]
+    async fn check_orders(){
+        init_logger(Trace);
+        let mut api = BinanceAPI::new(
+            TEST_NET_API_KEY.to_string(), TEST_NET_API_SECRET.to_string(), false);
+        let orders = api.fetch_all_orders("ETHUSDT").await;
+        match orders {
+            Ok(order_data) => {
+                trace!("{:?}", order_data);
+            }
+            Err(e) => {panic!("error: {}", e.to_string())}
+        }
     }
 }
 
