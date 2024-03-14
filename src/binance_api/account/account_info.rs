@@ -11,40 +11,40 @@ use crate::binance_api::binance_client::BinanceClient;
 
 
 #[derive(Debug, Serialize, Deserialize)]
-pub struct AccountInfo {
+pub struct AccountInfoClient {
     #[serde(rename = "accountType")]
-    account_type: String,
-    balances: Vec<AssetBalance>,
-    brokered: bool,
+    pub account_type: String,
+    pub balances: Vec<AssetBalance>,
+    pub brokered: bool,
     #[serde(rename = "buyerCommission")]
-    buyer_commission: u32,
+    pub buyer_commission: u32,
     #[serde(rename = "canDeposit")]
-    can_deposit: bool,
+    pub can_deposit: bool,
     #[serde(rename = "canTrade")]
-    can_trade: bool,
+    pub can_trade: bool,
     #[serde(rename = "canWithdraw")]
-    can_withdraw: bool,
+    pub can_withdraw: bool,
     #[serde(rename = "commissionRates")]
-    commission_rates: CommissionRates,
+    pub commission_rates: CommissionRates,
     #[serde(rename = "makerCommission")]
-    maker_commission: u32,
-    permissions: Vec<String>,
+    pub maker_commission: u32,
+    pub permissions: Vec<String>,
     #[serde(rename = "preventSor")]
-    prevent_sor: bool,
+    pub prevent_sor: bool,
     #[serde(rename = "requireSelfTradePrevention")]
-    require_self_trade_prevention: bool,
+    pub require_self_trade_prevention: bool,
     #[serde(rename = "sellerCommission")]
-    seller_commission: u32,
+    pub seller_commission: u32,
     #[serde(rename = "takerCommission")]
-    taker_commission: u32,
-    uid: u64,
+    pub taker_commission: u32,
+    pub uid: u64,
     #[serde(rename = "updateTime")]
-    update_time: u64,
+    pub update_time: u64,
 }
 
 
-impl AccountInfo {
-    pub async fn from_binance_api(api: &BinanceClient) -> Result<Self, Box<dyn Error>> {
+impl AccountInfoClient {
+    pub async fn new(api: &BinanceClient) -> Result<Self, Box<dyn Error>> {
         let timestamp = BinanceClient::generate_timestamp()?;
         let recv_window = 5000;
         let params = format!("recvWindow={}&timestamp={}", recv_window, timestamp);
@@ -61,7 +61,7 @@ impl AccountInfo {
 
         if response.status().is_success() {
             let account_info: Self = response
-                .json::<AccountInfo>()
+                .json::<AccountInfoClient>()
                 .await
                 .map_err(|e| Box::new(e) as Box<dyn Error>)?;
             Ok(account_info)
@@ -107,17 +107,19 @@ mod tests {
     use std::env;
     use log::LevelFilter::Trace;
     use log::trace;
-    use crate::binance_api::auth::{TEST_NET_API_KEY, TEST_NET_API_SECRET};
+    use crate::binance_api::load_env::EnvVars;
     use crate::binance_api::logger_conf::init_logger; // For accessing environment variables
 
     #[tokio::test]
     async fn test_fetch_account_info() {
         init_logger(Trace);
-        let api = BinanceClient::new(TEST_NET_API_KEY.to_string(), TEST_NET_API_SECRET.to_string(), false)
-            .await; // false indicates using testnet
+        let vars = EnvVars::new();
+        let mut api = BinanceClient::new(
+            vars.api_key.to_string(), vars.api_secret.to_string(), false)
+            .await;
 
         // Attempt to fetch the account information
-        match AccountInfo::from_binance_api(&api).await {
+        match AccountInfoClient::new(&api).await {
             Ok(account_info) => {
                 trace!("account info fetched from binance: \n{:?}", account_info);
                 // Success: Perform your assertions here

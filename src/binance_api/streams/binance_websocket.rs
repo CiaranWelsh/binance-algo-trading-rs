@@ -121,8 +121,8 @@ mod tests {
     use std::hint::black_box;
     use log::LevelFilter::Trace;
     use log::trace;
-    use crate::binance_api::auth::{TEST_NET_API_KEY, TEST_NET_API_SECRET};
     use crate::binance_api::binance_client::BinanceClient;
+    use crate::binance_api::load_env::EnvVars;
     use crate::binance_api::logger_conf::init_logger;
     use crate::binance_api::streams::binance_stream::BinanceStreamTypes;
     use crate::binance_api::streams::binance_websocket::BinanceWebSocket;
@@ -132,7 +132,9 @@ mod tests {
         // Assuming `init_logger` and `TEST_NET_API_KEY`, `TEST_NET_API_SECRET` are available
         init_logger(Trace);
 
-        let binance_client = BinanceClient::new(TEST_NET_API_KEY.to_string(), TEST_NET_API_SECRET.to_string(), false)
+        let vars = EnvVars::new();
+        let mut binance_client = BinanceClient::new(
+            vars.api_key.to_string(), vars.api_secret.to_string(), false)
             .await;
         let websocket_api = BinanceWebSocket::new(&binance_client);
 
@@ -163,7 +165,9 @@ mod tests {
         // Assuming `init_logger` and `TEST_NET_API_KEY`, `TEST_NET_API_SECRET` are available
         init_logger(Trace);
 
-        let binance_client = BinanceClient::new(TEST_NET_API_KEY.to_string(), TEST_NET_API_SECRET.to_string(), false)
+        let vars = EnvVars::new();
+        let mut binance_client = BinanceClient::new(
+            vars.api_key.to_string(), vars.api_secret.to_string(), false)
             .await;
         let websocket_api = BinanceWebSocket::new(&binance_client);
 

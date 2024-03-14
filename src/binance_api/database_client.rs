@@ -60,18 +60,8 @@ impl DatabaseClient {
         Self::connect(&db_conn_str).await
     }
 
-    // Method to check if a specific database exists
-    pub async fn check_database_exists(&self, dbname: &str) -> Result<bool, Error> {
-        let stmt = "SELECT EXISTS(SELECT 1 FROM pg_database WHERE datname = $1)";
-        let row = self.client.query_one(stmt, &[&dbname]).await?;
-        Ok(row.get(0))
-    }
-
     // Method to check if the specified database exists
     pub async fn database_exists(dbname: &str, user: &str, password: &str) -> Result<bool, IOError> {
-        trace!("dbname : {:?}", dbname);
-        trace!("user : {:?}", user);
-        trace!("pwd : {:?}", password);
         let (client, connection) = match tokio_postgres::connect(format!("host=localhost user={} password={} dbname=postgres", user, password).as_str(), NoTls).await {
             Ok(conn) => conn,
             Err(e) => return Err(IOError::new(ErrorKind::ConnectionRefused, e.to_string())),

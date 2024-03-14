@@ -19,6 +19,7 @@ use tokio_websockets::upgrade::Response;
 
 use crate::binance_api::account::order::Order;
 use crate::binance_api::account::deserialization::deserialize_string_to_f64;
+use crate::binance_api::account::open_order::OpenOrder;
 use crate::binance_api::account::trades::Trade;
 use crate::binance_api::database_client::DatabaseClient;
 use crate::binance_api::streams::binance_stream::BinanceStreamTypes;
@@ -158,20 +159,44 @@ impl BinanceClient {
             .await
             .map_err(|err| IOError::new(ErrorKind::Other, format!("HTTP request failed: {}", err)))?;
 
-        match response.status() {
-            reqwest::StatusCode::OK => {
-                // let parsed_result: String= serde_json::from_str(&response.text().await.unwrap().clone()).unwrap();
-                // trace!("Parsed: {:?}", response.text().await);
-                //
-                // Ok(Vec::new())
+        if response.status() == reqwest::StatusCode::OK {
+            let orders = response
+                .json::<Vec<Order>>()
+                .await
+                .map_err(|err| IOError::new(ErrorKind::Other, format!("Failed to deserialize orders: {}", err)))?;
+            Ok(orders)
+        } else {
+            // Attempt to capture and log the error message from Binance
+            let error_msg = response.text().await.unwrap_or_else(|_| "Failed to read error message".to_string());
+            Err(IOError::new(ErrorKind::Other, format!("Failed to fetch all orders: {}", error_msg)))
+        }
+    }
 
-                let orders = response
-                    .json::<Vec<Order>>()
-                    .await
-                    .map_err(|err| IOError::new(ErrorKind::Other, format!("Failed to deserialize orders: {}", err)))?;
-                Ok(orders)
-            }
-            _ => Err(IOError::new(ErrorKind::Other, "Failed to fetch all orders"))
+    // Fetch all orders for a specific symbol
+    pub async fn fetch_open_orders(&self, symbol: &str) -> Result<Vec<OpenOrder>, IOError> {
+        let endpoint = "/v3/openOrders";
+        let timestamp = Self::generate_timestamp().unwrap();
+        let params = format!("symbol={}&timestamp={}", symbol, timestamp);
+        let signature = self.sign(&params);
+        let url = format!("{}{}?{}&signature={}", self.api_url, endpoint, params, signature);
+
+        let response = self.client
+            .get(&url)
+            .header("X-MBX-APIKEY", self.api_key.clone())
+            .send()
+            .await
+            .map_err(|err| IOError::new(ErrorKind::Other, format!("HTTP request failed: {}", err)))?;
+
+        if response.status() == reqwest::StatusCode::OK {
+            let orders = response
+                .json::<Vec<OpenOrder>>()
+                .await
+                .map_err(|err| IOError::new(ErrorKind::Other, format!("Failed to deserialize orders: {}", err)))?;
+            Ok(orders)
+        } else {
+            // Attempt to capture and log the error message from Binance
+            let error_msg = response.text().await.unwrap_or_else(|_| "Failed to read error message".to_string());
+            Err(IOError::new(ErrorKind::Other, format!("Failed to fetch all orders: {}", error_msg)))
         }
     }
 
@@ -239,12 +264,13 @@ mod tests {
     use std::io::Error;
     use dotenv::{dotenv, vars};
     use dotenv::Error::EnvVar;
+    use env_logger::{Env, init};
     use log::LevelFilter;
     use log::LevelFilter::Trace;
     use super::*;
     use tokio;
     use url::quirks::username;
-    use crate::binance_api::auth::{TEST_NET_API_KEY, TEST_NET_API_SECRET};
+    use crate::binance_api::account::account_info::AccountInfoClient;
     use crate::binance_api::load_env::{EnvVars};
     use crate::binance_api::logger_conf::init_logger;
 
@@ -273,8 +299,9 @@ mod tests {
     #[tokio::test]
     async fn check_orders() {
         init_logger(Trace);
+        let vars = EnvVars::new();
         let mut api = BinanceClient::new(
-            TEST_NET_API_KEY.to_string(), TEST_NET_API_SECRET.to_string(), false)
+            vars.api_key.to_string(), vars.api_secret.to_string(), false)
             .await;
         let orders = api.fetch_all_orders("ETHUSDT").await;
         match orders {
@@ -288,9 +315,9 @@ mod tests {
     #[tokio::test]
     async fn test_fetch_all_trades() {
         init_logger(LevelFilter::Trace); // Initialize logger if needed
-
-        // Initialize the BinanceAPI instance with testnet credentials
-        let api = BinanceClient::new(TEST_NET_API_KEY.to_string(), TEST_NET_API_SECRET.to_string(), false)
+        let vars = EnvVars::new();
+        let mut api = BinanceClient::new(
+            vars.api_key.to_string(), vars.api_secret.to_string(), false)
             .await;
 
         // Fetch all trades for a specific symbol
@@ -308,7 +335,9 @@ mod tests {
 
     #[tokio::test]
     async fn test_get_listen_key() {
-        let api = BinanceClient::new(TEST_NET_API_KEY.to_string(), TEST_NET_API_SECRET.to_string(), false)
+        let vars = EnvVars::new();
+        let mut api = BinanceClient::new(
+            vars.api_key.to_string(), vars.api_secret.to_string(), false)
             .await;
         match api.get_listen_key().await {
             Ok(listen_key) => {
@@ -336,25 +365,61 @@ mod tests {
         }
 
         // Ensure the database does not exist
-        // assert!(!db_exist(&vars).await, "Database should not exist at the start of the test");
-        //
-        // // Code to create the database
-        // // Assuming you have a method or process to do this
-        // // For example, using `init_db_client` if it creates the database when it doesn't exist
-        // let mut client = BinanceClient::new(vars.api_key.to_string(), vars.api_secret.to_string(), false).await;
-        // client.init_db_client(
-        //     vars.name.as_str(),
-        //     vars.user.as_str(),
-        //     vars.pwd.as_str(),
-        // ).await.expect("Failed to initialize or create the database");
-        //
-        // // Verify the database now exists
-        // assert!(db_exist(&vars).await, "Database should exist after creation");
-        //
-        // // Delete the database
-        // drop_if_database_exists(&vars).await;
-        // // Ensure the database no longer exists
-        // assert!(db_exist(&vars).await, "Database should be deleted by the end of the test");
+        assert!(!db_exist(&vars).await, "Database should not exist at the start of the test");
+
+        // Code to create the database
+        // Assuming you have a method or process to do this
+        // For example, using `init_db_client` if it creates the database when it doesn't exist
+        let mut client = BinanceClient::new(vars.api_key.to_string(), vars.api_secret.to_string(), false).await;
+        client.init_db_client(
+            vars.name.as_str(),
+            vars.user.as_str(),
+            vars.pwd.as_str(),
+        ).await.expect("Failed to initialize or create the database");
+
+        // Verify the database now exists
+        assert!(db_exist(&vars).await, "Database should exist after creation");
+
+        client.db_client.unwrap().close().await;
+
+        // Delete the database
+        drop_if_database_exists(&vars).await;
+        // Ensure the database no longer exists
+        assert!(db_exist(&vars).await, "Database should be deleted by the end of the test");
+    }
+
+
+    #[tokio::test]
+    async fn check_fetch_all_orders() {
+        init_logger(Trace);
+        let vars = EnvVars::new();
+        let client = BinanceClient::new(vars.api_key, vars.api_secret, false).await;
+
+        match AccountInfoClient::new(&client).await {
+            Ok(account_info) => {
+                trace!("account info fetched from binance: \n{:?}", account_info);
+                let balances = account_info.balances;
+                // for balance in balances.iter() {
+                //     trace!("balance: {:?}", balance);
+                // }
+                let orders_opt = client.fetch_all_orders("ETHUSDT").await;
+                match orders_opt {
+                    Ok(orders) => {
+                        for o in orders {
+                            trace!("Order: {:?}", o);
+                        }
+                    }
+                    Err(e) => { panic!("error: {:?}", e) }
+                }
+            }
+            Err(e) => {
+                // If the API call fails, ensure the test fails
+                panic!("Failed to fetch account info: {}", e);
+            }
+        }
+
+        // let orders = client.await.();
+        // trace!("{:?}", client.fetch_all_orders())
     }
 }
 

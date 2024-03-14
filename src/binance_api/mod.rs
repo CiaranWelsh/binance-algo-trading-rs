@@ -1,7 +1,6 @@
 pub mod position_size;
 pub mod spot_orders;
 pub mod binance_client;
-pub mod auth;
 
 pub mod logger_conf;
 

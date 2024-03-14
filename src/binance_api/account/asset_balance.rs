@@ -7,11 +7,11 @@ use crate::binance_api::account::deserialization::deserialize_string_to_f64;
 
 #[derive(Debug, Serialize, Deserialize, PartialEq)]
 pub struct AssetBalance {
-    asset: String,
+    pub asset: String,
     #[serde(deserialize_with = "deserialize_string_to_f64")]
-    free: f64,
+    pub free: f64,
     #[serde(deserialize_with = "deserialize_string_to_f64")]
-    locked: f64,
+    pub locked: f64,
 }
 
 impl AssetBalance {
@@ -105,15 +105,16 @@ impl AssetBalance {
 mod tests {
     use super::*;
     use tokio;
-    use crate::binance_api::auth::{TEST_NET_API_KEY, TEST_NET_API_SECRET};
+    use crate::binance_api::load_env::EnvVars;
 
     // This is an integration test for the Binance testnet.
     // Make sure to replace "your_api_key" and "your_api_secret" with your actual testnet API key and secret.
     #[tokio::test]
     async fn test_retrieve_balance() {
 
-        let api = BinanceClient::new(
-            TEST_NET_API_KEY.to_string(), TEST_NET_API_SECRET.to_string(), false)
+        let vars = EnvVars::new();
+        let mut api = BinanceClient::new(
+            vars.api_key.to_string(), vars.api_secret.to_string(), false)
             .await;
 
         // Attempt to retrieve the balance for a testnet asset. This asset should exist on your testnet account.
@@ -131,13 +132,14 @@ mod tests {
 
     #[tokio::test]
     async fn check_retrieve_all_balances(){
-        let api = BinanceClient::new(TEST_NET_API_KEY.to_string(),
-                                     TEST_NET_API_SECRET.to_string(), false).await;
-
+        let vars = EnvVars::new();
+        let mut binance_client = BinanceClient::new(
+            vars.api_key.to_string(), vars.api_secret.to_string(), false)
+            .await;
         // Attempt to retrieve the balance for a testnet asset. This asset should exist on your testnet account.
         // If "BTC" doesn't exist or has never been transacted, try with another asset that exists on your testnet account.
         let asset = "BTC";
-        let balance_result = AssetBalance::retrieve_balance(&api, asset).await;
+        let balance_result = AssetBalance::retrieve_balance(&binance_client, asset).await;
 
         match balance_result {
             Ok(balance) => {

@@ -26,6 +26,7 @@ mod integration_tests {
         // Initialize SpotOrders
         let spot_orders = SpotOrders::new(&binance_api);
 
+
         // Define a limit order (replace with testnet compatible values)
         // symbol: String, side: String, quantity: f64, price: f64
         let limit_order = LimitOrder::new(

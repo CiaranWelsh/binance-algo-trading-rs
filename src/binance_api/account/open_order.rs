@@ -3,7 +3,7 @@
 use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]
-struct OpenOrder {
+pub struct OpenOrder {
     // This struct can be similar to `Order` with possibly fewer fields depending on the API's response
     symbol: String,
     order_id: i64,
