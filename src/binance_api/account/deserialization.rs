@@ -1,6 +1,7 @@
 use serde::{Deserialize, Deserializer};
 use std::str::FromStr;
 use std::marker::PhantomData;
+use rust_decimal::Decimal;
 
 // Generic function to deserialize a string to a numeric type T
 pub fn deserialize_string_to_numeric<'de, T, D>(deserializer: D) -> Result<T, D::Error>
@@ -33,6 +34,13 @@ pub fn deserialize_string_to_i64<'de, D>(deserializer: D) -> Result<i64, D::Erro
         D: Deserializer<'de>,
 {
     deserialize_string_to_numeric::<i64, D>(deserializer)
+}
+
+pub fn deserialize_string_to_decimal<'de, D>(deserializer: D) -> Result<Decimal, D::Error>
+    where
+        D: Deserializer<'de>,
+{
+    deserialize_string_to_numeric::<Decimal, D>(deserializer)
 }
 
 

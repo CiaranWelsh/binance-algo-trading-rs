@@ -2,57 +2,57 @@ use serde::{Deserialize, Serialize};
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct KlineMessage {
-    stream: String,
-    data: KlineData,
+    pub stream: String,
+    pub data: KlineData,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct KlineData {
     #[serde(rename = "e")]
-    event_type: String,
+    pub event_type: String,
     #[serde(rename = "E")]
-    event_time: u64,
+    pub event_time: u64,
     #[serde(rename = "s")]
-    symbol: String,
-    k: Kline,
+    pub symbol: String,
+    pub k: Kline,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Kline {
     #[serde(rename = "t")]
-    start_time: u64,
+    pub start_time: u64,
     #[serde(rename = "T")]
-    end_time: u64,
+    pub end_time: u64,
     #[serde(rename = "s")]
-    symbol: String,
+    pub symbol: String,
     #[serde(rename = "i")]
-    interval: String,
+    pub interval: String,
     #[serde(rename = "f")]
-    first_trade_id: u64,
+    pub first_trade_id: u64,
     #[serde(rename = "L")]
-    last_trade_id: u64,
+    pub last_trade_id: u64,
     #[serde(rename = "o")]
-    open_price: String,
+    pub open_price: f64,
     #[serde(rename = "c")]
-    close_price: String,
+    pub close_price: f64,
     #[serde(rename = "h")]
-    high_price: String,
+    pub high_price: f64,
     #[serde(rename = "l")]
-    low_price: String,
+    pub low_price: f64,
     #[serde(rename = "v")]
-    base_asset_volume: String,
+    pub base_asset_volume: f64,
     #[serde(rename = "n")]
-    number_of_trades: u32,
+    pub number_of_trades: u32,
     #[serde(rename = "x")]
-    is_kline_closed: bool,
+    pub is_kline_closed: bool,
     #[serde(rename = "q")]
-    quote_asset_volume: String,
+    pub quote_asset_volume: f64,
     #[serde(rename = "V")]
-    taker_buy_base_asset_volume: String,
+    pub taker_buy_base_asset_volume: f64,
     #[serde(rename = "Q")]
-    taker_buy_quote_asset_volume: String,
+    pub taker_buy_quote_asset_volume: f64,
     #[serde(rename = "B")]
-    ignore: String,
+    pub ignore: String,
 }
 
 
