@@ -41,7 +41,9 @@ mod tests {
 
         let is_live = false; // false indicates using testnet.
 
-        let binance_client = BinanceClient::new(TEST_NET_API_KEY.to_string(), TEST_NET_API_SECRET.to_string(), is_live);
+        let binance_client = BinanceClient::new(
+            TEST_NET_API_KEY.to_string(), TEST_NET_API_SECRET.to_string(), is_live)
+            .await;
         let websocket_api = BinanceWebSocket::new(&binance_client);
 
         // Define the stream you want to subscribe to - Depth for a test symbol.

@@ -20,6 +20,7 @@ use tokio_websockets::upgrade::Response;
 use crate::binance_api::account::order::Order;
 use crate::binance_api::account::deserialization::deserialize_string_to_f64;
 use crate::binance_api::account::trades::Trade;
+use crate::binance_api::database_client::DatabaseClient;
 use crate::binance_api::streams::binance_stream::BinanceStreamTypes;
 use crate::binance_api::streams::kline_data::KlineMessage;
 
@@ -38,24 +39,30 @@ pub struct BinanceClient {
     api_secret: String,
     is_live: bool,
     client: Client,
+    db_client: Option<DatabaseClient>,
     pub api_url: String,
     pub websocket_url: String,
     pub stream_url: String,
+    // user: String,
+    // pwd: String,
+    // dbname: String,
 }
 
 impl BinanceClient {
-    pub fn new(api_key: String, api_secret: String, is_live: bool) -> Self {
+    pub async fn new(api_key: String, api_secret: String, is_live: bool) -> Self {
         let (api_url, websocket_url, stream_url) = if is_live {
             (BINANCE_API_URL.to_string(), BINANCE_WS_URL.to_string(), BINANCE_STREAM_URL.to_string())
         } else {
             (BINANCE_API_TEST_URL.to_string(), BINANCE_WS_TEST_URL.to_string(), BINANCE_STREAM_TEST_URL.to_string())
         };
 
+
         BinanceClient {
             api_key,
             api_secret,
             is_live,
             client: Client::new(),
+            db_client: None,
             api_url,
             websocket_url,
             stream_url,
@@ -67,6 +74,24 @@ impl BinanceClient {
         self.api_url = if is_live { BINANCE_API_URL } else { BINANCE_API_TEST_URL }.to_string();
         self.websocket_url = if is_live { BINANCE_WS_URL } else { BINANCE_WS_TEST_URL }.to_string();
         self.stream_url = if is_live { BINANCE_STREAM_URL } else { BINANCE_STREAM_TEST_URL }.to_string();
+    }
+
+
+    // Method to optionally initialize the database client
+    pub async fn init_db_client(&mut self, user: &str, pwd: &str, dbname: &str) -> Result<(), IOError> {
+        // let user = user.unwrap_or("default_user");
+        // let pwd = pwd.unwrap_or("default_password");
+        // let dbname = dbname.unwrap_or("BinanceData");
+
+        match DatabaseClient::connect_and_setup(dbname, user, pwd).await {
+            Ok(db_client) => {
+                self.db_client = Some(db_client);
+                Ok(())
+            }
+            Err(e) => {
+                Err(IOError::new(ErrorKind::Other, format!("Failed to initialize database client: {:?}", e)))
+            }
+        }
     }
 
     pub async fn ping(&self) -> Result<(), IOError> {
@@ -285,15 +310,16 @@ mod tests {
     #[tokio::test]
     async fn test_url_initialization() {
         let api_live = BinanceClient::new("".to_string(), "".to_string(), true);
-        assert_eq!(api_live.api_url, BINANCE_API_URL);
+        assert_eq!(api_live.await.api_url, BINANCE_API_URL);
 
         let api_test = BinanceClient::new("".to_string(), "".to_string(), false);
-        assert_eq!(api_test.api_url, BINANCE_API_TEST_URL);
+        assert_eq!(api_test.await.api_url, BINANCE_API_TEST_URL);
     }
 
     #[tokio::test]
     async fn test_set_live_mode() {
-        let mut api = BinanceClient::new("".to_string(), "".to_string(), false);
+        let mut api = BinanceClient::new("".to_string(), "".to_string(), false)
+            .await;
         assert_eq!(api.api_url, BINANCE_API_TEST_URL);
 
         api.set_live_mode(true);
@@ -307,7 +333,8 @@ mod tests {
     async fn check_orders() {
         init_logger(Trace);
         let mut api = BinanceClient::new(
-            TEST_NET_API_KEY.to_string(), TEST_NET_API_SECRET.to_string(), false);
+            TEST_NET_API_KEY.to_string(), TEST_NET_API_SECRET.to_string(), false)
+            .await;
         let orders = api.fetch_all_orders("ETHUSDT").await;
         match orders {
             Ok(order_data) => {
@@ -322,7 +349,8 @@ mod tests {
         init_logger(LevelFilter::Trace); // Initialize logger if needed
 
         // Initialize the BinanceAPI instance with testnet credentials
-        let api = BinanceClient::new(TEST_NET_API_KEY.to_string(), TEST_NET_API_SECRET.to_string(), false);
+        let api = BinanceClient::new(TEST_NET_API_KEY.to_string(), TEST_NET_API_SECRET.to_string(), false)
+            .await;
 
         // Fetch all trades for a specific symbol
         let result = api.fetch_all_trades("BTCUSDT").await;
@@ -339,7 +367,8 @@ mod tests {
 
     #[tokio::test]
     async fn test_get_listen_key() {
-        let api = BinanceClient::new(TEST_NET_API_KEY.to_string(), TEST_NET_API_SECRET.to_string(), false);
+        let api = BinanceClient::new(TEST_NET_API_KEY.to_string(), TEST_NET_API_SECRET.to_string(), false)
+            .await;
         match api.get_listen_key().await {
             Ok(listen_key) => {
                 assert!(!listen_key.is_empty(), "Listen key should not be empty");

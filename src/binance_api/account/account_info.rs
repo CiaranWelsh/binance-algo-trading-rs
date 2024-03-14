@@ -113,7 +113,8 @@ mod tests {
     #[tokio::test]
     async fn test_fetch_account_info() {
         init_logger(Trace);
-        let api = BinanceClient::new(TEST_NET_API_KEY.to_string(), TEST_NET_API_SECRET.to_string(), false); // false indicates using testnet
+        let api = BinanceClient::new(TEST_NET_API_KEY.to_string(), TEST_NET_API_SECRET.to_string(), false)
+            .await; // false indicates using testnet
 
         // Attempt to fetch the account information
         match AccountInfo::from_binance_api(&api).await {

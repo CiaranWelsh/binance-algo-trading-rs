@@ -112,7 +112,9 @@ mod tests {
     #[tokio::test]
     async fn test_retrieve_balance() {
 
-        let api = BinanceClient::new(TEST_NET_API_KEY.to_string(), TEST_NET_API_SECRET.to_string(), false);
+        let api = BinanceClient::new(
+            TEST_NET_API_KEY.to_string(), TEST_NET_API_SECRET.to_string(), false)
+            .await;
 
         // Attempt to retrieve the balance for a testnet asset. This asset should exist on your testnet account.
         // If "BTC" doesn't exist or has never been transacted, try with another asset that exists on your testnet account.
@@ -129,7 +131,8 @@ mod tests {
 
     #[tokio::test]
     async fn check_retrieve_all_balances(){
-        let api = BinanceClient::new(TEST_NET_API_KEY.to_string(), TEST_NET_API_SECRET.to_string(), false);
+        let api = BinanceClient::new(TEST_NET_API_KEY.to_string(),
+                                     TEST_NET_API_SECRET.to_string(), false).await;
 
         // Attempt to retrieve the balance for a testnet asset. This asset should exist on your testnet account.
         // If "BTC" doesn't exist or has never been transacted, try with another asset that exists on your testnet account.

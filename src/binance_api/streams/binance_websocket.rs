@@ -132,7 +132,8 @@ mod tests {
         // Assuming `init_logger` and `TEST_NET_API_KEY`, `TEST_NET_API_SECRET` are available
         init_logger(Trace);
 
-        let binance_client = BinanceClient::new(TEST_NET_API_KEY.to_string(), TEST_NET_API_SECRET.to_string(), false);
+        let binance_client = BinanceClient::new(TEST_NET_API_KEY.to_string(), TEST_NET_API_SECRET.to_string(), false)
+            .await;
         let websocket_api = BinanceWebSocket::new(&binance_client);
 
         // Define the streams you want to subscribe to
@@ -162,7 +163,8 @@ mod tests {
         // Assuming `init_logger` and `TEST_NET_API_KEY`, `TEST_NET_API_SECRET` are available
         init_logger(Trace);
 
-        let binance_client = BinanceClient::new(TEST_NET_API_KEY.to_string(), TEST_NET_API_SECRET.to_string(), false);
+        let binance_client = BinanceClient::new(TEST_NET_API_KEY.to_string(), TEST_NET_API_SECRET.to_string(), false)
+            .await;
         let websocket_api = BinanceWebSocket::new(&binance_client);
 
         // Define the streams you want to subscribe to

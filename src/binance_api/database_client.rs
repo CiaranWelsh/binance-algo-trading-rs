@@ -5,7 +5,7 @@ use tokio::task::JoinHandle;
 use tokio_postgres::{NoTls, Error, Client};
 use crate::binance_api::streams::kline_data::{Kline, KlineMessage};
 
-
+#[derive(Debug)]
 pub struct DatabaseClient {
     pub client: Client,
     connection_handle: Arc<Mutex<Option<JoinHandle<()>>>>,
@@ -13,31 +13,48 @@ pub struct DatabaseClient {
 
 
 impl DatabaseClient {
-    // Connects to the default database to check for the existence of your target database
+
+    pub async fn new(user: &str, pwd: &str, dbname: &str) -> Result<Self, Error> {
+        // Try connecting directly first
+        let direct_conn_str = format!("host=localhost user={} password={} dbname={}", user, pwd, dbname);
+        if let Ok((client, connection)) = tokio_postgres::connect(&direct_conn_str, NoTls).await {
+            let connection_handle = tokio::spawn(async move {
+                if let Err(e) = connection.await {
+                    eprintln!("connection error: {}", e);
+                }
+            });
+
+            return Ok(DatabaseClient {
+                client,
+                connection_handle: Arc::new(Mutex::new(Some(connection_handle))),
+            });
+        }
+
+        // If direct connection fails, proceed with connect_and_setup to ensure the database is created
+        Self::connect_and_setup(dbname, user, pwd).await
+    }
+
+
+    // Connects to the default database to check for the existence of the target database
     pub async fn connect_and_setup(db_name: &str, user: &str, password: &str) -> Result<Self, Error> {
-        // Use the default 'postgres' database for initial connection
         let admin_conn_str = format!("host=localhost user={} password={} dbname=postgres", user, password);
         let (admin_client, connection) = tokio_postgres::connect(&admin_conn_str, NoTls).await?;
 
-        let handle = tokio::spawn(async move {
+        // Spawning a new task for the connection to keep it alive
+        tokio::spawn(async move {
             if let Err(e) = connection.await {
                 eprintln!("connection error: {}", e);
             }
         });
 
         // Check if the target database exists
-        let exists = admin_client
-            .query_one("SELECT EXISTS(SELECT 1 FROM pg_database WHERE datname = $1)", &[&db_name])
-            .await
-            .map(|row| row.get::<_, bool>(0))
-            .unwrap_or(false);
-
-        if !exists {
-            // Create the database if it doesn't exist
-            admin_client.execute(&*format!("CREATE DATABASE {}", db_name), &[]).await?;
+        let row = admin_client.query_one("SELECT 1 FROM pg_database WHERE datname = $1", &[&db_name]).await;
+        if row.is_err() {
+            // If the database does not exist, create it
+            admin_client.execute(&format!("CREATE DATABASE {}", db_name), &[]).await?;
         }
 
-        // Now connect to the target database
+        // Now connect to the newly created or existing database
         let db_conn_str = format!("host=localhost user={} password={} dbname={}", user, password, db_name);
         Self::connect(&db_conn_str).await
     }
