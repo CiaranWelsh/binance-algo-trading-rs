@@ -11,6 +11,7 @@ use sha2::Sha256;
 use futures::StreamExt;
 use futures::FutureExt;
 use futures_util::SinkExt;
+use serde::de::DeserializeOwned;
 use tokio::net::TcpStream;
 use tokio::sync::TryAcquireError::Closed;
 use tokio_websockets::{ClientBuilder, Error as WsError, Error, MaybeTlsStream, Message, WebSocketStream};
@@ -144,87 +145,43 @@ impl BinanceClient {
         &self.api_key
     }
 
-    // Fetch all orders for a specific symbol
+    // Generic function to fetch and deserialize data from Binance API
+    async fn fetch_from_api<T: DeserializeOwned>(&self, endpoint: &str, params: &str) -> Result<Vec<T>, IOError> {
+        let signature = self.sign(params);
+        let url = format!("{}{}?{}&signature={}", self.api_url, endpoint, params, signature);
+
+        let response = self.client
+            .get(&url)
+            .header("X-MBX-APIKEY", self.api_key.clone())
+            .send()
+            .await
+            .map_err(|err| IOError::new(ErrorKind::Other, format!("HTTP request failed: {}", err)))?;
+
+        if response.status().is_success() {
+            response
+                .json::<Vec<T>>()
+                .await
+                .map_err(|err| IOError::new(ErrorKind::Other, format!("Failed to deserialize response: {}", err)))
+        } else {
+            // Attempt to capture and log the error message from Binance
+            let error_msg = response.text().await.unwrap_or_else(|_| "Failed to read error message".to_string());
+            Err(IOError::new(ErrorKind::Other, format!("Failed to fetch data: {}", error_msg)))
+        }
+    }
+
     pub async fn fetch_all_orders(&self, symbol: &str) -> Result<Vec<Order>, IOError> {
-        let endpoint = "/v3/allOrders";
-        let timestamp = Self::generate_timestamp().unwrap();
-        let params = format!("symbol={}&timestamp={}", symbol, timestamp);
-        let signature = self.sign(&params);
-        let url = format!("{}{}?{}&signature={}", self.api_url, endpoint, params, signature);
-
-        let response = self.client
-            .get(&url)
-            .header("X-MBX-APIKEY", self.api_key.clone())
-            .send()
-            .await
-            .map_err(|err| IOError::new(ErrorKind::Other, format!("HTTP request failed: {}", err)))?;
-
-        if response.status() == reqwest::StatusCode::OK {
-            let orders = response
-                .json::<Vec<Order>>()
-                .await
-                .map_err(|err| IOError::new(ErrorKind::Other, format!("Failed to deserialize orders: {}", err)))?;
-            Ok(orders)
-        } else {
-            // Attempt to capture and log the error message from Binance
-            let error_msg = response.text().await.unwrap_or_else(|_| "Failed to read error message".to_string());
-            Err(IOError::new(ErrorKind::Other, format!("Failed to fetch all orders: {}", error_msg)))
-        }
+        let params = format!("symbol={}&timestamp={}", symbol, Self::generate_timestamp().unwrap());
+        self.fetch_from_api::<Order>("/v3/allOrders", &params).await
     }
 
-    // Fetch all orders for a specific symbol
     pub async fn fetch_open_orders(&self, symbol: &str) -> Result<Vec<OpenOrder>, IOError> {
-        let endpoint = "/v3/openOrders";
-        let timestamp = Self::generate_timestamp().unwrap();
-        let params = format!("symbol={}&timestamp={}", symbol, timestamp);
-        let signature = self.sign(&params);
-        let url = format!("{}{}?{}&signature={}", self.api_url, endpoint, params, signature);
-
-        let response = self.client
-            .get(&url)
-            .header("X-MBX-APIKEY", self.api_key.clone())
-            .send()
-            .await
-            .map_err(|err| IOError::new(ErrorKind::Other, format!("HTTP request failed: {}", err)))?;
-
-        if response.status() == reqwest::StatusCode::OK {
-            let orders = response
-                .json::<Vec<OpenOrder>>()
-                .await
-                .map_err(|err| IOError::new(ErrorKind::Other, format!("Failed to deserialize orders: {}", err)))?;
-            Ok(orders)
-        } else {
-            // Attempt to capture and log the error message from Binance
-            let error_msg = response.text().await.unwrap_or_else(|_| "Failed to read error message".to_string());
-            Err(IOError::new(ErrorKind::Other, format!("Failed to fetch all orders: {}", error_msg)))
-        }
+        let params = format!("symbol={}&timestamp={}", symbol, Self::generate_timestamp().unwrap());
+        self.fetch_from_api::<OpenOrder>("/v3/openOrders", &params).await
     }
 
-    // Fetch all trades for a specific symbol
-    pub async fn fetch_all_trades(&self, symbol: &str) -> Result<Vec<Trade>, IOError> {
-        let endpoint = "/v3/myTrades";
-        let timestamp = Self::generate_timestamp()?;
-        let params = format!("symbol={}&timestamp={}", symbol, timestamp);
-        let signature = self.sign(&params);
-        let url = format!("{}{}?{}&signature={}", self.api_url, endpoint, params, signature);
-
-        let response = self.client
-            .get(&url)
-            .header("X-MBX-APIKEY", self.api_key.clone())
-            .send()
-            .await
-            .map_err(|err| IOError::new(ErrorKind::Other, format!("HTTP request failed: {}", err)))?;
-
-        match response.status() {
-            reqwest::StatusCode::OK => {
-                let trades = response
-                    .json::<Vec<Trade>>()
-                    .await
-                    .map_err(|err| IOError::new(ErrorKind::Other, format!("Failed to deserialize trades: {}", err)))?;
-                Ok(trades)
-            }
-            _ => Err(IOError::new(ErrorKind::Other, "Failed to fetch all trades"))
-        }
+    pub async fn fetch_my_trades(&self, symbol: &str) -> Result<Vec<Trade>, IOError> {
+        let params = format!("symbol={}&timestamp={}", symbol, Self::generate_timestamp().unwrap());
+        self.fetch_from_api::<Trade>("/v3/myTrades", &params).await
     }
 
     pub async fn get_listen_key(&self) -> Result<String, IOError> {
@@ -420,6 +377,23 @@ mod tests {
 
         // let orders = client.await.();
         // trace!("{:?}", client.fetch_all_orders())
+    }
+
+    #[tokio::test]
+    async fn test_fetch_open_orders() {
+        init_logger(Trace);
+        let vars = EnvVars::new();
+        let client = BinanceClient::new(vars.api_key, vars.api_secret, false).await;
+
+        let result = client.fetch_open_orders("ETHUSDT").await;
+
+        match result {
+            Ok(orders) => {
+                assert!(!orders.is_empty(), "Should fetch at least one open order");
+                trace!("Fetched open orders: {:?}", orders);
+            }
+            Err(e) => panic!("Failed to fetch open orders: {}", e),
+        }
     }
 }
 
