@@ -3,11 +3,11 @@ use serde::{Deserialize, Serialize};
 use std::io::{Error as IOError, ErrorKind};
 use log::trace;
 use serde_json::Value;
-use crate::binance_api::binance_client::BinanceClient;
-use crate::binance_api::order_types::limit_order::LimitOrder;
-use crate::binance_api::order_types::market_order::MarketOrder;
-use crate::binance_api::order_types::oco_order::OcoOrder;
-use crate::binance_api::order_types::stop_limit_order::StopLimitOrder;
+use crate::binance_client::binance_client::BinanceClient;
+use crate::binance_client::order_types::limit_order::LimitOrder;
+use crate::binance_client::order_types::market_order::MarketOrder;
+use crate::binance_client::order_types::oco_order::OcoOrder;
+use crate::binance_client::order_types::stop_limit_order::StopLimitOrder;
 
 pub struct SpotClient<'a> {
     api: &'a BinanceClient,

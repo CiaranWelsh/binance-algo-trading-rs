@@ -1,6 +1,6 @@
 use std::fmt;
 use serde::{Deserialize, Serialize};
-use crate::binance_api::order_types::order_type::OrderType;
+use crate::binance_client::order_types::order_type::OrderType;
 
 /// Defines the time frame in which an order will remain valid before it is executed or expires.
 ///

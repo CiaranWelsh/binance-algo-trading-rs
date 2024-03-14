@@ -1,6 +1,6 @@
 use std::fmt;
 use serde::{Deserialize, Serialize};
-use crate::binance_api::order_types::order_type::OrderType;
+use crate::binance_client::order_types::order_type::OrderType;
 
 // Define an enum for the order side
 #[derive(Debug, Serialize, Deserialize)]

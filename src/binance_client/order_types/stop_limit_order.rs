@@ -1,8 +1,8 @@
 use serde::{Deserialize, Serialize};
-use crate::binance_api::binance_client::BinanceClient;
-use crate::binance_api::order_types::order_type::OrderType;
-use crate::binance_api::order_types::side::Side;
-use crate::binance_api::order_types::time_in_force::TimeInForce;
+use crate::binance_client::binance_client::BinanceClient;
+use crate::binance_client::order_types::order_type::OrderType;
+use crate::binance_client::order_types::side::Side;
+use crate::binance_client::order_types::time_in_force::TimeInForce;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct StopLimitOrder {

@@ -48,6 +48,10 @@ mockall = "0.12.1"
 name = "async_experiment"
 path = "src/bin/async_experiment.rs"
 
+[[bin]]
+name = "quick_trade"
+path = "src/bin/quick_trade.rs"
+
 
 
 

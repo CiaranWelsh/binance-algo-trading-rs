@@ -4,9 +4,9 @@ use serde_json::error::Error as SerdeJsonError;
 
 use std::fmt;
 use serde::{Deserialize, Serialize};
-use crate::binance_api::account::asset_balance::AssetBalance;
-use crate::binance_api::account::commission_rates::CommissionRates;
-use crate::binance_api::binance_client::BinanceClient;
+use crate::binance_client::account::asset_balance::AssetBalance;
+use crate::binance_client::account::commission_rates::CommissionRates;
+use crate::binance_client::binance_client::BinanceClient;
 
 
 
@@ -107,8 +107,8 @@ mod tests {
     use std::env;
     use log::LevelFilter::Trace;
     use log::trace;
-    use crate::binance_api::load_env::EnvVars;
-    use crate::binance_api::logger_conf::init_logger; // For accessing environment variables
+    use crate::binance_client::load_env::EnvVars;
+    use crate::binance_client::logger_conf::init_logger; // For accessing environment variables
 
     #[tokio::test]
     async fn test_fetch_account_info() {

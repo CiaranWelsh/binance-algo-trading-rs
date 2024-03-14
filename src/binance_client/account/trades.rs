@@ -1,9 +1,9 @@
 use serde::{Deserialize, Serialize};
-use crate::binance_api::account::order_status::OrderStatus;
-use crate::binance_api::order_types::order_type::OrderType;
-use crate::binance_api::order_types::side::Side;
-use crate::binance_api::order_types::time_in_force::TimeInForce;
-use crate::binance_api::account::deserialization::*;
+use crate::binance_client::account::order_status::OrderStatus;
+use crate::binance_client::order_types::order_type::OrderType;
+use crate::binance_client::order_types::side::Side;
+use crate::binance_client::order_types::time_in_force::TimeInForce;
+use crate::binance_client::account::deserialization::*;
 
 
 

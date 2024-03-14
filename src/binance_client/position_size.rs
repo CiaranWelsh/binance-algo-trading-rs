@@ -1,4 +1,4 @@
-fn calculate_position_size(
+pub fn calculate_position_size(
     account_size: f64,
     risk_percentage: f64,
     entry_price: f64,
@@ -30,7 +30,7 @@ fn calculate_position_size(
     Ok((position_size, take_profit_price, stop_loss_price))
 }
 
-fn calculate_position_size_stop_loss_as_percentage(
+pub fn calculate_position_size_stop_loss_as_percentage(
     account_size: f64,
     risk_percentage: f64,
     entry_price: f64,

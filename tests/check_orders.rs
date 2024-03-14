@@ -4,16 +4,16 @@ mod integration_tests {
     use std::env;
     use log::LevelFilter::Trace;
     use log::trace;
-    use binance_api::binance_api::binance_client::BinanceClient;
-    use binance_api::binance_api::logger_conf::init_logger;
-    use binance_api::binance_api::order_types::limit_order::LimitOrder;
-    use binance_api::binance_api::order_types::market_order::MarketOrder;
-    use binance_api::binance_api::order_types::oco_order::OcoOrder;
-    use binance_api::binance_api::order_types::side::Side;
-    use binance_api::binance_api::order_types::stop_limit_order::StopLimitOrder;
-    use binance_api::binance_api::order_types::time_in_force::TimeInForce;
-    use binance_api::binance_api::spot_orders::SpotClient;
-    use binance_api::binance_api::load_env::EnvVars;
+    use binance_api::binance_client::binance_client::BinanceClient;
+    use binance_api::binance_client::logger_conf::init_logger;
+    use binance_api::binance_client::order_types::limit_order::LimitOrder;
+    use binance_api::binance_client::order_types::market_order::MarketOrder;
+    use binance_api::binance_client::order_types::oco_order::OcoOrder;
+    use binance_api::binance_client::order_types::side::Side;
+    use binance_api::binance_client::order_types::stop_limit_order::StopLimitOrder;
+    use binance_api::binance_client::order_types::time_in_force::TimeInForce;
+    use binance_api::binance_client::spot_orders::SpotClient;
+    use binance_api::binance_client::load_env::EnvVars;
 
     #[tokio::test]
     async fn test_create_limit_order() {

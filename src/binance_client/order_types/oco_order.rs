@@ -1,5 +1,5 @@
 use serde::{Deserialize, Serialize};
-use crate::binance_api::order_types::side::Side;
+use crate::binance_client::order_types::side::Side;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct OcoOrder {

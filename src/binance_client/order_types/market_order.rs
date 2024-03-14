@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
-use crate::binance_api::order_types::side::Side;
-use crate::binance_api::binance_client::BinanceClient;
+use crate::binance_client::order_types::side::Side;
+use crate::binance_client::binance_client::BinanceClient;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct MarketOrder {

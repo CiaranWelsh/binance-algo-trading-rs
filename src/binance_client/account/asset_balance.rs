@@ -1,8 +1,8 @@
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use std::error::Error;
-use crate::binance_api::binance_client::BinanceClient;
-use crate::binance_api::account::deserialization::deserialize_string_to_f64;
+use crate::binance_client::binance_client::BinanceClient;
+use crate::binance_client::account::deserialization::deserialize_string_to_f64;
 
 
 #[derive(Debug, Serialize, Deserialize, PartialEq)]
@@ -105,7 +105,7 @@ impl AssetBalance {
 mod tests {
     use super::*;
     use tokio;
-    use crate::binance_api::load_env::EnvVars;
+    use crate::binance_client::load_env::EnvVars;
 
     // This is an integration test for the Binance testnet.
     // Make sure to replace "your_api_key" and "your_api_secret" with your actual testnet API key and secret.

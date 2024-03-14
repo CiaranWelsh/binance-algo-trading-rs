@@ -28,11 +28,11 @@ mod tests {
     use std::thread::sleep;
     use std::time::Duration;
     use log::LevelFilter;
-    use crate::binance_api::binance_client::BinanceClient;
-    use crate::binance_api::load_env::EnvVars;
-    use crate::binance_api::logger_conf::init_logger;
-    use crate::binance_api::streams::binance_stream::BinanceStreamTypes;
-    use crate::binance_api::streams::binance_websocket::BinanceWebSocket;
+    use crate::binance_client::binance_client::BinanceClient;
+    use crate::binance_client::load_env::EnvVars;
+    use crate::binance_client::logger_conf::init_logger;
+    use crate::binance_client::streams::binance_stream::BinanceStreamTypes;
+    use crate::binance_client::streams::binance_websocket::BinanceWebSocket;
 
     #[tokio::test]
     async fn depth_stream_test() {

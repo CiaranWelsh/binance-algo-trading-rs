@@ -19,14 +19,14 @@ use tokio_websockets::{ClientBuilder, Error as WsError, Error, MaybeTlsStream, M
 use tokio_websockets::upgrade::Response;
 
 
-use crate::binance_api::account::order::Order;
-use crate::binance_api::account::deserialization::deserialize_string_to_f64;
-use crate::binance_api::account::open_order::OpenOrder;
-use crate::binance_api::account::trades::Trade;
-use crate::binance_api::binance_error::BinanceError;
-use crate::binance_api::database_client::DatabaseClient;
-use crate::binance_api::streams::binance_stream::BinanceStreamTypes;
-use crate::binance_api::streams::kline_data::KlineMessage;
+use crate::binance_client::account::order::Order;
+use crate::binance_client::account::deserialization::deserialize_string_to_f64;
+use crate::binance_client::account::open_order::OpenOrder;
+use crate::binance_client::account::trades::Trade;
+use crate::binance_client::binance_error::BinanceError;
+use crate::binance_client::database_client::DatabaseClient;
+use crate::binance_client::streams::binance_stream::BinanceStreamTypes;
+use crate::binance_client::streams::kline_data::KlineMessage;
 
 const BINANCE_API_URL: &str = "https://api.binance.com/api";
 const BINANCE_API_TEST_URL: &str = "https://testnet.binance.vision/api";
@@ -268,12 +268,12 @@ mod tests {
     use tokio;
     use tokio_postgres::types::Format::Binary;
     use url::quirks::username;
-    use crate::binance_api::account::account_info::AccountInfoClient;
-    use crate::binance_api::load_env::{EnvVars};
-    use crate::binance_api::logger_conf::init_logger;
-    use crate::binance_api::order_types::limit_order::LimitOrder;
-    use crate::binance_api::order_types::side::Side;
-    use crate::binance_api::spot_orders::SpotClient;
+    use crate::binance_client::account::account_info::AccountInfoClient;
+    use crate::binance_client::load_env::{EnvVars};
+    use crate::binance_client::logger_conf::init_logger;
+    use crate::binance_client::order_types::limit_order::LimitOrder;
+    use crate::binance_client::order_types::side::Side;
+    use crate::binance_client::spot_orders::SpotClient;
 
     #[tokio::test]
     async fn test_url_initialization() {

@@ -8,10 +8,10 @@ use futures_util::SinkExt;
 use serde_json::{Error, Value};
 use tokio_websockets::{ClientBuilder, Message};
 use regex::Regex;
-use crate::binance_api::binance_client::BinanceClient;
-use crate::binance_api::streams::binance_stream::BinanceStreamTypes;
-use crate::binance_api::streams::depth_stream::DepthMessage;
-use crate::binance_api::streams::kline_data::{Kline, KlineMessage};
+use crate::binance_client::binance_client::BinanceClient;
+use crate::binance_client::streams::binance_stream::BinanceStreamTypes;
+use crate::binance_client::streams::depth_stream::DepthMessage;
+use crate::binance_client::streams::kline_data::{Kline, KlineMessage};
 
 #[derive(Debug)]
 pub struct BinanceWebSocket<'a> {
@@ -121,11 +121,11 @@ mod tests {
     use std::hint::black_box;
     use log::LevelFilter::Trace;
     use log::trace;
-    use crate::binance_api::binance_client::BinanceClient;
-    use crate::binance_api::load_env::EnvVars;
-    use crate::binance_api::logger_conf::init_logger;
-    use crate::binance_api::streams::binance_stream::BinanceStreamTypes;
-    use crate::binance_api::streams::binance_websocket::BinanceWebSocket;
+    use crate::binance_client::binance_client::BinanceClient;
+    use crate::binance_client::load_env::EnvVars;
+    use crate::binance_client::logger_conf::init_logger;
+    use crate::binance_client::streams::binance_stream::BinanceStreamTypes;
+    use crate::binance_client::streams::binance_websocket::BinanceWebSocket;
 
     #[tokio::test]
     async fn kline_websocket_stream_test() {

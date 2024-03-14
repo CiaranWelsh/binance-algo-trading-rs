@@ -6,7 +6,7 @@ use tokio::task::JoinHandle;
 use tokio_postgres::{NoTls, Error, Client};
 use std::io::{Error as IOError, ErrorKind};
 use log::trace;
-use crate::binance_api::streams::kline_data::{Kline, KlineMessage};
+use crate::binance_client::streams::kline_data::{Kline, KlineMessage};
 
 #[derive(Debug)]
 pub struct DatabaseClient {
@@ -209,9 +209,9 @@ mod tests {
     use serde::{Deserialize, Serialize};
     use super::DatabaseClient;
     use tokio_postgres::NoTls;
-    use crate::binance_api::load_env::EnvVars;
-    use crate::binance_api::logger_conf::init_logger;
-    use crate::binance_api::streams::kline_data::{Kline, KlineData, KlineMessage};
+    use crate::binance_client::load_env::EnvVars;
+    use crate::binance_client::logger_conf::init_logger;
+    use crate::binance_client::streams::kline_data::{Kline, KlineData, KlineMessage};
 
     #[tokio::test]
     async fn test_database_creation() {

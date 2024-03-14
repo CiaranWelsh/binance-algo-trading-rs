@@ -1,1 +1,1 @@
-pub mod binance_api;
+pub mod binance_client;
