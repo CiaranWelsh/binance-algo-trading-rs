@@ -21,7 +21,7 @@ use crate::binance_api::account::order::Order;
 use crate::binance_api::account::deserialization::deserialize_string_to_f64;
 use crate::binance_api::account::trades::Trade;
 use crate::binance_api::streams::binance_stream::BinanceStreamTypes;
-use crate::binance_api::streams::kline_data::klineMessage;
+use crate::binance_api::streams::kline_data::KlineMessage;
 
 const BINANCE_API_URL: &str = "https://api.binance.com/api";
 const BINANCE_API_TEST_URL: &str = "https://testnet.binance.vision/api";
@@ -348,36 +348,6 @@ mod tests {
             Err(e) => panic!("Failed to retrieve listen key: {}", e),
         }
     }
-    //
-    // #[tokio::test]
-    // async fn websocket_stream_test() {
-    //     // Assuming `init_logger` and `TEST_NET_API_KEY`, `TEST_NET_API_SECRET` are available
-    //     init_logger(Trace);
-    //
-    //     let symbol = "BTCUSDT".to_string();
-    //     let api = BinanceClient::new(TEST_NET_API_KEY.to_string(), TEST_NET_API_SECRET.to_string(), false);
-    //
-    //     // Define the streams you want to subscribe to
-    //     let streams = vec![
-    //         BinanceStreamTypes::Kline(symbol.clone().to_lowercase(), "1m".to_string()),
-    //         BinanceStreamTypes::Kline("ethusdt".to_string(), "1m".to_string()),
-    //         // BinanceStream::Depth(symbol.clone()),
-    //         // BinanceStream::Trade(symbol.clone()),
-    //     ];
-    //
-    //     // Call the method to create and listen to the websocket stream
-    //     let result = api.create_websocket_stream(streams).await;
-    //
-    //     trace!("result: {:?}",result);
-    //
-    //     // match result {
-    //     //     Ok(data) => {
-    //     //         info!("Successfully connected and processed messages from WebSocket streams.");
-    //     //         info!("Data {:?}", data);
-    //     //     },
-    //     //     Err(e) => panic!("Failed to connect or process messages: {}", e),
-    //     // }
-    // }
 }
 
 

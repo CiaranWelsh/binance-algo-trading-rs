@@ -304,6 +304,7 @@ dependencies = [
  "hmac 0.13.0-pre.3",
  "log",
  "mockall",
+ "regex",
  "reqwest",
  "serde",
  "serde_json",
