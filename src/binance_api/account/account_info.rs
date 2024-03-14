@@ -6,7 +6,7 @@ use std::fmt;
 use serde::{Deserialize, Serialize};
 use crate::binance_api::account::asset_balance::AssetBalance;
 use crate::binance_api::account::commission_rates::CommissionRates;
-use crate::binance_api::binance_api::BinanceAPI;
+use crate::binance_api::binance_client::BinanceClient;
 
 
 
@@ -44,8 +44,8 @@ pub struct AccountInfo {
 
 
 impl AccountInfo {
-    pub async fn from_binance_api(api: &BinanceAPI) -> Result<Self, Box<dyn Error>> {
-        let timestamp = BinanceAPI::generate_timestamp()?;
+    pub async fn from_binance_api(api: &BinanceClient) -> Result<Self, Box<dyn Error>> {
+        let timestamp = BinanceClient::generate_timestamp()?;
         let recv_window = 5000;
         let params = format!("recvWindow={}&timestamp={}", recv_window, timestamp);
         let signature = api.sign(&params);
@@ -113,7 +113,7 @@ mod tests {
     #[tokio::test]
     async fn test_fetch_account_info() {
         init_logger(Trace);
-        let api = BinanceAPI::new(TEST_NET_API_KEY.to_string(), TEST_NET_API_SECRET.to_string(), false); // false indicates using testnet
+        let api = BinanceClient::new(TEST_NET_API_KEY.to_string(), TEST_NET_API_SECRET.to_string(), false); // false indicates using testnet
 
         // Attempt to fetch the account information
         match AccountInfo::from_binance_api(&api).await {

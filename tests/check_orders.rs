@@ -5,7 +5,7 @@ mod integration_tests {
     use log::LevelFilter::Trace;
     use log::trace;
     use binance_api::binance_api::auth::{TEST_NET_API_KEY, TEST_NET_API_SECRET};
-    use binance_api::binance_api::binance_api::BinanceAPI;
+    use binance_api::binance_api::binance_client::BinanceClient;
     use binance_api::binance_api::logger_conf::init_logger;
     use binance_api::binance_api::order_types::limit_order::LimitOrder;
     use binance_api::binance_api::order_types::market_order::MarketOrder;
@@ -21,7 +21,7 @@ mod integration_tests {
         // Load API keys from environment variables
 
         // Initialize BinanceAPI with testnet configuration
-        let binance_api = BinanceAPI::new(TEST_NET_API_KEY.to_string(), TEST_NET_API_SECRET.to_string(), false);
+        let binance_api = BinanceClient::new(TEST_NET_API_KEY.to_string(), TEST_NET_API_SECRET.to_string(), false);
 
         // Initialize SpotOrders
         let spot_orders = SpotOrders::new(&binance_api);
@@ -33,7 +33,7 @@ mod integration_tests {
             Side::Buy,
             0.01,
             2500.0,
-            BinanceAPI::generate_timestamp().unwrap(),
+            BinanceClient::generate_timestamp().unwrap(),
         );
 
 
@@ -52,13 +52,13 @@ mod integration_tests {
         init_logger(Trace);
 
         // Initialize BinanceAPI with testnet configuration
-        let binance_api = BinanceAPI::new(TEST_NET_API_KEY.to_string(), TEST_NET_API_SECRET.to_string(), false);
+        let binance_api = BinanceClient::new(TEST_NET_API_KEY.to_string(), TEST_NET_API_SECRET.to_string(), false);
 
         // Initialize SpotOrders
         let spot_orders = SpotOrders::new(&binance_api);
 
         // Generate a timestamp
-        let timestamp = BinanceAPI::generate_timestamp().unwrap();
+        let timestamp = BinanceClient::generate_timestamp().unwrap();
 
         // Define a sell limit order
         // Ensure you have sufficient balance of the asset you're trying to sell on the testnet
@@ -85,7 +85,7 @@ mod integration_tests {
         init_logger(Trace);
 
         // Initialize BinanceAPI with testnet configuration
-        let binance_api = BinanceAPI::new(TEST_NET_API_KEY.to_string(), TEST_NET_API_SECRET.to_string(), false);
+        let binance_api = BinanceClient::new(TEST_NET_API_KEY.to_string(), TEST_NET_API_SECRET.to_string(), false);
 
         // Initialize SpotOrders
         let spot_orders = SpotOrders::new(&binance_api);
@@ -111,7 +111,7 @@ mod integration_tests {
         init_logger(Trace);
 
         // Initialize BinanceAPI with testnet configuration
-        let binance_api = BinanceAPI::new(TEST_NET_API_KEY.to_string(), TEST_NET_API_SECRET.to_string(), false);
+        let binance_api = BinanceClient::new(TEST_NET_API_KEY.to_string(), TEST_NET_API_SECRET.to_string(), false);
 
         // Initialize SpotOrders
         let spot_orders = SpotOrders::new(&binance_api);
@@ -136,7 +136,7 @@ mod integration_tests {
     async fn test_create_sell_market_order_using_base_asset() {
         init_logger(Trace);
 
-        let binance_api = BinanceAPI::new(TEST_NET_API_KEY.to_string(), TEST_NET_API_SECRET.to_string(), false);
+        let binance_api = BinanceClient::new(TEST_NET_API_KEY.to_string(), TEST_NET_API_SECRET.to_string(), false);
         let spot_orders = SpotOrders::new(&binance_api);
 
         let sell_market_order = MarketOrder::new_with_base_asset(
@@ -154,7 +154,7 @@ mod integration_tests {
     async fn test_create_sell_market_order_using_quote_asset() {
         init_logger(Trace);
 
-        let binance_api = BinanceAPI::new(TEST_NET_API_KEY.to_string(), TEST_NET_API_SECRET.to_string(), false);
+        let binance_api = BinanceClient::new(TEST_NET_API_KEY.to_string(), TEST_NET_API_SECRET.to_string(), false);
         let spot_orders = SpotOrders::new(&binance_api);
 
         // This is a conceptual example; actual implementation requires calculating the ETH amount equivalent to 100 USDT beforehand
@@ -174,7 +174,7 @@ mod integration_tests {
     async fn test_create_buy_stop_limit_order() {
         init_logger(Trace);
 
-        let binance_api = BinanceAPI::new(TEST_NET_API_KEY.to_string(), TEST_NET_API_SECRET.to_string(), false);
+        let binance_api = BinanceClient::new(TEST_NET_API_KEY.to_string(), TEST_NET_API_SECRET.to_string(), false);
         let spot_orders = SpotOrders::new(&binance_api);
 
         // Ensure these values are set correctly according to current market conditions
@@ -194,7 +194,7 @@ mod integration_tests {
     async fn test_create_sell_stop_limit_order() {
         init_logger(Trace);
 
-        let binance_api = BinanceAPI::new(TEST_NET_API_KEY.to_string(), TEST_NET_API_SECRET.to_string(), false);
+        let binance_api = BinanceClient::new(TEST_NET_API_KEY.to_string(), TEST_NET_API_SECRET.to_string(), false);
         let spot_orders = SpotOrders::new(&binance_api);
 
         // Ensure these values are set correctly according to current market conditions

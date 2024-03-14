@@ -1,23 +1,39 @@
 use reqwest::Client;
 use serde::{Deserialize, Serialize};
 use std::io::{Error as IOError, ErrorKind};
+use std::str::FromStr;
 use std::time::{SystemTime, UNIX_EPOCH};
+use async_tungstenite::tungstenite::http::Uri;
+use async_tungstenite::tungstenite::WebSocket;
 use hmac::{Hmac, KeyInit, Mac};
-use log::trace;
+use log::{error, info, trace};
 use sha2::Sha256;
+use futures::StreamExt;
+use futures::FutureExt;
+use futures_util::SinkExt;
+use tokio::net::TcpStream;
+use tokio::sync::TryAcquireError::Closed;
+use tokio_websockets::{ClientBuilder, Error as WsError, Error, MaybeTlsStream, Message, WebSocketStream};
+use tokio_websockets::upgrade::Response;
+
+
 use crate::binance_api::account::order::Order;
 use crate::binance_api::account::deserialization::deserialize_string_to_f64;
 use crate::binance_api::account::trades::Trade;
+use crate::binance_api::streams::binance_stream::BinanceStreamTypes;
+use crate::binance_api::streams::kline_data::klineMessage;
 
 const BINANCE_API_URL: &str = "https://api.binance.com/api";
 const BINANCE_API_TEST_URL: &str = "https://testnet.binance.vision/api";
+
 const BINANCE_WS_URL: &str = "wss://stream.binance.com:9443/ws";
 const BINANCE_WS_TEST_URL: &str = "wss://testnet.binance.vision/ws";
+
 const BINANCE_STREAM_URL: &str = "wss://stream.binance.com:9443/stream";
 const BINANCE_STREAM_TEST_URL: &str = "wss://testnet.binance.vision/stream";
 
 #[derive(Debug)]
-pub struct BinanceAPI {
+pub struct BinanceClient {
     api_key: String,
     api_secret: String,
     is_live: bool,
@@ -27,7 +43,7 @@ pub struct BinanceAPI {
     pub stream_url: String,
 }
 
-impl BinanceAPI {
+impl BinanceClient {
     pub fn new(api_key: String, api_secret: String, is_live: bool) -> Self {
         let (api_url, websocket_url, stream_url) = if is_live {
             (BINANCE_API_URL.to_string(), BINANCE_WS_URL.to_string(), BINANCE_STREAM_URL.to_string())
@@ -35,7 +51,7 @@ impl BinanceAPI {
             (BINANCE_API_TEST_URL.to_string(), BINANCE_WS_TEST_URL.to_string(), BINANCE_STREAM_TEST_URL.to_string())
         };
 
-        BinanceAPI {
+        BinanceClient {
             api_key,
             api_secret,
             is_live,
@@ -161,6 +177,98 @@ impl BinanceAPI {
             _ => Err(IOError::new(ErrorKind::Other, "Failed to fetch all trades"))
         }
     }
+
+    pub async fn get_listen_key(&self) -> Result<String, IOError> {
+        let url = format!("{}/v3/userDataStream", self.api_url);
+        let res = self.client.post(&url)
+            .header("X-MBX-APIKEY", &self.api_key)
+            .send()
+            .await
+            .map_err(|err| IOError::new(ErrorKind::Other, format!("Failed to get listen key: {}", err)))?;
+
+        if res.status().is_success() {
+            let data: serde_json::Value = res.json().await.map_err(|err| IOError::new(ErrorKind::Other, format!("Failed to parse listen key response: {}", err)))?;
+            Ok(data["listenKey"].as_str().unwrap_or_default().to_string())
+        } else {
+            Err(IOError::new(ErrorKind::Other, "Failed to get listen key with non-success status"))
+        }
+    }
+
+    pub async fn create_websocket_stream_with_listen_key(&self) -> Result<(), IOError> {
+        match self.get_listen_key().await {
+            Ok(listen_key) => {
+                let ws_url = format!("{}/{}", self.websocket_url, listen_key);
+                println!("Connecting to WebSocket at: {}", ws_url);
+                // Connect to WebSocket using listen_key in ws_url...
+                // This is a placeholder for your actual WebSocket connection logic.
+                Ok(())
+            }
+            Err(e) => Err(e),
+        }
+    }
+
+
+    // pub async fn create_websocket_stream(&self, streams: Vec<BinanceStreamTypes>) -> Result<(), IOError> {
+    //     let combined_streams: Vec<String> = streams.into_iter().map(|s| s.to_stream_path()).collect();
+    //     let stream_paths = combined_streams.join("/");
+    //     let ws_url = format!("{}?streams={}", self.stream_url, stream_paths);
+    //
+    //     trace!("ws url: {:?}", ws_url);
+    //
+    //     // Convert ws_url string to Uri
+    //     let uri = match ws_url.parse::<Uri>() {
+    //         Ok(uri) => uri,
+    //         Err(e) => return Err(IOError::new(ErrorKind::Other, format!("Invalid WebSocket URL: {}", e))),
+    //     };
+    //
+    //     // Connect to the WebSocket server
+    //     let (mut client, _) = ClientBuilder::from_uri(uri)
+    //         .connect()
+    //         .await
+    //         .map_err(|e| IOError::new(ErrorKind::Other, format!("Failed to connect: {}", e)))?;
+    //
+    //     info!("WebSocket connected: {:?}" ,client);
+    //
+    //     // Example sending a message, replace or remove as needed
+    //     // client.send(Message::text("Your command here")).await
+    //     //     .map_err(|e| IOError::new(ErrorKind::Other, format!("Send Error: {}", e)))?;
+    //
+    //     while let Some(message) = client.next().await {
+    //         match message {
+    //             Ok(msg) => {
+    //                 if msg.is_ping() {
+    //                     trace!("Is ping: {:?}", msg);
+    //                     let pong = Message::ping(msg.into_payload());
+    //                     // let response_message = Message::pong(msg.as_payload());
+    //                     if let Err(e) = client.send(pong){
+    //                         error!("Responding to binance's ping with pong failed: {:?}", e);
+    //                     }
+    //
+    //                 } else if msg.is_pong() {
+    //                     trace!("Is pong: {:?}", msg);
+    //                 } else if msg.is_binary() {
+    //                     trace!("Is binary: {:?}", msg.as_payload());
+    //                 } else if msg.is_text() {
+    //                     match serde_json::from_str::<WebSocketMessage>(msg.as_text().unwrap()) {
+    //                         Ok(parsed_message) => {
+    //                             // Now you have your deserialized message
+    //                             // You can handle it according to your logic
+    //                             println!("Parsed kline data: {:?}", parsed_message);
+    //                         },
+    //                         Err(e) => {
+    //                             error!("Failed to parse JSON: {}", e);
+    //                         }
+    //                     }
+    //                 } else if msg.is_close() {
+    //                     trace!("Is close: {:?}", msg.as_close());
+    //                 } else { panic!("Unexpected message: {:?}", msg) }
+    //             }
+    //             Err(e) => error!("Error receiving message: {:?}", e),
+    //         }
+    //     }
+    //
+    //     Ok(())
+    // }
 }
 
 
@@ -176,16 +284,16 @@ mod tests {
 
     #[tokio::test]
     async fn test_url_initialization() {
-        let api_live = BinanceAPI::new("".to_string(), "".to_string(), true);
+        let api_live = BinanceClient::new("".to_string(), "".to_string(), true);
         assert_eq!(api_live.api_url, BINANCE_API_URL);
 
-        let api_test = BinanceAPI::new("".to_string(), "".to_string(), false);
+        let api_test = BinanceClient::new("".to_string(), "".to_string(), false);
         assert_eq!(api_test.api_url, BINANCE_API_TEST_URL);
     }
 
     #[tokio::test]
     async fn test_set_live_mode() {
-        let mut api = BinanceAPI::new("".to_string(), "".to_string(), false);
+        let mut api = BinanceClient::new("".to_string(), "".to_string(), false);
         assert_eq!(api.api_url, BINANCE_API_TEST_URL);
 
         api.set_live_mode(true);
@@ -198,7 +306,7 @@ mod tests {
     #[tokio::test]
     async fn check_orders() {
         init_logger(Trace);
-        let mut api = BinanceAPI::new(
+        let mut api = BinanceClient::new(
             TEST_NET_API_KEY.to_string(), TEST_NET_API_SECRET.to_string(), false);
         let orders = api.fetch_all_orders("ETHUSDT").await;
         match orders {
@@ -214,7 +322,7 @@ mod tests {
         init_logger(LevelFilter::Trace); // Initialize logger if needed
 
         // Initialize the BinanceAPI instance with testnet credentials
-        let api = BinanceAPI::new(TEST_NET_API_KEY.to_string(), TEST_NET_API_SECRET.to_string(), false);
+        let api = BinanceClient::new(TEST_NET_API_KEY.to_string(), TEST_NET_API_SECRET.to_string(), false);
 
         // Fetch all trades for a specific symbol
         let result = api.fetch_all_trades("BTCUSDT").await;
@@ -228,6 +336,48 @@ mod tests {
             Err(e) => panic!("Failed to fetch trades: {}", e),
         }
     }
+
+    #[tokio::test]
+    async fn test_get_listen_key() {
+        let api = BinanceClient::new(TEST_NET_API_KEY.to_string(), TEST_NET_API_SECRET.to_string(), false);
+        match api.get_listen_key().await {
+            Ok(listen_key) => {
+                assert!(!listen_key.is_empty(), "Listen key should not be empty");
+                println!("Retrieved listen key: {}", listen_key);
+            }
+            Err(e) => panic!("Failed to retrieve listen key: {}", e),
+        }
+    }
+    //
+    // #[tokio::test]
+    // async fn websocket_stream_test() {
+    //     // Assuming `init_logger` and `TEST_NET_API_KEY`, `TEST_NET_API_SECRET` are available
+    //     init_logger(Trace);
+    //
+    //     let symbol = "BTCUSDT".to_string();
+    //     let api = BinanceClient::new(TEST_NET_API_KEY.to_string(), TEST_NET_API_SECRET.to_string(), false);
+    //
+    //     // Define the streams you want to subscribe to
+    //     let streams = vec![
+    //         BinanceStreamTypes::Kline(symbol.clone().to_lowercase(), "1m".to_string()),
+    //         BinanceStreamTypes::Kline("ethusdt".to_string(), "1m".to_string()),
+    //         // BinanceStream::Depth(symbol.clone()),
+    //         // BinanceStream::Trade(symbol.clone()),
+    //     ];
+    //
+    //     // Call the method to create and listen to the websocket stream
+    //     let result = api.create_websocket_stream(streams).await;
+    //
+    //     trace!("result: {:?}",result);
+    //
+    //     // match result {
+    //     //     Ok(data) => {
+    //     //         info!("Successfully connected and processed messages from WebSocket streams.");
+    //     //         info!("Data {:?}", data);
+    //     //     },
+    //     //     Err(e) => panic!("Failed to connect or process messages: {}", e),
+    //     // }
+    // }
 }
 
 

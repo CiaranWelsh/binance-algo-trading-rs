@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 use crate::binance_api::order_types::side::Side;
-use crate::binance_api::binance_api::BinanceAPI;
+use crate::binance_api::binance_client::BinanceClient;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct MarketOrder {
@@ -24,7 +24,7 @@ impl MarketOrder {
             r#type: "MARKET".to_string(),
             quantity: Some(quantity),
             quote_order_qty: None,
-            timestamp: BinanceAPI::generate_timestamp().unwrap(),
+            timestamp: BinanceClient::generate_timestamp().unwrap(),
         }
     }
 
@@ -36,7 +36,7 @@ impl MarketOrder {
             r#type: "MARKET".to_string(),
             quantity: None,
             quote_order_qty: Some(quote_order_qty),
-            timestamp: BinanceAPI::generate_timestamp().unwrap(),
+            timestamp: BinanceClient::generate_timestamp().unwrap(),
         }
     }
 }

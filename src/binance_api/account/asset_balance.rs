@@ -1,7 +1,7 @@
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use std::error::Error;
-use crate::binance_api::binance_api::BinanceAPI;
+use crate::binance_api::binance_client::BinanceClient;
 use crate::binance_api::account::deserialization::deserialize_string_to_f64;
 
 
@@ -32,8 +32,8 @@ impl AssetBalance {
     }
 
     // Use BinanceAPI to retrieve the balance of a specified asset
-    pub async fn retrieve_balance(api: &BinanceAPI, asset: &str) -> Result<Self, Box<dyn Error>> {
-        let timestamp = BinanceAPI::generate_timestamp()?;
+    pub async fn retrieve_balance(api: &BinanceClient, asset: &str) -> Result<Self, Box<dyn Error>> {
+        let timestamp = BinanceClient::generate_timestamp()?;
         let recv_window = 5000;
         let params = format!("recvWindow={}&timestamp={}", recv_window, timestamp);
         let signature = api.sign(&params);
@@ -62,8 +62,8 @@ impl AssetBalance {
     }
 
     // Adjusted to retrieve balances for all assets
-    pub async fn retrieve_all_balances(api: &BinanceAPI) -> Result<Vec<Self>, Box<dyn Error>> {
-        let timestamp = BinanceAPI::generate_timestamp()?;
+    pub async fn retrieve_all_balances(api: &BinanceClient) -> Result<Vec<Self>, Box<dyn Error>> {
+        let timestamp = BinanceClient::generate_timestamp()?;
         let recv_window = 5000;
         let params = format!("recvWindow={}&timestamp={}", recv_window, timestamp);
         let signature = api.sign(&params);
@@ -112,7 +112,7 @@ mod tests {
     #[tokio::test]
     async fn test_retrieve_balance() {
 
-        let api = BinanceAPI::new(TEST_NET_API_KEY.to_string(), TEST_NET_API_SECRET.to_string(), false);
+        let api = BinanceClient::new(TEST_NET_API_KEY.to_string(), TEST_NET_API_SECRET.to_string(), false);
 
         // Attempt to retrieve the balance for a testnet asset. This asset should exist on your testnet account.
         // If "BTC" doesn't exist or has never been transacted, try with another asset that exists on your testnet account.
@@ -129,7 +129,7 @@ mod tests {
 
     #[tokio::test]
     async fn check_retrieve_all_balances(){
-        let api = BinanceAPI::new(TEST_NET_API_KEY.to_string(), TEST_NET_API_SECRET.to_string(), false);
+        let api = BinanceClient::new(TEST_NET_API_KEY.to_string(), TEST_NET_API_SECRET.to_string(), false);
 
         // Attempt to retrieve the balance for a testnet asset. This asset should exist on your testnet account.
         // If "BTC" doesn't exist or has never been transacted, try with another asset that exists on your testnet account.
