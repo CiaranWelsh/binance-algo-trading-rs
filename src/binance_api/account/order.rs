@@ -4,13 +4,15 @@ use crate::binance_api::order_types::order_type::OrderType;
 use crate::binance_api::order_types::side::Side;
 use crate::binance_api::order_types::time_in_force::TimeInForce;
 use crate::binance_api::account::deserialization::*;
+
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Order {
     symbol: String,
     #[serde(rename = "orderId")]
     order_id: i64,
     #[serde(rename = "orderListId")]
-    order_list_id: i64, // Unless OCO, the value will be -1
+    order_list_id: i64,
+    // Unless OCO, the value will be -1
     #[serde(rename = "clientOrderId")]
     client_order_id: String,
     #[serde(rename = "price", deserialize_with = "deserialize_string_to_f64")]

@@ -7,6 +7,7 @@ use log::trace;
 use sha2::Sha256;
 use crate::binance_api::account::order::Order;
 use crate::binance_api::account::deserialization::deserialize_string_to_f64;
+use crate::binance_api::account::trades::Trade;
 
 const BINANCE_API_URL: &str = "https://api.binance.com/api";
 const BINANCE_API_TEST_URL: &str = "https://testnet.binance.vision/api";
@@ -103,7 +104,7 @@ impl BinanceAPI {
     }
 
     // Fetch all orders for a specific symbol
-    pub async fn fetch_all_orders(&self, symbol: &str) -> Result<Vec<Order>, IOError>{
+    pub async fn fetch_all_orders(&self, symbol: &str) -> Result<Vec<Order>, IOError> {
         let endpoint = "/v3/allOrders";
         let timestamp = Self::generate_timestamp().unwrap();
         let params = format!("symbol={}&timestamp={}", symbol, timestamp);
@@ -133,12 +134,40 @@ impl BinanceAPI {
             _ => Err(IOError::new(ErrorKind::Other, "Failed to fetch all orders"))
         }
     }
+
+    // Fetch all trades for a specific symbol
+    pub async fn fetch_all_trades(&self, symbol: &str) -> Result<Vec<Trade>, IOError> {
+        let endpoint = "/v3/myTrades";
+        let timestamp = Self::generate_timestamp()?;
+        let params = format!("symbol={}&timestamp={}", symbol, timestamp);
+        let signature = self.sign(&params);
+        let url = format!("{}{}?{}&signature={}", self.api_url, endpoint, params, signature);
+
+        let response = self.client
+            .get(&url)
+            .header("X-MBX-APIKEY", self.api_key.clone())
+            .send()
+            .await
+            .map_err(|err| IOError::new(ErrorKind::Other, format!("HTTP request failed: {}", err)))?;
+
+        match response.status() {
+            reqwest::StatusCode::OK => {
+                let trades = response
+                    .json::<Vec<Trade>>()
+                    .await
+                    .map_err(|err| IOError::new(ErrorKind::Other, format!("Failed to deserialize trades: {}", err)))?;
+                Ok(trades)
+            }
+            _ => Err(IOError::new(ErrorKind::Other, "Failed to fetch all trades"))
+        }
+    }
 }
 
 
 #[cfg(test)]
 mod tests {
     use std::io::Error;
+    use log::LevelFilter;
     use log::LevelFilter::Trace;
     use super::*;
     use tokio;
@@ -167,7 +196,7 @@ mod tests {
     }
 
     #[tokio::test]
-    async fn check_orders(){
+    async fn check_orders() {
         init_logger(Trace);
         let mut api = BinanceAPI::new(
             TEST_NET_API_KEY.to_string(), TEST_NET_API_SECRET.to_string(), false);
@@ -176,8 +205,31 @@ mod tests {
             Ok(order_data) => {
                 trace!("{:?}", order_data);
             }
-            Err(e) => {panic!("error: {}", e.to_string())}
+            Err(e) => { panic!("error: {}", e.to_string()) }
+        }
+    }
+
+    #[tokio::test]
+    async fn test_fetch_all_trades() {
+        init_logger(LevelFilter::Trace); // Initialize logger if needed
+
+        // Initialize the BinanceAPI instance with testnet credentials
+        let api = BinanceAPI::new(TEST_NET_API_KEY.to_string(), TEST_NET_API_SECRET.to_string(), false);
+
+        // Fetch all trades for a specific symbol
+        let result = api.fetch_all_trades("BTCUSDT").await;
+
+        match result {
+            Ok(trades) => {
+                trace!("No trades found, make sure the test account has trades for the symbol");
+                trace!("Fetched trades: {:?}", trades);
+                // Perform further assertions as necessary, e.g., checking if a specific trade exists
+            }
+            Err(e) => panic!("Failed to fetch trades: {}", e),
         }
     }
 }
+
+
+
 
