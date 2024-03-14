@@ -56,7 +56,6 @@ impl BinanceClient {
             (BINANCE_API_TEST_URL.to_string(), BINANCE_WS_TEST_URL.to_string(), BINANCE_STREAM_TEST_URL.to_string())
         };
 
-
         BinanceClient {
             api_key,
             api_secret,
@@ -83,7 +82,7 @@ impl BinanceClient {
         // let pwd = pwd.unwrap_or("default_password");
         // let dbname = dbname.unwrap_or("BinanceData");
 
-        match DatabaseClient::connect_and_setup(dbname, user, pwd).await {
+        match DatabaseClient::connect_or_create_if_not_exist(dbname, user, pwd).await {
             Ok(db_client) => {
                 self.db_client = Some(db_client);
                 Ok(())
@@ -231,80 +230,22 @@ impl BinanceClient {
             Err(e) => Err(e),
         }
     }
-
-
-    // pub async fn create_websocket_stream(&self, streams: Vec<BinanceStreamTypes>) -> Result<(), IOError> {
-    //     let combined_streams: Vec<String> = streams.into_iter().map(|s| s.to_stream_path()).collect();
-    //     let stream_paths = combined_streams.join("/");
-    //     let ws_url = format!("{}?streams={}", self.stream_url, stream_paths);
-    //
-    //     trace!("ws url: {:?}", ws_url);
-    //
-    //     // Convert ws_url string to Uri
-    //     let uri = match ws_url.parse::<Uri>() {
-    //         Ok(uri) => uri,
-    //         Err(e) => return Err(IOError::new(ErrorKind::Other, format!("Invalid WebSocket URL: {}", e))),
-    //     };
-    //
-    //     // Connect to the WebSocket server
-    //     let (mut client, _) = ClientBuilder::from_uri(uri)
-    //         .connect()
-    //         .await
-    //         .map_err(|e| IOError::new(ErrorKind::Other, format!("Failed to connect: {}", e)))?;
-    //
-    //     info!("WebSocket connected: {:?}" ,client);
-    //
-    //     // Example sending a message, replace or remove as needed
-    //     // client.send(Message::text("Your command here")).await
-    //     //     .map_err(|e| IOError::new(ErrorKind::Other, format!("Send Error: {}", e)))?;
-    //
-    //     while let Some(message) = client.next().await {
-    //         match message {
-    //             Ok(msg) => {
-    //                 if msg.is_ping() {
-    //                     trace!("Is ping: {:?}", msg);
-    //                     let pong = Message::ping(msg.into_payload());
-    //                     // let response_message = Message::pong(msg.as_payload());
-    //                     if let Err(e) = client.send(pong){
-    //                         error!("Responding to binance's ping with pong failed: {:?}", e);
-    //                     }
-    //
-    //                 } else if msg.is_pong() {
-    //                     trace!("Is pong: {:?}", msg);
-    //                 } else if msg.is_binary() {
-    //                     trace!("Is binary: {:?}", msg.as_payload());
-    //                 } else if msg.is_text() {
-    //                     match serde_json::from_str::<WebSocketMessage>(msg.as_text().unwrap()) {
-    //                         Ok(parsed_message) => {
-    //                             // Now you have your deserialized message
-    //                             // You can handle it according to your logic
-    //                             println!("Parsed kline data: {:?}", parsed_message);
-    //                         },
-    //                         Err(e) => {
-    //                             error!("Failed to parse JSON: {}", e);
-    //                         }
-    //                     }
-    //                 } else if msg.is_close() {
-    //                     trace!("Is close: {:?}", msg.as_close());
-    //                 } else { panic!("Unexpected message: {:?}", msg) }
-    //             }
-    //             Err(e) => error!("Error receiving message: {:?}", e),
-    //         }
-    //     }
-    //
-    //     Ok(())
-    // }
 }
 
 
 #[cfg(test)]
 mod tests {
+    use std::env;
     use std::io::Error;
+    use dotenv::{dotenv, vars};
+    use dotenv::Error::EnvVar;
     use log::LevelFilter;
     use log::LevelFilter::Trace;
     use super::*;
     use tokio;
+    use url::quirks::username;
     use crate::binance_api::auth::{TEST_NET_API_KEY, TEST_NET_API_SECRET};
+    use crate::binance_api::load_env::{EnvVars};
     use crate::binance_api::logger_conf::init_logger;
 
     #[tokio::test]
@@ -376,6 +317,44 @@ mod tests {
             }
             Err(e) => panic!("Failed to retrieve listen key: {}", e),
         }
+    }
+
+
+    #[tokio::test]
+    async fn test_database_lifecycle() {
+        init_logger(Trace);
+        let vars = EnvVars::new();
+
+        trace!("vars: {:?}", vars);
+
+        async fn drop_if_database_exists(vars: &EnvVars) {
+            DatabaseClient::drop_database_if_exists(vars.name.as_str(), vars.user.as_str(), vars.pwd.as_str())
+                .await.expect("Failed to delete the database")
+        }
+        async fn db_exist(vars: &EnvVars) -> bool {
+            DatabaseClient::database_exists(vars.name.as_str(), vars.user.as_str(), vars.pwd.as_str()).await.unwrap()
+        }
+
+        // Ensure the database does not exist
+        // assert!(!db_exist(&vars).await, "Database should not exist at the start of the test");
+        //
+        // // Code to create the database
+        // // Assuming you have a method or process to do this
+        // // For example, using `init_db_client` if it creates the database when it doesn't exist
+        // let mut client = BinanceClient::new(vars.api_key.to_string(), vars.api_secret.to_string(), false).await;
+        // client.init_db_client(
+        //     vars.name.as_str(),
+        //     vars.user.as_str(),
+        //     vars.pwd.as_str(),
+        // ).await.expect("Failed to initialize or create the database");
+        //
+        // // Verify the database now exists
+        // assert!(db_exist(&vars).await, "Database should exist after creation");
+        //
+        // // Delete the database
+        // drop_if_database_exists(&vars).await;
+        // // Ensure the database no longer exists
+        // assert!(db_exist(&vars).await, "Database should be deleted by the end of the test");
     }
 }
 

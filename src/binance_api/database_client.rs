@@ -1,8 +1,11 @@
+use std::fmt::format;
 use std::sync::{Arc};
 use rust_decimal::Decimal;
 use tokio::sync::Mutex;
 use tokio::task::JoinHandle;
 use tokio_postgres::{NoTls, Error, Client};
+use std::io::{Error as IOError, ErrorKind};
+use log::trace;
 use crate::binance_api::streams::kline_data::{Kline, KlineMessage};
 
 #[derive(Debug)]
@@ -13,8 +16,7 @@ pub struct DatabaseClient {
 
 
 impl DatabaseClient {
-
-    pub async fn new(user: &str, pwd: &str, dbname: &str) -> Result<Self, Error> {
+    pub async fn new(dbname: &str, user: &str, pwd: &str) -> Result<Self, Error> {
         // Try connecting directly first
         let direct_conn_str = format!("host=localhost user={} password={} dbname={}", user, pwd, dbname);
         if let Ok((client, connection)) = tokio_postgres::connect(&direct_conn_str, NoTls).await {
@@ -31,12 +33,11 @@ impl DatabaseClient {
         }
 
         // If direct connection fails, proceed with connect_and_setup to ensure the database is created
-        Self::connect_and_setup(dbname, user, pwd).await
+        Self::connect_or_create_if_not_exist(dbname, user, pwd).await
     }
 
-
     // Connects to the default database to check for the existence of the target database
-    pub async fn connect_and_setup(db_name: &str, user: &str, password: &str) -> Result<Self, Error> {
+    pub async fn connect_or_create_if_not_exist(dbname: &str, user: &str, password: &str) -> Result<Self, Error> {
         let admin_conn_str = format!("host=localhost user={} password={} dbname=postgres", user, password);
         let (admin_client, connection) = tokio_postgres::connect(&admin_conn_str, NoTls).await?;
 
@@ -48,14 +49,14 @@ impl DatabaseClient {
         });
 
         // Check if the target database exists
-        let row = admin_client.query_one("SELECT 1 FROM pg_database WHERE datname = $1", &[&db_name]).await;
+        let row = admin_client.query_one("SELECT 1 FROM pg_database WHERE datname = $1", &[&dbname]).await;
         if row.is_err() {
             // If the database does not exist, create it
-            admin_client.execute(&format!("CREATE DATABASE {}", db_name), &[]).await?;
+            admin_client.execute(&format!("CREATE DATABASE {}", dbname), &[]).await?;
         }
 
         // Now connect to the newly created or existing database
-        let db_conn_str = format!("host=localhost user={} password={} dbname={}", user, password, db_name);
+        let db_conn_str = format!("host=localhost user={} password={} dbname={}", user, password, dbname);
         Self::connect(&db_conn_str).await
     }
 
@@ -64,6 +65,29 @@ impl DatabaseClient {
         let stmt = "SELECT EXISTS(SELECT 1 FROM pg_database WHERE datname = $1)";
         let row = self.client.query_one(stmt, &[&dbname]).await?;
         Ok(row.get(0))
+    }
+
+    // Method to check if the specified database exists
+    pub async fn database_exists(dbname: &str, user: &str, password: &str) -> Result<bool, IOError> {
+        trace!("dbname : {:?}", dbname);
+        trace!("user : {:?}", user);
+        trace!("pwd : {:?}", password);
+        let (client, connection) = match tokio_postgres::connect(format!("host=localhost user={} password={} dbname=postgres", user, password).as_str(), NoTls).await {
+            Ok(conn) => conn,
+            Err(e) => return Err(IOError::new(ErrorKind::ConnectionRefused, e.to_string())),
+        };
+
+        tokio::spawn(async move {
+            if let Err(e) = connection.await {
+                eprintln!("connection error: {}", e);
+            }
+        });
+
+        let stmt = "SELECT EXISTS(SELECT 1 FROM pg_database WHERE datname = $1)";
+        match client.query_one(stmt, &[&dbname]).await {
+            Ok(row) => Ok(row.get(0)),
+            Err(e) => Err(IOError::new(ErrorKind::Other, e.to_string())),
+        }
     }
 
     pub async fn connect(connection_string: &str) -> Result<Self, Error> {
@@ -92,7 +116,7 @@ impl DatabaseClient {
     }
 
     // Method to drop a database
-    pub async fn drop_database_static(user: &str, password: &str, db_name: &str) -> Result<(), Error> {
+    pub async fn drop_database_if_exists(db_name: &str, user: &str, password: &str) -> Result<(), Error> {
         // Form the connection string to the default or administration database
         let conn_str = format!("host=localhost user={} password={} dbname=postgres", user, password);
 
@@ -142,15 +166,6 @@ impl DatabaseClient {
     pub async fn insert_kline_data(&self, kline_message: &KlineMessage) -> Result<(), Error> {
         let kline = &kline_message.data.k;
 
-    //     let stmt = "
-    // INSERT INTO kline_data (
-    //     symbol, interval, start_time, end_time, open_price, close_price,
-    //     high_price, low_price, base_asset_volume, number_of_trades,
-    //     is_kline_closed, quote_asset_volume, taker_buy_base_asset_volume,
-    //     taker_buy_quote_asset_volume
-    // ) VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12, $13, $14)
-    // ";
-
         let stmt = "
     INSERT INTO kline_data (
         symbol, interval, start_time, end_time, open_price, close_price,
@@ -198,62 +213,49 @@ impl DatabaseClient {
 #[cfg(test)]
 mod tests {
     use chrono::Month::December;
+    use log::LevelFilter::Trace;
+    use log::trace;
     use rust_decimal::Decimal;
     use serde::{Deserialize, Serialize};
     use super::DatabaseClient;
     use tokio_postgres::NoTls;
+    use crate::binance_api::load_env::EnvVars;
+    use crate::binance_api::logger_conf::init_logger;
     use crate::binance_api::streams::kline_data::{Kline, KlineData, KlineMessage};
 
     #[tokio::test]
-    async fn test_database_creation_and_deletion() {
-        let user = "test";
-        let password = "1";
-        let db_name = "test_database_creation_and_deletion";
+    async fn test_database_creation() {
+        init_logger(Trace);
+        // Setup unique test database parameters
+        let vars = EnvVars::new();
+        let db_name = vars.name.as_str();
+        let user = vars.user.as_str();
+        let pwd = vars.pwd.as_str();
 
+        trace!("vars: {:?}", vars);
 
-        // Connection string for default administrative database
-        let admin_conn_str = format!("host=localhost user={} password={} dbname=postgres", user, password);
+        // Attempt to create the database
+        let db_client = DatabaseClient::connect_or_create_if_not_exist(&db_name, &user, &pwd).await.expect("Failed to setup database");
 
-        let (admin_client, connection) = tokio_postgres::connect(&admin_conn_str, NoTls).await.expect("Failed to connect to postgres database");
+        // Verify the database exists
+        let exists = DatabaseClient::database_exists(&db_name, &user, &pwd).await.expect("Failed to check if database exists");
+        assert!(exists, "Database was not created successfully");
 
-        tokio::spawn(async move {
-            if let Err(e) = connection.await {
-                eprintln!("connection error: {}", e);
-            }
-        });
+        db_client.close().await;
 
-        // Check if the test database exists and drop it if it does
-        let db_exists: bool = admin_client.query_one("SELECT EXISTS(SELECT 1 FROM pg_database WHERE datname=$1)", &[&db_name]).await.unwrap().get(0);
-        if db_exists {
-            admin_client.execute(&*format!("DROP DATABASE {}", db_name), &[]).await.expect("Failed to drop existing test database");
-        }
+        // Drop the database to clean up
+        DatabaseClient::drop_database_if_exists(&db_name, &user, &pwd).await.expect("Failed to drop the test database");
 
-        // Assert that the database does not exist
-        let db_exists: bool = admin_client.query_one("SELECT EXISTS(SELECT 1 FROM pg_database WHERE datname=$1)", &[&db_name]).await.unwrap().get(0);
-        assert!(!db_exists, "Database should not exist after being dropped");
-
-        // Create the test database
-        admin_client.execute(&*format!("CREATE DATABASE {}", db_name), &[]).await.expect("Failed to create test database");
-
-        // Assert that the database now exists
-        let db_exists: bool = admin_client.query_one("SELECT EXISTS(SELECT 1 FROM pg_database WHERE datname=$1)", &[&db_name]).await.unwrap().get(0);
-        assert!(db_exists, "Database should exist after being created");
-
-        // Drop the test database to clean up
-        admin_client.execute(&*format!("DROP DATABASE {}", db_name), &[]).await.expect("Failed to drop test database after tests");
-
-        // Assert that the database no longer exists
-        let db_exists: bool = admin_client.query_one("SELECT EXISTS(SELECT 1 FROM pg_database WHERE datname=$1)", &[&db_name]).await.unwrap().get(0);
-        assert!(!db_exists, "Database should not exist after final cleanup");
+        // Verify the database no longer exists
+        let exists = DatabaseClient::database_exists(&db_name, &user, &pwd).await.expect("Failed to check if database exists after dropping");
+        assert!(!exists, "Database was not dropped successfully");
     }
 
     #[tokio::test]
     async fn test_database_operations_with_kline_data() {
-        let user = "test";
-        let password = "1";
-        let db_name = "test_database_operations_with_kline_data";
+        let vars = EnvVars::new();
 
-        let database_client = DatabaseClient::connect_and_setup(db_name, user, password).await.expect("Failed to setup database");
+        let database_client = DatabaseClient::connect_or_create_if_not_exist(vars.name.as_str(), vars.user.as_str(), vars.pwd.as_str()).await.expect("Failed to setup database");
 
         // Ensure kline_data table exists
         database_client.ensure_kline_data_table_exists().await.expect("Failed to ensure kline_data table exists");
@@ -300,9 +302,7 @@ mod tests {
         // Clean up by dropping the test database
         // database_client.execute(&*format!("DROP DATABASE {}", db_name), &[]).await.expect("Failed to drop test database after tests");
 
-        DatabaseClient::drop_database_static(user, password, db_name).await.expect("Failed to drop database");
+        DatabaseClient::drop_database_if_exists(vars.name.as_str(), vars.user.as_str(), vars.pwd.as_str()).await.expect("Failed to drop database");
     }
-
-
 }
 
