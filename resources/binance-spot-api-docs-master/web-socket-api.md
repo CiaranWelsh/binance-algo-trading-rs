@@ -558,13 +558,13 @@ Security type | API key  | Signature | Description
 ## Timing security
 
 * `SIGNED` requests also require a `timestamp` parameter which should be the current millisecond timestamp.
-* An additional optional parameter, `recvWindow`, specifies for how long the request stays valid.
-  * If `recvWindow` is not sent, **it defaults to 5000 milliseconds**.
-  * Maximum `recvWindow` is 60000 milliseconds.
+* An additional optional parameter, `recv_window`, specifies for how long the request stays valid.
+  * If `recv_window` is not sent, **it defaults to 5000 milliseconds**.
+  * Maximum `recv_window` is 60000 milliseconds.
 * Request processing logic is as follows:
 
   ```javascript
-  if (timestamp < (serverTime + 1000) && (serverTime - timestamp) <= recvWindow) {
+  if (timestamp < (serverTime + 1000) && (serverTime - timestamp) <= recv_window) {
     // process request
   } else {
     // reject request
@@ -573,11 +573,11 @@ Security type | API key  | Signature | Description
 
 **Serious trading is about timing.** Networks can be unstable and unreliable,
 which can lead to requests taking varying amounts of time to reach the
-servers. With `recvWindow`, you can specify that the request must be
+servers. With `recv_window`, you can specify that the request must be
 processed within a certain number of milliseconds or be rejected by the
 server.
 
-**It is recommended to use a small `recvWindow` of 5000 or less!**
+**It is recommended to use a small `recv_window` of 5000 or less!**
 
 ## SIGNED request example (HMAC)
 
@@ -608,7 +608,7 @@ Example of request:
     "quantity":         "0.01000000",
     "price":            "52000.00",
     "newOrderRespType": "ACK",
-    "recvWindow":       100,
+    "recv_window":       100,
     "timestamp":        1645423376532,
     "apiKey":           "vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A",
     "signature":        "------ FILL ME ------"
@@ -628,7 +628,7 @@ apiKey           | vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duE
 newOrderRespType | ACK
 price            | 52000.00
 quantity         | 0.01000000
-recvWindow       | 100
+recv_window       | 100
 side             | SELL
 symbol           | BTCUSDT
 timeInForce      | GTC
@@ -640,7 +640,7 @@ Format parameters as `parameter=value` pairs separated by `&`.
 Resulting signature payload:
 
 ```
-apiKey=vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A&newOrderRespType=ACK&price=52000.00&quantity=0.01000000&recvWindow=100&side=SELL&symbol=BTCUSDT&timeInForce=GTC&timestamp=1645423376532&type=LIMIT
+apiKey=vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A&newOrderRespType=ACK&price=52000.00&quantity=0.01000000&recv_window=100&side=SELL&symbol=BTCUSDT&timeInForce=GTC&timestamp=1645423376532&type=LIMIT
 ```
 
 **Step 2. Compute the signature**
@@ -654,7 +654,7 @@ Note that `apiKey`, `secretKey`, and the payload are **case-sensitive**, while r
 You can cross-check your signature algorithm implementation with OpenSSL:
 
 ```console
-$ echo -n 'apiKey=vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A&newOrderRespType=ACK&price=52000.00&quantity=0.01000000&recvWindow=100&side=SELL&symbol=BTCUSDT&timeInForce=GTC&timestamp=1645423376532&type=LIMIT' \
+$ echo -n 'apiKey=vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A&newOrderRespType=ACK&price=52000.00&quantity=0.01000000&recv_window=100&side=SELL&symbol=BTCUSDT&timeInForce=GTC&timestamp=1645423376532&type=LIMIT' \
   | openssl dgst -hex -sha256 -hmac 'NhqPtmdSJYdKjVHjA7PZj4Mge3R5YNiP1e3UZjInClVN65XAbvqqM6A7H5fATj0j'
 
 cc15477742bd704c29492d96c7ead9414dfd8e0ec4a00f947bb5bb454ddbd08a
@@ -676,7 +676,7 @@ Finally, complete the request by adding the `signature` parameter with the signa
     "quantity":         "0.01000000",
     "price":            "52000.00",
     "newOrderRespType": "ACK",
-    "recvWindow":       100,
+    "recv_window":       100,
     "timestamp":        1645423376532,
     "apiKey":           "vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A",
     "signature":        "cc15477742bd704c29492d96c7ead9414dfd8e0ec4a00f947bb5bb454ddbd08a"
@@ -712,7 +712,7 @@ Example of request:
     "quantity":         "0.01000000",
     "price":            "52000.00",
     "newOrderRespType": "ACK",
-    "recvWindow":       100,
+    "recv_window":       100,
     "timestamp":        1645423376532,
     "apiKey":           "CAvIjXy3F44yW6Pou5k8Dy1swsYDWJZLeoK2r8G4cFDnE9nosRppc2eKc1T8TRTQ",
     "signature":        "------ FILL ME ------"
@@ -730,7 +730,7 @@ apiKey           | CAvIjXy3F44yW6Pou5k8Dy1swsYDWJZLeoK2r8G4cFDnE9nosRppc2eKc1T8T
 newOrderRespType | ACK
 price            | 52000.00
 quantity         | 0.01000000
-recvWindow       | 100
+recv_window       | 100
 side             | SELL
 symbol           | BTCUSDT
 timeInForce      | GTC
@@ -742,7 +742,7 @@ Format parameters as `parameter=value` pairs separated by `&`.
 Resulting signature payload:
 
 ```
-apiKey=CAvIjXy3F44yW6Pou5k8Dy1swsYDWJZLeoK2r8G4cFDnE9nosRppc2eKc1T8TRTQ&newOrderRespType=ACK&price=52000.00&quantity=0.01000000&recvWindow=100&side=SELL&symbol=BTCUSDT&timeInForce=GTC&timestamp=1645423376532&type=LIMIT
+apiKey=CAvIjXy3F44yW6Pou5k8Dy1swsYDWJZLeoK2r8G4cFDnE9nosRppc2eKc1T8TRTQ&newOrderRespType=ACK&price=52000.00&quantity=0.01000000&recv_window=100&side=SELL&symbol=BTCUSDT&timeInForce=GTC&timestamp=1645423376532&type=LIMIT
 ```
 
 **Step 2. Compute the signature**
@@ -756,7 +756,7 @@ Note that `apiKey`, the payload, and the resulting `signature` are **case-sensit
 You can cross-check your signature algorithm implementation with OpenSSL:
 
 ```console
-$ echo -n 'apiKey=CAvIjXy3F44yW6Pou5k8Dy1swsYDWJZLeoK2r8G4cFDnE9nosRppc2eKc1T8TRTQ&newOrderRespType=ACK&price=52000.00&quantity=0.01000000&recvWindow=100&side=SELL&symbol=BTCUSDT&timeInForce=GTC&timestamp=1645423376532&type=LIMIT' \
+$ echo -n 'apiKey=CAvIjXy3F44yW6Pou5k8Dy1swsYDWJZLeoK2r8G4cFDnE9nosRppc2eKc1T8TRTQ&newOrderRespType=ACK&price=52000.00&quantity=0.01000000&recv_window=100&side=SELL&symbol=BTCUSDT&timeInForce=GTC&timestamp=1645423376532&type=LIMIT' \
   | openssl dgst -sha256 -sign test-prv-key.pem \
   | openssl enc -base64 -A
 
@@ -779,7 +779,7 @@ Finally, complete the request by adding the `signature` parameter with the signa
     "quantity":         "0.01000000",
     "price":            "52000.00",
     "newOrderRespType": "ACK",
-    "recvWindow":       100,
+    "recv_window":       100,
     "timestamp":        1645423376532,
     "apiKey":           "CAvIjXy3F44yW6Pou5k8Dy1swsYDWJZLeoK2r8G4cFDnE9nosRppc2eKc1T8TRTQ",
     "signature":        "OJJaf8C/3VGrU4ATTR4GiUDqL2FboSE1Qw7UnnoYNfXTXHubIl1iaePGuGyfct4NPu5oVEZCH4Q6ZStfB1w4ssgu0uiB/Bg+fBrRFfVgVaLKBdYHMvT+ljUJzqVaeoThG9oXlduiw8PbS9U8DYAbDvWN3jqZLo4Z2YJbyovyDAvDTr/oC0+vssLqP7NmlNb3fF3Bj7StmOwJvQJTbRAtzxK5PP7OQe+0mbW+D7RqVkUiSswR8qJFWTeSe4nXXNIdZdueYhF/Xf25L+KitJS5IHdIHcKfEw3MQzHFb2ZsGWkjDQwxkwr7Noi0Zaa+gFtxCuatGFm9dFIyx217pmSHtA=="
@@ -2787,7 +2787,7 @@ Calling `session.logon` multiple times changes the current authenticated API key
 Name          | Type    | Mandatory | Description
 ------------- | ------- | --------- | ------------
 `apiKey`      | STRING  | YES       |
-`recvWindow`  | INT     | NO        | The value cannot be greater than `60000`
+`recv_window`  | INT     | NO        | The value cannot be greater than `60000`
 `signature`   | STRING  | YES       |
 `timestamp`   | INT     | YES       |
 
@@ -2937,7 +2937,7 @@ Name                | Type    | Mandatory | Description
 `strategyType`      | INT     | NO        | <p>Arbitrary numeric value identifying the order strategy.</p><p>Values smaller than `1000000` are reserved and cannot be used.</p>
 `selfTradePreventionMode` |ENUM | NO      | The allowed enums is dependent on what is configured on the symbol. The possible supported values are `EXPIRE_TAKER`, `EXPIRE_MAKER`, `EXPIRE_BOTH`, `NONE`.
 `apiKey`            | STRING  | YES       |
-`recvWindow`        | INT     | NO        | The value cannot be greater than `60000`
+`recv_window`        | INT     | NO        | The value cannot be greater than `60000`
 `signature`         | STRING  | YES       |
 `timestamp`         | INT     | YES       |
 
@@ -3494,7 +3494,7 @@ Check execution status of an order.
         <td></td>
     </tr>
     <tr>
-        <td><code>recvWindow</code></td>
+        <td><code>recv_window</code></td>
         <td>INT</td>
         <td>NO</td>
         <td>The value cannot be greater than <tt>60000</tt></td>
@@ -3641,7 +3641,7 @@ Cancel an active order.
         <td></td>
     </tr>
     <tr>
-        <td><code>recvWindow</code></td>
+        <td><code>recv_window</code></td>
         <td>INT</td>
         <td>NO</td>
         <td>The value cannot be greater than <tt>60000</tt></td>
@@ -3988,7 +3988,7 @@ Cancel an existing order and immediately place a new order instead of the cancel
         <td></td>
     </tr>
     <tr>
-        <td><code>recvWindow</code></td>
+        <td><code>recv_window</code></td>
         <td>INT</td>
         <td>NO</td>
         <td>The value cannot be greater than <tt>60000</tt></td>
@@ -4427,7 +4427,7 @@ Name                | Type    | Mandatory | Description
 ------------------- | ------- | --------- | ------------
 `symbol`            | STRING  | NO        | If omitted, open orders for all symbols are returned
 `apiKey`            | STRING  | YES       |
-`recvWindow`        | INT     | NO        | The value cannot be greater than `60000`
+`recv_window`        | INT     | NO        | The value cannot be greater than `60000`
 `signature`         | STRING  | YES       |
 `timestamp`         | INT     | YES       |
 
@@ -4512,7 +4512,7 @@ Name                | Type    | Mandatory | Description
 ------------------- | ------- | --------- | ------------
 `symbol`            | STRING  | YES       |
 `apiKey`            | STRING  | YES       |
-`recvWindow`        | INT     | NO        | The value cannot be greater than `60000`
+`recv_window`        | INT     | NO        | The value cannot be greater than `60000`
 `signature`         | STRING  | YES       |
 `timestamp`         | INT     | YES       |
 
@@ -4677,7 +4677,7 @@ Name                | Type    | Mandatory | Description
 `newOrderRespType`  | ENUM    | NO        | Select response format: `ACK`, `RESULT`, `FULL` (default)
 `selfTradePreventionMode` |ENUM | NO      | The allowed enums is dependent on what is configured on the symbol. The possible supported values are `EXPIRE_TAKER`, `EXPIRE_MAKER`, `EXPIRE_BOTH`, `NONE`.
 `apiKey`            | STRING  | YES       |
-`recvWindow`        | INT     | NO        | The value cannot be greater than `60000`
+`recv_window`        | INT     | NO        | The value cannot be greater than `60000`
 `signature`         | STRING  | YES       |
 `timestamp`         | INT     | YES       |
 
@@ -4859,7 +4859,7 @@ For execution status of individual orders, use [`order.status`](#query-order-use
         <td></td>
     </tr>
     <tr>
-        <td><code>recvWindow</code></td>
+        <td><code>recv_window</code></td>
         <td>INT</td>
         <td>NO</td>
         <td>The value cannot be greater than <tt>60000</tt></td>
@@ -4991,7 +4991,7 @@ Cancel an active OCO.
         <td></td>
     </tr>
     <tr>
-        <td><code>recvWindow</code></td>
+        <td><code>recv_window</code></td>
         <td>INT</td>
         <td>NO</td>
         <td>The value cannot be greater than <tt>60000</tt></td>
@@ -5124,7 +5124,7 @@ If you need to continuously monitor order status updates, please consider using 
 Name                | Type    | Mandatory | Description
 ------------------- | ------- | --------- | ------------
 `apiKey`            | STRING  | YES       |
-`recvWindow`        | INT     | NO        | The value cannot be greater than `60000`
+`recv_window`        | INT     | NO        | The value cannot be greater than `60000`
 `signature`         | STRING  | YES       |
 `timestamp`         | INT     | YES       |
 
@@ -5216,7 +5216,7 @@ Name                | Type    | Mandatory | Description
 `selfTradePreventionMode` |ENUM | NO      | The allowed enums is dependent on what is configured on the symbol. The possible supported values are `EXPIRE_TAKER`, `EXPIRE_MAKER`, `EXPIRE_BOTH`, `NONE`.
 `apiKey`            | STRING  | YES       |
 `timestamp`         | INT     | YES       |
-`recvWindow`        | INT     | NO        | The value cannot be greater than `60000`
+`recv_window`        | INT     | NO        | The value cannot be greater than `60000`
 `signature`         | STRING  | YES       |
 
 **Note:** `sor.order.place` only supports `LIMIT` and `MARKET` orders. `quoteOrderQty` is not supported.
@@ -5295,7 +5295,7 @@ Matching Engine
 }
 ```
 
-Test new order creation and signature/recvWindow using smart order routing (SOR).
+Test new order creation and signature/recv_window using smart order routing (SOR).
 Creates and validates a new order but does not send it into the matching engine.
 
 **Weight:**
@@ -5398,7 +5398,7 @@ Query information about your account.
 Name                | Type    | Mandatory | Description
 ------------------- | ------- | --------- | ------------
 `apiKey`            | STRING  | YES       |
-`recvWindow`        | INT     | NO        | The value cannot be greater than `60000`
+`recv_window`        | INT     | NO        | The value cannot be greater than `60000`
 `signature`         | STRING  | YES       |
 `timestamp`         | INT     | YES       |
 
@@ -5488,7 +5488,7 @@ Query your current order rate limit.
 Name                | Type    | Mandatory | Description
 ------------------- | ------- | --------- | ------------
 `apiKey`            | STRING  | YES       |
-`recvWindow`        | INT     | NO        | The value cannot be greater than `60000`
+`recv_window`        | INT     | NO        | The value cannot be greater than `60000`
 `signature`         | STRING  | YES       |
 `timestamp`         | INT     | YES       |
 
@@ -5562,7 +5562,7 @@ Name                | Type    | Mandatory | Description
 `endTime`           | INT     | NO        |
 `limit`             | INT     | NO        | Default 500; max 1000
 `apiKey`            | STRING  | YES       |
-`recvWindow`        | INT     | NO        | The value cannot be greater than `60000`
+`recv_window`        | INT     | NO        | The value cannot be greater than `60000`
 `signature`         | STRING  | YES       |
 `timestamp`         | INT     | YES       |
 
@@ -5661,7 +5661,7 @@ Name                | Type    | Mandatory | Description
 `endTime`           | INT     | NO        |
 `limit`             | INT     | NO        | Default 500; max 1000
 `apiKey`            | STRING  | YES       |
-`recvWindow`        | INT     | NO        | The value cannot be greater than `60000`
+`recv_window`        | INT     | NO        | The value cannot be greater than `60000`
 `signature`         | STRING  | YES       |
 `timestamp`         | INT     | YES       |
 
@@ -5754,7 +5754,7 @@ Name                | Type    | Mandatory | Description
 `fromId`            | INT     | NO        | First trade ID to query
 `limit`             | INT     | NO        | Default 500; max 1000
 `apiKey`            | STRING  | YES       |
-`recvWindow`        | INT     | NO        | The value cannot be greater than `60000`
+`recv_window`        | INT     | NO        | The value cannot be greater than `60000`
 `signature`         | STRING  | YES       |
 `timestamp`         | INT     | YES       |
 
@@ -5860,7 +5860,7 @@ preventedMatchId    |LONG    | NO           |
 orderId             |LONG    | NO           |
 fromPreventedMatchId|LONG    | NO           |
 limit               |INT     | NO           | Default: `500`; Max: `1000`
-recvWindow          | LONG   | NO           | The value cannot be greater than `60000`
+recv_window          | LONG   | NO           | The value cannot be greater than `60000`
 timestamp           | LONG   | YES          |
 
 **Weight**
@@ -5938,7 +5938,7 @@ Name                       | Type  |Mandatory | Description
 `fromAllocationId`         |INT    |No        |
 `limit`                    |INT    |No        |Default 500;Max 1000
 `orderId`                  |LONG   |No        |
-`recvWindow`               |LONG   |No        |The value cannot be greater than `60000`
+`recv_window`               |LONG   |No        |The value cannot be greater than `60000`
 `timestamp`                |LONG   |No        |
 
 Supported parameter combinations:

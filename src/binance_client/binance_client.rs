@@ -20,13 +20,14 @@ use tokio_websockets::upgrade::Response;
 
 
 use crate::binance_client::account::order::Order;
-use crate::binance_client::account::deserialization::deserialize_string_to_f64;
+use crate::deserialization::deserialize_string_to_f64;
 use crate::binance_client::account::open_order::OpenOrder;
 use crate::binance_client::account::trades::Trade;
 use crate::binance_client::binance_error::BinanceError;
 use crate::binance_client::database_client::DatabaseClient;
 use crate::binance_client::streams::binance_stream::BinanceStreamTypes;
 use crate::binance_client::streams::kline_data::KlineMessage;
+use crate::binance_client::ticker_price::TickerPrice;
 
 const BINANCE_API_URL: &str = "https://api.binance.com/api";
 const BINANCE_API_TEST_URL: &str = "https://testnet.binance.vision/api";
@@ -224,6 +225,23 @@ impl BinanceClient {
             }
         }
     }
+
+    // Function to get the current price of a symbol
+    pub async fn get_current_price(&self, symbol: &str) -> Result<TickerPrice, IOError> {
+        let request_url = format!("{}/v3/ticker/price?symbol={}", self.api_url, symbol);
+
+        let response = self.client
+            .get(&request_url)
+            .send()
+            .await
+            .map_err(|e| IOError::new(ErrorKind::Other, e.to_string()))?
+            .json::<TickerPrice>()
+            .await
+            .map_err(|e| IOError::new(ErrorKind::Other, e.to_string()))?;
+
+        Ok(response)
+    }
+
     pub async fn get_listen_key(&self) -> Result<String, IOError> {
         let url = format!("{}/v3/userDataStream", self.api_url);
         let res = self.client.post(&url)
@@ -251,6 +269,39 @@ impl BinanceClient {
             }
             Err(e) => Err(e),
         }
+    }
+
+
+    // Method to listen for user data stream updates
+    pub async fn listen_user_data_stream(&self) -> Result<(), IOError> {
+        let listen_key = self.get_listen_key().await?;
+        let ws_url = format!("{}/{}", self.websocket_url, listen_key);
+
+        let (ws_stream, _) = tokio_tungstenite::connect_async(ws_url)
+            .await
+            .map_err(|e| IOError::new(ErrorKind::Other, format!("WebSocket connection failed: {}", e)))?;
+
+        println!("Connected to WebSocket user data stream");
+
+        let (write, mut read) = ws_stream.split();
+
+        // Listen for messages
+        while let Some(message) = read.next().await {
+            match message {
+                Ok(msg) => {
+                    if let Ok(text) = msg.into_text() {
+                        println!("Received message: {}", text);
+                        // Here you would handle the message, for example by checking if it indicates a filled trade
+                    }
+                }
+                Err(e) => {
+                    println!("Error receiving message: {}", e);
+                    break;
+                }
+            }
+        }
+
+        Ok(())
     }
 }
 
@@ -480,6 +531,36 @@ mod tests {
             open_orders_result.unwrap().is_empty(),
             "There should be no open orders after cancellation"
         );
+    }
+
+
+    #[tokio::test]
+    async fn test_listen_user_data_stream() {
+        let vars = EnvVars::new(); // Ensure this fetches testnet API keys and URLs
+        let client = BinanceClient::new(vars.api_key, vars.api_secret, false).await;
+        let spot_client = SpotClient::new(&client);
+
+        // This should be an unlikely price to ensure the order won't be filled immediately
+        let test_order_price = 0.01;
+        let symbol = "BNBUSDT";
+        let quantity = 1.0;
+
+        // Place a limit order
+        let order_response = client.place_limit_order(symbol, Side::Buy, quantity, test_order_price).await;
+        assert!(order_response.is_ok(), "Failed to place test limit order");
+
+        // Listen to the user data stream for a short period to catch the order update
+        let listen_result = client.listen_user_data_stream().await;
+        assert!(listen_result.is_ok(), "Listening to user data stream failed");
+
+        // Optionally, clean up by canceling the test order to avoid leaving open orders on the testnet account
+        // Implementation of cancel_order() is assumed to exist
+        let cancel_response = spot_client.cancel_order(symbol, order_response.unwrap().order_id).await;
+        assert!(cancel_response.is_ok(), "Failed to cancel test limit order");
+
+        // This test is inherently limited by its reliance on the behavior of the Binance testnet and the presence of real-time updates.
+        // It does not assert on receiving the specific WebSocket message due to the asynchronous and unpredictable nature of such messages.
+        // In a real application, consider more sophisticated methods to verify WebSocket communications, such as mocking or event recording.
     }
 }
 

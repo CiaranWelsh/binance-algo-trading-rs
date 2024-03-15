@@ -273,7 +273,7 @@ Order Book
 
 ## R
 
-`recvWindow`
+`recv_window`
 * API中的一个参数, 值为毫秒; 用以设定请求从`timestamp`开始的有效期。
 
 `RESULT`

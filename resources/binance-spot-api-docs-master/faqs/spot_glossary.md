@@ -276,7 +276,7 @@ Prevented Match
 
 ## R
 
-`recvWindow`
+`recv_window`
 * Parameter in the APIs that can be used to specify the number of milliseconds after the `timestamp` the request is valid for.
 
 `RESULT`

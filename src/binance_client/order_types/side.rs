@@ -3,7 +3,7 @@ use serde::{Deserialize, Serialize};
 use crate::binance_client::order_types::order_type::OrderType;
 
 // Define an enum for the order side
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 #[serde(rename_all = "SCREAMING_SNAKE_CASE")]
 pub enum Side {
     Buy,

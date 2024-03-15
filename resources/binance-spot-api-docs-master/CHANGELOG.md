@@ -1229,7 +1229,7 @@ By end of Q1 2020, the following endpoints will be removed from the API. The doc
         * DELETE api/v3/orderList
         * GET api/v3/orderList
 
-* ```recvWindow``` cannot exceed 60000.
+* ```recv_window``` cannot exceed 60000.
 * New `intervalLetter` values for headers:
     * SECOND => S
     * MINUTE => M
@@ -1248,7 +1248,7 @@ By end of Q1 2020, the following endpoints will be removed from the API. The doc
 
 ### NEW ERRORS
 * **-1131 BAD_RECV_WINDOW**
-    * ```recvWindow``` must be less than 60000
+    * ```recv_window``` must be less than 60000
 * **-1099 Not found, authenticated, or authorized**
     * This replaces error code -1999
 

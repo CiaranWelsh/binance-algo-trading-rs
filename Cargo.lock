@@ -333,6 +333,7 @@ dependencies = [
  "sha2 0.11.0-pre.3",
  "tokio",
  "tokio-postgres",
+ "tokio-tungstenite",
  "tokio-util",
  "tokio-websockets",
  "toml",
@@ -2247,6 +2248,18 @@ dependencies = [
  "tokio",
  "tokio-util",
  "whoami",
+]
+
+[[package]]
+name = "tokio-tungstenite"
+version = "0.21.0"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "c83b561d025642014097b66e6c1bb422783339e0909e4429cde4749d1990bc38"
+dependencies = [
+ "futures-util",
+ "log",
+ "tokio",
+ "tungstenite",
 ]
 
 [[package]]

@@ -47,7 +47,7 @@ Errors consist of two parts: an error code and a message. Codes are universal,
  * This operation is not supported.
 
 #### -1021 INVALID_TIMESTAMP
- * Timestamp for this request is outside of the recvWindow.
+ * Timestamp for this request is outside of the recv_window.
  * Timestamp for this request was 1000ms ahead of the server's time.
 
 #### -1022 INVALID_SIGNATURE

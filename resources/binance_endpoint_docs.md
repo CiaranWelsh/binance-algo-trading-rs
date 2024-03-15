@@ -191,13 +191,13 @@ USER_STREAM | Endpoint requires sending a valid API-Key.
 ## Timing security
 * A `SIGNED` endpoint also requires a parameter, `timestamp`, to be sent which
   should be the millisecond timestamp of when the request was created and sent.
-* An additional parameter, `recvWindow`, may be sent to specify the number of
-  milliseconds after `timestamp` the request is valid for. If `recvWindow`
+* An additional parameter, `recv_window`, may be sent to specify the number of
+  milliseconds after `timestamp` the request is valid for. If `recv_window`
   is not sent, **it defaults to 5000**.
 * The logic is as follows:
 
   ```javascript
-  if (timestamp < (serverTime + 1000) && (serverTime - timestamp) <= recvWindow) {
+  if (timestamp < (serverTime + 1000) && (serverTime - timestamp) <= recv_window) {
     // process request
   } else {
     // reject request
@@ -206,12 +206,12 @@ USER_STREAM | Endpoint requires sending a valid API-Key.
 
 **Serious trading is about timing.** Networks can be unstable and unreliable,
 which can lead to requests taking varying amounts of time to reach the
-servers. With `recvWindow`, you can specify that the request must be
+servers. With `recv_window`, you can specify that the request must be
 processed within a certain number of milliseconds or be rejected by the
 server.
 
 
-**It is recommended to use a small recvWindow of 5000 or less! The max cannot go beyond 60,000!**
+**It is recommended to use a small recv_window of 5000 or less! The max cannot go beyond 60,000!**
 
 
 ## SIGNED Endpoint Examples for POST /api/v3/order
@@ -234,15 +234,15 @@ Parameter | Value
 `timeInForce` | GTC
 `quantity` | 1
 `price` | 0.1
-`recvWindow` | 5000
+`recv_window` | 5000
 `timestamp` | 1499827319559
 
 #### Example 1: As a request body
-* **requestBody:** symbol=LTCBTC&side=BUY&type=LIMIT&timeInForce=GTC&quantity=1&price=0.1&recvWindow=5000&timestamp=1499827319559
+* **requestBody:** symbol=LTCBTC&side=BUY&type=LIMIT&timeInForce=GTC&quantity=1&price=0.1&recv_window=5000&timestamp=1499827319559
 * **HMAC SHA256 signature:**
 
     ```
-    [linux]$ echo -n "symbol=LTCBTC&side=BUY&type=LIMIT&timeInForce=GTC&quantity=1&price=0.1&recvWindow=5000&timestamp=1499827319559" | openssl dgst -sha256 -hmac "NhqPtmdSJYdKjVHjA7PZj4Mge3R5YNiP1e3UZjInClVN65XAbvqqM6A7H5fATj0j"
+    [linux]$ echo -n "symbol=LTCBTC&side=BUY&type=LIMIT&timeInForce=GTC&quantity=1&price=0.1&recv_window=5000&timestamp=1499827319559" | openssl dgst -sha256 -hmac "NhqPtmdSJYdKjVHjA7PZj4Mge3R5YNiP1e3UZjInClVN65XAbvqqM6A7H5fATj0j"
     (stdin)= c8db56825ae71d6d79447849e617115f4a920fa2acdcab2b053c4b2838bd6b71
     ```
 
@@ -251,15 +251,15 @@ Parameter | Value
 
     ```
     (HMAC SHA256)
-    [linux]$ curl -H "X-MBX-APIKEY: vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A" -X POST 'https://api.binance.com/api/v3/order' -d 'symbol=LTCBTC&side=BUY&type=LIMIT&timeInForce=GTC&quantity=1&price=0.1&recvWindow=5000&timestamp=1499827319559&signature=c8db56825ae71d6d79447849e617115f4a920fa2acdcab2b053c4b2838bd6b71'
+    [linux]$ curl -H "X-MBX-APIKEY: vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A" -X POST 'https://api.binance.com/api/v3/order' -d 'symbol=LTCBTC&side=BUY&type=LIMIT&timeInForce=GTC&quantity=1&price=0.1&recv_window=5000&timestamp=1499827319559&signature=c8db56825ae71d6d79447849e617115f4a920fa2acdcab2b053c4b2838bd6b71'
     ```
 
 #### Example 2: As a query string
-* **queryString:** symbol=LTCBTC&side=BUY&type=LIMIT&timeInForce=GTC&quantity=1&price=0.1&recvWindow=5000&timestamp=1499827319559
+* **queryString:** symbol=LTCBTC&side=BUY&type=LIMIT&timeInForce=GTC&quantity=1&price=0.1&recv_window=5000&timestamp=1499827319559
 * **HMAC SHA256 signature:**
 
     ```
-    [linux]$ echo -n "symbol=LTCBTC&side=BUY&type=LIMIT&timeInForce=GTC&quantity=1&price=0.1&recvWindow=5000&timestamp=1499827319559" | openssl dgst -sha256 -hmac "NhqPtmdSJYdKjVHjA7PZj4Mge3R5YNiP1e3UZjInClVN65XAbvqqM6A7H5fATj0j"
+    [linux]$ echo -n "symbol=LTCBTC&side=BUY&type=LIMIT&timeInForce=GTC&quantity=1&price=0.1&recv_window=5000&timestamp=1499827319559" | openssl dgst -sha256 -hmac "NhqPtmdSJYdKjVHjA7PZj4Mge3R5YNiP1e3UZjInClVN65XAbvqqM6A7H5fATj0j"
     (stdin)= c8db56825ae71d6d79447849e617115f4a920fa2acdcab2b053c4b2838bd6b71
     ```
 
@@ -268,16 +268,16 @@ Parameter | Value
 
     ```
     (HMAC SHA256)
-    [linux]$ curl -H "X-MBX-APIKEY: vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A" -X POST 'https://api.binance.com/api/v3/order?symbol=LTCBTC&side=BUY&type=LIMIT&timeInForce=GTC&quantity=1&price=0.1&recvWindow=5000&timestamp=1499827319559&signature=c8db56825ae71d6d79447849e617115f4a920fa2acdcab2b053c4b2838bd6b71'
+    [linux]$ curl -H "X-MBX-APIKEY: vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A" -X POST 'https://api.binance.com/api/v3/order?symbol=LTCBTC&side=BUY&type=LIMIT&timeInForce=GTC&quantity=1&price=0.1&recv_window=5000&timestamp=1499827319559&signature=c8db56825ae71d6d79447849e617115f4a920fa2acdcab2b053c4b2838bd6b71'
     ```
 
 #### Example 3: Mixed query string and request body
 * **queryString:** symbol=LTCBTC&side=BUY&type=LIMIT&timeInForce=GTC
-* **requestBody:** quantity=1&price=0.1&recvWindow=5000&timestamp=1499827319559
+* **requestBody:** quantity=1&price=0.1&recv_window=5000&timestamp=1499827319559
 * **HMAC SHA256 signature:**
 
     ```
-    [linux]$ echo -n "symbol=LTCBTC&side=BUY&type=LIMIT&timeInForce=GTCquantity=1&price=0.1&recvWindow=5000&timestamp=1499827319559" | openssl dgst -sha256 -hmac "NhqPtmdSJYdKjVHjA7PZj4Mge3R5YNiP1e3UZjInClVN65XAbvqqM6A7H5fATj0j"
+    [linux]$ echo -n "symbol=LTCBTC&side=BUY&type=LIMIT&timeInForce=GTCquantity=1&price=0.1&recv_window=5000&timestamp=1499827319559" | openssl dgst -sha256 -hmac "NhqPtmdSJYdKjVHjA7PZj4Mge3R5YNiP1e3UZjInClVN65XAbvqqM6A7H5fATj0j"
     (stdin)= 0fd168b8ddb4876a0358a8d14d0c9f3da0e9b20c5d52b2a00fcf7d1c602f9a77
     ```
 
@@ -286,7 +286,7 @@ Parameter | Value
 
     ```
     (HMAC SHA256)
-    [linux]$ curl -H "X-MBX-APIKEY: vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A" -X POST 'https://api.binance.com/api/v3/order?symbol=LTCBTC&side=BUY&type=LIMIT&timeInForce=GTC' -d 'quantity=1&price=0.1&recvWindow=5000&timestamp=1499827319559&signature=0fd168b8ddb4876a0358a8d14d0c9f3da0e9b20c5d52b2a00fcf7d1c602f9a77'
+    [linux]$ curl -H "X-MBX-APIKEY: vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A" -X POST 'https://api.binance.com/api/v3/order?symbol=LTCBTC&side=BUY&type=LIMIT&timeInForce=GTC' -d 'quantity=1&price=0.1&recv_window=5000&timestamp=1499827319559&signature=0fd168b8ddb4876a0358a8d14d0c9f3da0e9b20c5d52b2a00fcf7d1c602f9a77'
     ```
 
 Note that the signature is different in example 3.
@@ -316,7 +316,7 @@ Parameter | Value
 `quantity` | 1
 `price` | 0.2
 `timestamp` | 1668481559918
-`recvWindow` | 5000
+`recv_window` | 5000
 
 
 **Step 1: Construct the payload**
@@ -326,7 +326,7 @@ Arrange the list of parameters into a string. Separate each parameter with a `&`
 For the parameters above, the signature payload would look like this:
 
 ```console
-symbol=BTCUSDT&side=SELL&type=LIMIT&timeInForce=GTC&quantity=1&price=0.2&timestamp=1668481559918&recvWindow=5000
+symbol=BTCUSDT&side=SELL&type=LIMIT&timeInForce=GTC&quantity=1&price=0.2&timestamp=1668481559918&recv_window=5000
 ```
 
 **Step 2: Compute the signature:**
@@ -335,12 +335,12 @@ symbol=BTCUSDT&side=SELL&type=LIMIT&timeInForce=GTC&quantity=1&price=0.2&timesta
 2. Sign payload using RSASSA-PKCS1-v1_5 algorithm with SHA-256 hash function.
 
 ```console
-$ echo -n 'symbol=BTCUSDT&side=SELL&type=LIMIT&timeInForce=GTC&quantity=1&price=0.2&timestamp=1668481559918&recvWindow=5000' | openssl dgst -sha256 -sign ./test-prv-key.pem
+$ echo -n 'symbol=BTCUSDT&side=SELL&type=LIMIT&timeInForce=GTC&quantity=1&price=0.2&timestamp=1668481559918&recv_window=5000' | openssl dgst -sha256 -sign ./test-prv-key.pem
 ```
 3. Encode output as base64 string.
 
 ```console
-$  echo -n 'symbol=BTCUSDT&side=SELL&type=LIMIT&timeInForce=GTC&quantity=1&price=0.2&timestamp=1668481559918&recvWindow=5000' | openssl dgst -sha256 -sign ./test-prv-key.pem | openssl enc -base64 -A
+$  echo -n 'symbol=BTCUSDT&side=SELL&type=LIMIT&timeInForce=GTC&quantity=1&price=0.2&timestamp=1668481559918&recv_window=5000' | openssl dgst -sha256 -sign ./test-prv-key.pem | openssl enc -base64 -A
 HZ8HOjiJ1s/igS9JA+n7+7Ti/ihtkRF5BIWcPIEluJP6tlbFM/Bf44LfZka/iemtahZAZzcO9TnI5uaXh3++lrqtNonCwp6/245UFWkiW1elpgtVAmJPbogcAv6rSlokztAfWk296ZJXzRDYAtzGH0gq7CgSJKfH+XxaCmR0WcvlKjNQnp12/eKXJYO4tDap8UCBLuyxDnR7oJKLHQHJLP0r0EAVOOSIbrFang/1WOq+Jaq4Efc4XpnTgnwlBbWTmhWDR1pvS9iVEzcSYLHT/fNnMRxFc7u+j3qI//5yuGuu14KR0MuQKKCSpViieD+fIti46sxPTsjSemoUKp0oXA==
 ```
 4. Since the signature may contain `/` and `=`, this could cause issues with sending the request. So the signature has to be URL encoded.
@@ -352,7 +352,7 @@ HZ8HOjiJ1s%2FigS9JA%2Bn7%2B7Ti%2FihtkRF5BIWcPIEluJP6tlbFM%2FBf44LfZka%2FiemtahZA
 5. The curl command:
 
 ```console
-curl -H "X-MBX-APIKEY: CAvIjXy3F44yW6Pou5k8Dy1swsYDWJZLeoK2r8G4cFDnE9nosRppc2eKc1T8TRTQ" -X POST 'https://api.binance.com/api/v3/order?symbol=BTCUSDT&side=SELL&type=LIMIT&timeInForce=GTC&quantity=1&price=0.2&timestamp=1668481559918&recvWindow=5000&signature=HZ8HOjiJ1s%2FigS9JA%2Bn7%2B7Ti%2FihtkRF5BIWcPIEluJP6tlbFM%2FBf44LfZka%2FiemtahZAZzcO9TnI5uaXh3%2B%2BlrqtNonCwp6%2F245UFWkiW1elpgtVAmJPbogcAv6rSlokztAfWk296ZJXzRDYAtzGH0gq7CgSJKfH%2BXxaCmR0WcvlKjNQnp12%2FeKXJYO4tDap8UCBLuyxDnR7oJKLHQHJLP0r0EAVOOSIbrFang%2F1WOq%2BJaq4Efc4XpnTgnwlBbWTmhWDR1pvS9iVEzcSYLHT%2FfNnMRxFc7u%2Bj3qI%2F%2F5yuGuu14KR0MuQKKCSpViieD%2BfIti46sxPTsjSemoUKp0oXA%3D%3D'
+curl -H "X-MBX-APIKEY: CAvIjXy3F44yW6Pou5k8Dy1swsYDWJZLeoK2r8G4cFDnE9nosRppc2eKc1T8TRTQ" -X POST 'https://api.binance.com/api/v3/order?symbol=BTCUSDT&side=SELL&type=LIMIT&timeInForce=GTC&quantity=1&price=0.2&timestamp=1668481559918&recv_window=5000&signature=HZ8HOjiJ1s%2FigS9JA%2Bn7%2B7Ti%2FihtkRF5BIWcPIEluJP6tlbFM%2FBf44LfZka%2FiemtahZAZzcO9TnI5uaXh3%2B%2BlrqtNonCwp6%2F245UFWkiW1elpgtVAmJPbogcAv6rSlokztAfWk296ZJXzRDYAtzGH0gq7CgSJKfH%2BXxaCmR0WcvlKjNQnp12%2FeKXJYO4tDap8UCBLuyxDnR7oJKLHQHJLP0r0EAVOOSIbrFang%2F1WOq%2BJaq4Efc4XpnTgnwlBbWTmhWDR1pvS9iVEzcSYLHT%2FfNnMRxFc7u%2Bj3qI%2F%2F5yuGuu14KR0MuQKKCSpViieD%2BfIti46sxPTsjSemoUKp0oXA%3D%3D'
 ```
 
 A sample Bash script below does the similar steps said above.
@@ -1828,7 +1828,7 @@ trailingDelta|LONG|NO| Used with `StopLoss`, `StopLossLimit`, `TakeProfit`, and 
 icebergQty | DECIMAL | NO | Used with `LIMIT`, `StopLossLimit`, and `TakeProfitLimit` to create an iceberg order.
 newOrderRespType | ENUM | NO | Set the response JSON. `ACK`, `RESULT`, or `FULL`; `MARKET` and `LIMIT` order types default to `FULL`, all other orders default to `ACK`.
 selfTradePreventionMode |ENUM| NO | The allowed enums is dependent on what is configured on the symbol. The possible supported values are `EXPIRE_TAKER`, `EXPIRE_MAKER`, `EXPIRE_BOTH`, `NONE`.
-recvWindow | LONG | NO |The value cannot be greater than ```60000```
+recv_window | LONG | NO |The value cannot be greater than ```60000```
 timestamp | LONG | YES |
 
 
@@ -1973,7 +1973,7 @@ Field          |Description                                                     
 ```
 POST /api/v3/order/test
 ```
-Test new order creation and signature/recvWindow long.
+Test new order creation and signature/recv_window long.
 Creates and validates a new order but does not send it into the matching engine.
 
 **Weight:**
@@ -2040,7 +2040,7 @@ Name | Type | Mandatory | Description
 symbol | STRING | YES |
 orderId | LONG | NO |
 origClientOrderId | STRING | NO |
-recvWindow | LONG | NO | The value cannot be greater than ```60000```
+recv_window | LONG | NO | The value cannot be greater than ```60000```
 timestamp | LONG | YES |
 
 Notes:
@@ -2096,7 +2096,7 @@ orderId           | LONG   | NO           |
 origClientOrderId | STRING | NO           |
 newClientOrderId  | STRING | NO           |  Used to uniquely identify this cancel. Automatically generated by default.
 cancelRestrictions| ENUM   | NO           | Supported values: <br>`ONLY_NEW` - Cancel will succeed if the order status is `NEW`.<br> `ONLY_PARTIALLY_FILLED ` - Cancel will succeed if order status is `PartiallyFilled`.
-recvWindow        | LONG   | NO           | The value cannot be greater than `60000`.
+recv_window        | LONG   | NO           | The value cannot be greater than `60000`.
 timestamp         | LONG   | YES          |
 
 Either `orderId` or `origClientOrderId` must be sent.
@@ -2158,7 +2158,7 @@ This includes OCO orders.
 Name | Type | Mandatory | Description
 ------------ | ------------ | ------------ | ------------
 symbol | STRING | YES |
-recvWindow | LONG | NO | The value cannot be greater than ```60000```
+recv_window | LONG | NO | The value cannot be greater than ```60000```
 timestamp | LONG | YES |
 
 **Data Source:**
@@ -2302,7 +2302,7 @@ icebergQty|DECIMAL|NO|
 newOrderRespType|ENUM|NO|Allowed values: <br/> `ACK`, `RESULT`, `FULL` <br/> `MARKET` and `LIMIT` orders types default to `FULL`; all other orders default to `ACK`
 selfTradePreventionMode |ENUM| NO | The allowed enums is dependent on what is configured on the symbol. The possible supported values are `EXPIRE_TAKER`, `EXPIRE_MAKER`, `EXPIRE_BOTH`, `NONE`.
 cancelRestrictions| ENUM   | NO           | Supported values: <br>`ONLY_NEW` - Cancel will succeed if the order status is `NEW`.<br> `ONLY_PARTIALLY_FILLED ` - Cancel will succeed if order status is `ONLY_PARTIALLY_FILLED`. For more information please refer to [Regarding `cancelRestrictions`](#regarding-cancelrestrictions)
-recvWindow | LONG | NO | The value cannot be greater than `60000`
+recv_window | LONG | NO | The value cannot be greater than `60000`
 timestamp | LONG | YES |
 
 
@@ -2468,7 +2468,7 @@ Get all open orders on a symbol. **Careful** when accessing this with no symbol.
 Name | Type | Mandatory | Description
 ------------ | ------------ | ------------ | ------------
 symbol | STRING | NO |
-recvWindow | LONG | NO | The value cannot be greater than ```60000```
+recv_window | LONG | NO | The value cannot be greater than ```60000```
 timestamp | LONG | YES |
 
 * If the symbol is not sent, orders for all symbols will be returned in an array.
@@ -2527,7 +2527,7 @@ orderId | LONG | NO |
 startTime | LONG | NO |
 endTime | LONG | NO |
 limit | INT | NO | Default 500; max 1000.
-recvWindow | LONG | NO | The value cannot be greater than ```60000```
+recv_window | LONG | NO | The value cannot be greater than ```60000```
 timestamp | LONG | YES |
 
 **Notes:**
@@ -2598,7 +2598,7 @@ stopIcebergQty|DECIMAL|NO| Used with `StopLossLimit` leg to make an iceberg orde
 stopLimitTimeInForce|ENUM|NO| Valid values are `GTC`/`FOK`/`IOC`
 newOrderRespType|ENUM|NO| Set the response JSON.
 selfTradePreventionMode |ENUM| NO | The allowed enums is dependent on what is configured on the symbol. The possible supported values are `EXPIRE_TAKER`, `EXPIRE_MAKER`, `EXPIRE_BOTH`, `NONE`.
-recvWindow|LONG|NO| The value cannot be greater than `60000`
+recv_window|LONG|NO| The value cannot be greater than `60000`
 timestamp|LONG|YES|
 
 
@@ -2697,7 +2697,7 @@ symbol|STRING| YES|
 orderListId|LONG|NO| Either ```orderListId``` or ```listClientOrderId``` must be provided
 listClientOrderId|STRING|NO| Either ```orderListId``` or ```listClientOrderId``` must be provided
 newClientOrderId|STRING|NO| Used to uniquely identify this cancel. Automatically generated by default
-recvWindow|LONG|NO| The value cannot be greater than ```60000```
+recv_window|LONG|NO| The value cannot be greater than ```60000```
 timestamp|LONG|YES|
 
 Additional notes:
@@ -2787,7 +2787,7 @@ Name| Type|Mandatory| Description
 ----|-----|----|----------
 orderListId|LONG|NO|  Either ```orderListId``` or ```listClientOrderId``` must be provided
 origClientOrderId|STRING|NO| Either ```orderListId``` or ```listClientOrderId``` must be provided
-recvWindow|LONG|NO| The value cannot be greater than ```60000```
+recv_window|LONG|NO| The value cannot be greater than ```60000```
 timestamp|LONG|YES|
 
 **Data Source:**
@@ -2838,7 +2838,7 @@ fromId|LONG|NO| If supplied, neither ```startTime``` or ```endTime``` can be pro
 startTime|LONG|NO|
 endTime|LONG|NO|
 limit|INT|NO| Default Value: 500; Max Value: 1000
-recvWindow|LONG|NO| The value cannot be greater than ```60000```
+recv_window|LONG|NO| The value cannot be greater than ```60000```
 timestamp|LONG|YES|
 
 **Data Source:**
@@ -2905,7 +2905,7 @@ Weight: 6
 
 Name| Type|Mandatory| Description
 ----|-----|---|------------------
-recvWindow|LONG|NO| The value cannot be greater than ```60000```
+recv_window|LONG|NO| The value cannot be greater than ```60000```
 timestamp|LONG|YES|
 
 **Data Source:**
@@ -2965,7 +2965,7 @@ strategyType            |INT     | NO| The value cannot be less than `1000000`.
 icebergQty              | DECIMAL| NO | Used with `LIMIT` to create an iceberg order.
 newOrderRespType        | ENUM   | NO | Set the response JSON. `ACK`, `RESULT`, or `FULL`. Default to `FULL`
 selfTradePreventionMode |ENUM    | NO | The allowed enums is dependent on what is configured on the symbol. The possible supported values are `EXPIRE_TAKER`, `EXPIRE_MAKER`, `EXPIRE_BOTH`, `NONE`.
-recvWindow              | LONG   | NO |The value cannot be greater than `60000`
+recv_window              | LONG   | NO |The value cannot be greater than `60000`
 timestamp               | LONG | YES |
 
 **Note:** `POST /api/v3/sor/order` only supports `LIMIT` and `MARKET` orders. `quoteOrderQty` is not supported.
@@ -3014,7 +3014,7 @@ Matching Engine
 POST /api/v3/sor/order/test
 ```
 
-Test new order creation and signature/recvWindow using smart order routing (SOR).
+Test new order creation and signature/recv_window using smart order routing (SOR).
 Creates and validates a new order but does not send it into the matching engine.
 
 **Weight:**
@@ -3083,7 +3083,7 @@ Get current account information.
 
 Name | Type | Mandatory | Description
 ------------ | ------------ | ------------ | ------------
-recvWindow | LONG | NO | The value cannot be greater than ```60000```
+recv_window | LONG | NO | The value cannot be greater than ```60000```
 timestamp | LONG | YES |
 
 **Data Source:**
@@ -3148,7 +3148,7 @@ startTime | LONG | NO |
 endTime | LONG | NO |
 fromId | LONG | NO | TradeId to fetch from. Default gets most recent trades.
 limit | INT | NO | Default 500; max 1000.
-recvWindow | LONG | NO | The value cannot be greater than ```60000```
+recv_window | LONG | NO | The value cannot be greater than ```60000```
 timestamp | LONG | YES |
 
 **Notes:**
@@ -3203,7 +3203,7 @@ Displays the user's current order count usage for all intervals.
 
 Name | Type | Mandatory | Description
 ------------ | ------------ | ------------ | ------------
-recvWindow | LONG | NO | The value cannot be greater than ```60000```
+recv_window | LONG | NO | The value cannot be greater than ```60000```
 timestamp | LONG | YES |
 
 **Data Source:**
@@ -3255,7 +3255,7 @@ preventedMatchId    |LONG    | NO           |
 orderId             |LONG    | NO           |
 fromPreventedMatchId|LONG    | NO           |
 limit               |INT     | NO           | Default: `500`; Max: `1000`
-recvWindow          | LONG   | NO           | The value cannot be greater than `60000`
+recv_window          | LONG   | NO           | The value cannot be greater than `60000`
 timestamp           | LONG   | YES          |
 
 **Weight**
@@ -3310,7 +3310,7 @@ endTime                  |LONG   |No        |
 fromAllocationId         |INT    |No        |
 limit                    |INT    |No        |Default 500;Max 1000
 orderId                  |LONG   |No        |
-recvWindow               |LONG   |No        |The value cannot be greater than `60000`.
+recv_window               |LONG   |No        |The value cannot be greater than `60000`.
 timestamp                |LONG   |No        |
 
 Supported parameter combinations:

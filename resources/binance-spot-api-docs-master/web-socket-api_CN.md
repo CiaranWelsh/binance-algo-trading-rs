@@ -466,23 +466,23 @@ API 有多种频率限制间隔。
 ## 时间同步安全
 
 * `SIGNED` 请求也必须发 `timestamp` 参数，其值应当是请求发送时刻的 unix 时间戳(毫秒)。
-* 还可以发送一个可选参数 `recvWindow`，指定请求保持有效的时间。
-  * 如果 `recvWindow` 未发送，**默认为5000毫秒**。
-  * 最大 `recvWindow` 为60000毫秒。
+* 还可以发送一个可选参数 `recv_window`，指定请求保持有效的时间。
+  * 如果 `recv_window` 未发送，**默认为5000毫秒**。
+  * 最大 `recv_window` 为60000毫秒。
 
 * 请求处理逻辑:
 
   ```javascript
-  if (timestamp < (serverTime + 1000) && (serverTime - timestamp) <= recvWindow) {
+  if (timestamp < (serverTime + 1000) && (serverTime - timestamp) <= recv_window) {
     // 处理请求
   } else {
     // 拒绝请求
   }
   ```
 
-**关于交易时效性** 互联网状况并不完全稳定可靠，因此你的程序本地到币安服务器的时延会有抖动, 这是我们设置 `recvWindow` 的目所在。如果你从事高频交易，对交易时效性有较高的要求，可以灵活设置 `recvWindow` 以达到你的要求。
+**关于交易时效性** 互联网状况并不完全稳定可靠，因此你的程序本地到币安服务器的时延会有抖动, 这是我们设置 `recv_window` 的目所在。如果你从事高频交易，对交易时效性有较高的要求，可以灵活设置 `recv_window` 以达到你的要求。
 
-**建议使用5000毫秒以下的 `recvWindow`！**
+**建议使用5000毫秒以下的 `recv_window`！**
 
 ## SIGNED 请求示例 (HMAC)
 
@@ -513,7 +513,7 @@ secretKey    | `NhqPtmdSJYdKjVHjA7PZj4Mge3R5YNiP1e3UZjInClVN65XAbvqqM6A7H5fATj0j
     "quantity":         "0.01000000",
     "price":            "52000.00",
     "newOrderRespType": "ACK",
-    "recvWindow":       100,
+    "recv_window":       100,
     "timestamp":        1645423376532,
     "apiKey":           "vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A",
     "signature":        "------ 未填写 ------"
@@ -533,7 +533,7 @@ apiKey           | vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duE
 newOrderRespType | ACK
 price            | 52000.00
 quantity         | 0.01000000
-recvWindow       | 100
+recv_window       | 100
 side             | SELL
 symbol           | BTCUSDT
 timeInForce      | GTC
@@ -544,7 +544,7 @@ type             | LIMIT
 
 签名效载荷示例：
 ```
-apiKey=vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A&newOrderRespType=ACK&price=52000.00&quantity=0.01000000&recvWindow=100&side=SELL&symbol=BTCUSDT&timeInForce=GTC&timestamp=1645423376532&type=LIMIT
+apiKey=vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A&newOrderRespType=ACK&price=52000.00&quantity=0.01000000&recv_window=100&side=SELL&symbol=BTCUSDT&timeInForce=GTC&timestamp=1645423376532&type=LIMIT
 ```
 
 **第二步：计算签名**
@@ -559,7 +559,7 @@ apiKey=vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A&newOrder
 可以使用 OpenSSL 交叉检查您的签名算法实现：
 
 ```console
-$ echo -n 'apiKey=vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A&newOrderRespType=ACK&price=52000.00&quantity=0.01000000&recvWindow=100&side=SELL&symbol=BTCUSDT&timeInForce=GTC&timestamp=1645423376532&type=LIMIT' \
+$ echo -n 'apiKey=vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A&newOrderRespType=ACK&price=52000.00&quantity=0.01000000&recv_window=100&side=SELL&symbol=BTCUSDT&timeInForce=GTC&timestamp=1645423376532&type=LIMIT' \
   | openssl dgst -hex -sha256 -hmac 'NhqPtmdSJYdKjVHjA7PZj4Mge3R5YNiP1e3UZjInClVN65XAbvqqM6A7H5fATj0j'
 
 cc15477742bd704c29492d96c7ead9414dfd8e0ec4a00f947bb5bb454ddbd08a
@@ -581,7 +581,7 @@ cc15477742bd704c29492d96c7ead9414dfd8e0ec4a00f947bb5bb454ddbd08a
     "quantity":         "0.01000000",
     "price":            "52000.00",
     "newOrderRespType": "ACK",
-    "recvWindow":       100,
+    "recv_window":       100,
     "timestamp":        1645423376532,
     "apiKey":           "vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A",
     "signature":        "cc15477742bd704c29492d96c7ead9414dfd8e0ec4a00f947bb5bb454ddbd08a"
@@ -613,7 +613,7 @@ apiKey       | `CAvIjXy3F44yW6Pou5k8Dy1swsYDWJZLeoK2r8G4cFDnE9nosRppc2eKc1T8TRTQ
     "quantity":         "0.01000000",
     "price":            "52000.00",
     "newOrderRespType": "ACK",
-    "recvWindow":       100,
+    "recv_window":       100,
     "timestamp":        1645423376532,
     "apiKey":           "CAvIjXy3F44yW6Pou5k8Dy1swsYDWJZLeoK2r8G4cFDnE9nosRppc2eKc1T8TRTQ",
     "signature":        "------ FILL ME ------"
@@ -631,7 +631,7 @@ apiKey           | CAvIjXy3F44yW6Pou5k8Dy1swsYDWJZLeoK2r8G4cFDnE9nosRppc2eKc1T8T
 newOrderRespType | ACK
 price            | 52000.00
 quantity         | 0.01000000
-recvWindow       | 100
+recv_window       | 100
 side             | SELL
 symbol           | BTCUSDT
 timeInForce      | GTC
@@ -641,7 +641,7 @@ type             | LIMIT
 将参数格式化为 `参数=取值` 对并用 `&` 分隔每个参数：
 
 ```
-apiKey=CAvIjXy3F44yW6Pou5k8Dy1swsYDWJZLeoK2r8G4cFDnE9nosRppc2eKc1T8TRTQ&newOrderRespType=ACK&price=52000.00&quantity=0.01000000&recvWindow=100&side=SELL&symbol=BTCUSDT&timeInForce=GTC&timestamp=1645423376532&type=LIMIT
+apiKey=CAvIjXy3F44yW6Pou5k8Dy1swsYDWJZLeoK2r8G4cFDnE9nosRppc2eKc1T8TRTQ&newOrderRespType=ACK&price=52000.00&quantity=0.01000000&recv_window=100&side=SELL&symbol=BTCUSDT&timeInForce=GTC&timestamp=1645423376532&type=LIMIT
 ```
 
 **第二步：计算签名**
@@ -655,7 +655,7 @@ apiKey=CAvIjXy3F44yW6Pou5k8Dy1swsYDWJZLeoK2r8G4cFDnE9nosRppc2eKc1T8TRTQ&newOrder
 您可以使用 OpenSSL 交叉检查您的签名算法：
 
 ```console
-$ echo -n 'apiKey=CAvIjXy3F44yW6Pou5k8Dy1swsYDWJZLeoK2r8G4cFDnE9nosRppc2eKc1T8TRTQ&newOrderRespType=ACK&price=52000.00&quantity=0.01000000&recvWindow=100&side=SELL&symbol=BTCUSDT&timeInForce=GTC&timestamp=1645423376532&type=LIMIT' \
+$ echo -n 'apiKey=CAvIjXy3F44yW6Pou5k8Dy1swsYDWJZLeoK2r8G4cFDnE9nosRppc2eKc1T8TRTQ&newOrderRespType=ACK&price=52000.00&quantity=0.01000000&recv_window=100&side=SELL&symbol=BTCUSDT&timeInForce=GTC&timestamp=1645423376532&type=LIMIT' \
   | openssl dgst -sha256 -sign test-prv-key.pem \
   | openssl enc -base64 -A
 
@@ -678,7 +678,7 @@ OJJaf8C/3VGrU4ATTR4GiUDqL2FboSE1Qw7UnnoYNfXTXHubIl1iaePGuGyfct4NPu5oVEZCH4Q6ZStf
     "quantity":         "0.01000000",
     "price":            "52000.00",
     "newOrderRespType": "ACK",
-    "recvWindow":       100,
+    "recv_window":       100,
     "timestamp":        1645423376532,
     "apiKey":           "CAvIjXy3F44yW6Pou5k8Dy1swsYDWJZLeoK2r8G4cFDnE9nosRppc2eKc1T8TRTQ",
     "signature":        "OJJaf8C/3VGrU4ATTR4GiUDqL2FboSE1Qw7UnnoYNfXTXHubIl1iaePGuGyfct4NPu5oVEZCH4Q6ZStfB1w4ssgu0uiB/Bg+fBrRFfVgVaLKBdYHMvT+ljUJzqVaeoThG9oXlduiw8PbS9U8DYAbDvWN3jqZLo4Z2YJbyovyDAvDTr/oC0+vssLqP7NmlNb3fF3Bj7StmOwJvQJTbRAtzxK5PP7OQe+0mbW+D7RqVkUiSswR8qJFWTeSe4nXXNIdZdueYhF/Xf25L+KitJS5IHdIHcKfEw3MQzHFb2ZsGWkjDQwxkwr7Noi0Zaa+gFtxCuatGFm9dFIyx217pmSHtA=="
@@ -2668,7 +2668,7 @@ days    | `1d`, `2d` ... `7d`
 参数名          | 类型    | 是否必需 | 描述
 ------------- | ------- | --------- | ------------
 `apiKey`      | STRING  | YES       |
-`recvWindow`  | INT     | NO        | The value cannot be greater than `60000`
+`recv_window`  | INT     | NO        | The value cannot be greater than `60000`
 `signature`   | STRING  | YES       |
 `timestamp`   | INT     | YES       |
 
@@ -2816,7 +2816,7 @@ NONE
 `strategyType`      | INT     | NO        | <p>标识订单策略的任意数值。</p><p>小于`1000000`的值是保留的，不能使用。</p>
 `selfTradePreventionMode` |ENUM| NO | 允许的 ENUM 取决于交易对的配置。支持的值有 `EXPIRE_TAKER`，`EXPIRE_MAKER`，`EXPIRE_BOTH`，`NONE`。
 `apiKey`            | STRING  | YES       |
-`recvWindow`        | INT     | NO        | 值不能大于 `60000`
+`recv_window`        | INT     | NO        | 值不能大于 `60000`
 `signature`         | STRING  | YES       |
 `timestamp`         | INT     | YES       |
 
@@ -3362,7 +3362,7 @@ NONE
         <td></td>
     </tr>
     <tr>
-        <td><code>recvWindow</code></td>
+        <td><code>recv_window</code></td>
         <td>INT</td>
         <td>NO</td>
         <td>值不能大于 <tt>60000</tt></td>
@@ -3506,7 +3506,7 @@ NONE
         <td></td>
     </tr>
     <tr>
-        <td><code>recvWindow</code></td>
+        <td><code>recv_window</code></td>
         <td>INT</td>
         <td>NO</td>
         <td>值不能大于 <tt>60000</tt></td>
@@ -3851,7 +3851,7 @@ NONE
         <td></td>
     </tr>
     <tr>
-        <td><code>recvWindow</code></td>
+        <td><code>recv_window</code></td>
         <td>INT</td>
         <td>NO</td>
         <td>值不能大于 <tt>60000</tt></td>
@@ -4284,7 +4284,7 @@ NONE
 ------------------- | ------- | --------- | ------------
 `symbol`            | STRING  | NO        | 如果省略，则返回所有交易对的挂单
 `apiKey`            | STRING  | YES       |
-`recvWindow`        | INT     | NO        | 值不能大于 `60000`
+`recv_window`        | INT     | NO        | 值不能大于 `60000`
 `signature`         | STRING  | YES       |
 `timestamp`         | INT     | YES       |
 
@@ -4368,7 +4368,7 @@ NONE
 ------------------- | ------- | --------- | ------------
 `symbol`            | STRING  | YES       |
 `apiKey`            | STRING  | YES       |
-`recvWindow`        | INT     | NO        | 值不能大于 `60000`
+`recv_window`        | INT     | NO        | 值不能大于 `60000`
 `signature`         | STRING  | YES       |
 `timestamp`         | INT     | YES       |
 
@@ -4530,7 +4530,7 @@ NONE
 `newOrderRespType`  | ENUM    | NO        | 可选的响应格式: `ACK`，`RESULT`，`FULL` (默认)
 `selfTradePreventionMode` |ENUM| NO | 允许的 ENUM 取决于交易对的配置。支持的值有 `EXPIRE_TAKER`，`EXPIRE_MAKER`，`EXPIRE_BOTH`，`NONE`。
 `apiKey`            | STRING  | YES       |
-`recvWindow`        | INT     | NO        | 值不能大于 `60000`
+`recv_window`        | INT     | NO        | 值不能大于 `60000`
 `signature`         | STRING  | YES       |
 `timestamp`         | INT     | YES       |
 
@@ -4708,7 +4708,7 @@ NONE
         <td></td>
     </tr>
     <tr>
-        <td><code>recvWindow</code></td>
+        <td><code>recv_window</code></td>
         <td>INT</td>
         <td>NO</td>
         <td>值不能大于 <tt>60000</tt></td>
@@ -4839,7 +4839,7 @@ NONE
         <td></td>
     </tr>
     <tr>
-        <td><code>recvWindow</code></td>
+        <td><code>recv_window</code></td>
         <td>INT</td>
         <td>NO</td>
         <td>值不能大于 <tt>60000</tt></td>
@@ -4971,7 +4971,7 @@ NONE
 名称                | 类型    | 是否必需 | 描述
 ------------------- | ------- | --------- | ------------
 `apiKey`            | STRING  | YES       |
-`recvWindow`        | INT     | NO        | 值不能大于 `60000`
+`recv_window`        | INT     | NO        | 值不能大于 `60000`
 `signature`         | STRING  | YES       |
 `timestamp`         | INT     | YES       |
 
@@ -5063,7 +5063,7 @@ NONE
 `selfTradePreventionMode` |ENUM | NO      | 允许的 ENUM 取决于交易对的配置。支持的值有 `EXPIRE_TAKER`，`EXPIRE_MAKER`，`EXPIRE_BOTH`，`NONE`。
 `apiKey`            | STRING  | YES       |
 `timestamp`         | INT     | YES       |
-`recvWindow`        | INT     | NO        | 赋值不能大于 `60000`
+`recv_window`        | INT     | NO        | 赋值不能大于 `60000`
 `signature`         | STRING  | YES       |
 
 **注意:** `sor.order.place` 只支持 `限价` 和 `市场` 单， 并不支持 `quoteOrderQty`。
@@ -5244,7 +5244,7 @@ NONE
 名称                | 类型    | 是否必需 | 描述
 ------------------- | ------- | --------- | ------------
 `apiKey`            | STRING  | YES       |
-`recvWindow`        | INT     | NO        | 值不能大于 `60000`
+`recv_window`        | INT     | NO        | 值不能大于 `60000`
 `signature`         | STRING  | YES       |
 `timestamp`         | INT     | YES       |
 
@@ -5333,7 +5333,7 @@ NONE
 名称                | 类型    | 是否必需 | 描述
 ------------------- | ------- | --------- | ------------
 `apiKey`            | STRING  | YES       |
-`recvWindow`        | INT     | NO        | 值不能大于 `60000`
+`recv_window`        | INT     | NO        | 值不能大于 `60000`
 `signature`         | STRING  | YES       |
 `timestamp`         | INT     | YES       |
 
@@ -5407,7 +5407,7 @@ NONE
 `endTime`           | INT     | NO        |
 `limit`             | INT     | NO        | 默认 500; 最大值 1000
 `apiKey`            | STRING  | YES       |
-`recvWindow`        | INT     | NO        | 值不能大于 `60000`
+`recv_window`        | INT     | NO        | 值不能大于 `60000`
 `signature`         | STRING  | YES       |
 `timestamp`         | INT     | YES       |
 
@@ -5504,7 +5504,7 @@ NONE
 `endTime`           | INT     | NO        |
 `limit`             | INT     | NO        | 默认 500; 最大值 1000
 `apiKey`            | STRING  | YES       |
-`recvWindow`        | INT     | NO        | 值不能大于 `60000`
+`recv_window`        | INT     | NO        | 值不能大于 `60000`
 `signature`         | STRING  | YES       |
 `timestamp`         | INT     | YES       |
 
@@ -5597,7 +5597,7 @@ OCO 的状态报告与 [`orderList.status`](#查询-OCO-user_data) 相同。
 `fromId`            | INT     | NO        | 起始交易 ID
 `limit`             | INT     | NO        | 默认 500; 最大值 1000
 `apiKey`            | STRING  | YES       |
-`recvWindow`        | INT     | NO        | 值不能大于 `60000`
+`recv_window`        | INT     | NO        | 值不能大于 `60000`
 `signature`         | STRING  | YES       |
 `timestamp`         | INT     | YES       |
 
@@ -5702,7 +5702,7 @@ preventedMatchId    |LONG    | NO           |
 orderId             |LONG    | NO           |
 fromPreventedMatchId|LONG    | NO           |
 limit               |INT     | NO           | 默认：`500`；最大：`1000`
-recvWindow          | LONG   | NO           | 赋值不得大于 `60000`
+recv_window          | LONG   | NO           | 赋值不得大于 `60000`
 timestamp           | LONG   | YES          |
 
 **权重:**
@@ -5780,7 +5780,7 @@ timestamp           | LONG   | YES          |
 `fromAllocationId`         |INT    |No        |
 `limit`                    |INT    |No        |默认值 500； 最大值 1000
 `orderId`                  |LONG   |No        |
-`recvWindow`               |LONG   |No        |不能大于 `60000`
+`recv_window`               |LONG   |No        |不能大于 `60000`
 `timestamp`                |LONG   |No        |
 
 支持的参数组合:

@@ -1,6 +1,6 @@
 use serde::{Deserialize, Serialize};
 use crate::binance_client::order_types::time_in_force::TimeInForce;
-use crate::binance_client::account::deserialization::deserialize_string_to_f64;
+use crate::deserialization::deserialize_string_to_f64;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct OpenOrder {

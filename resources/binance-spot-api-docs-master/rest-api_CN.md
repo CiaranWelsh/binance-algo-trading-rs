@@ -106,11 +106,11 @@ MARKET_DATA | 需要有效的API-KEY
 
 ## 时间同步安全
 * 签名接口均需要传递 `timestamp`参数，其值应当是请求发送时刻的unix时间戳(毫秒)。
-* 服务器收到请求时会判断请求中的时间戳，如果是5000毫秒之前发出的，则请求会被认为无效。这个时间空窗值可以通过发送可选参数 `recvWindow`来定义。
+* 服务器收到请求时会判断请求中的时间戳，如果是5000毫秒之前发出的，则请求会被认为无效。这个时间空窗值可以通过发送可选参数 `recv_window`来定义。
 * 逻辑伪代码：
 
   ```javascript
-  if (timestamp < (serverTime + 1000) && (serverTime - timestamp) <= recvWindow) {
+  if (timestamp < (serverTime + 1000) && (serverTime - timestamp) <= recv_window) {
     // process request
   } else {
     // reject request
@@ -119,7 +119,7 @@ MARKET_DATA | 需要有效的API-KEY
 
 **关于交易时效性**
 互联网状况并不100%可靠，不可完全依赖,因此你的程序本地到币安服务器的时延会有抖动.
-这是我们设置`recvWindow`的目的所在，如果你从事高频交易，对交易时效性有较高的要求，可以灵活设置`recvWindow`以达到你的要求。
+这是我们设置`recv_window`的目的所在，如果你从事高频交易，对交易时效性有较高的要求，可以灵活设置`recv_window`以达到你的要求。
 **不推荐使用5秒以上的recvWindow**
 
 
@@ -143,16 +143,16 @@ Key | Value
 `timeInForce` | GTC
 `quantity` | 1
 `price` | 0.1
-`recvWindow` | 5000
+`recv_window` | 5000
 `timestamp` | 1499827319559
 
 
 ## 示例 1: 所有参数通过 query string 发送
-* **queryString:** symbol=LTCBTC&side=BUY&type=LIMIT&timeInForce=GTC&quantity=1&price=0.1&recvWindow=5000&timestamp=1499827319559
+* **queryString:** symbol=LTCBTC&side=BUY&type=LIMIT&timeInForce=GTC&quantity=1&price=0.1&recv_window=5000&timestamp=1499827319559
 * **HMAC SHA256 签名:**
 
     ```
-    [linux]$ echo -n "symbol=LTCBTC&side=BUY&type=LIMIT&timeInForce=GTC&quantity=1&price=0.1&recvWindow=5000&timestamp=1499827319559" | openssl dgst -sha256 -hmac "NhqPtmdSJYdKjVHjA7PZj4Mge3R5YNiP1e3UZjInClVN65XAbvqqM6A7H5fATj0j"
+    [linux]$ echo -n "symbol=LTCBTC&side=BUY&type=LIMIT&timeInForce=GTC&quantity=1&price=0.1&recv_window=5000&timestamp=1499827319559" | openssl dgst -sha256 -hmac "NhqPtmdSJYdKjVHjA7PZj4Mge3R5YNiP1e3UZjInClVN65XAbvqqM6A7H5fATj0j"
     (stdin)= c8db56825ae71d6d79447849e617115f4a920fa2acdcab2b053c4b2838bd6b71
     ```
 
@@ -161,15 +161,15 @@ Key | Value
 
     ```
     (HMAC SHA256)
-    [linux]$ curl -H "X-MBX-APIKEY: vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A" -X POST 'https://api.binance.com/api/v3/order?symbol=LTCBTC&side=BUY&type=LIMIT&timeInForce=GTC&quantity=1&price=0.1&recvWindow=5000&timestamp=1499827319559&signature=c8db56825ae71d6d79447849e617115f4a920fa2acdcab2b053c4b2838bd6b71'
+    [linux]$ curl -H "X-MBX-APIKEY: vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A" -X POST 'https://api.binance.com/api/v3/order?symbol=LTCBTC&side=BUY&type=LIMIT&timeInForce=GTC&quantity=1&price=0.1&recv_window=5000&timestamp=1499827319559&signature=c8db56825ae71d6d79447849e617115f4a920fa2acdcab2b053c4b2838bd6b71'
     ```
 
 ## 示例 2: 所有参数通过 request body 发送
-* **requestBody:** symbol=LTCBTC&side=BUY&type=LIMIT&timeInForce=GTC&quantity=1&price=0.1&recvWindow=5000&timestamp=1499827319559
+* **requestBody:** symbol=LTCBTC&side=BUY&type=LIMIT&timeInForce=GTC&quantity=1&price=0.1&recv_window=5000&timestamp=1499827319559
 * **HMAC SHA256 签名:**
 
     ```
-    [linux]$ echo -n "symbol=LTCBTC&side=BUY&type=LIMIT&timeInForce=GTC&quantity=1&price=0.1&recvWindow=5000&timestamp=1499827319559" | openssl dgst -sha256 -hmac "NhqPtmdSJYdKjVHjA7PZj4Mge3R5YNiP1e3UZjInClVN65XAbvqqM6A7H5fATj0j"
+    [linux]$ echo -n "symbol=LTCBTC&side=BUY&type=LIMIT&timeInForce=GTC&quantity=1&price=0.1&recv_window=5000&timestamp=1499827319559" | openssl dgst -sha256 -hmac "NhqPtmdSJYdKjVHjA7PZj4Mge3R5YNiP1e3UZjInClVN65XAbvqqM6A7H5fATj0j"
     (stdin)= c8db56825ae71d6d79447849e617115f4a920fa2acdcab2b053c4b2838bd6b71
     ```
 
@@ -178,16 +178,16 @@ Key | Value
 
     ```
     (HMAC SHA256)
-    [linux]$ curl -H "X-MBX-APIKEY: vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A" -X POST 'https://api.binance.com/api/v3/order' -d 'symbol=LTCBTC&side=BUY&type=LIMIT&timeInForce=GTC&quantity=1&price=0.1&recvWindow=5000&timestamp=1499827319559&signature=c8db56825ae71d6d79447849e617115f4a920fa2acdcab2b053c4b2838bd6b71'
+    [linux]$ curl -H "X-MBX-APIKEY: vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A" -X POST 'https://api.binance.com/api/v3/order' -d 'symbol=LTCBTC&side=BUY&type=LIMIT&timeInForce=GTC&quantity=1&price=0.1&recv_window=5000&timestamp=1499827319559&signature=c8db56825ae71d6d79447849e617115f4a920fa2acdcab2b053c4b2838bd6b71'
     ```
 
 ## 示例 3: 混合使用 query string 与 request body
 * **queryString:** symbol=LTCBTC&side=BUY&type=LIMIT&timeInForce=GTC
-* **requestBody:** quantity=1&price=0.1&recvWindow=5000&timestamp=1499827319559
+* **requestBody:** quantity=1&price=0.1&recv_window=5000&timestamp=1499827319559
 * **HMAC SHA256 签名:**
 
     ```
-    [linux]$ echo -n "symbol=LTCBTC&side=BUY&type=LIMIT&timeInForce=GTCquantity=1&price=0.1&recvWindow=5000&timestamp=1499827319559" | openssl dgst -sha256 -hmac "NhqPtmdSJYdKjVHjA7PZj4Mge3R5YNiP1e3UZjInClVN65XAbvqqM6A7H5fATj0j"
+    [linux]$ echo -n "symbol=LTCBTC&side=BUY&type=LIMIT&timeInForce=GTCquantity=1&price=0.1&recv_window=5000&timestamp=1499827319559" | openssl dgst -sha256 -hmac "NhqPtmdSJYdKjVHjA7PZj4Mge3R5YNiP1e3UZjInClVN65XAbvqqM6A7H5fATj0j"
     (stdin)= 0fd168b8ddb4876a0358a8d14d0c9f3da0e9b20c5d52b2a00fcf7d1c602f9a77
     ```
 
@@ -196,7 +196,7 @@ Key | Value
 
     ```
     (HMAC SHA256)
-    [linux]$ curl -H "X-MBX-APIKEY: vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A" -X POST 'https://api.binance.com/api/v3/order?symbol=LTCBTC&side=BUY&type=LIMIT&timeInForce=GTC' -d 'quantity=1&price=0.1&recvWindow=5000&timestamp=1499827319559&signature=0fd168b8ddb4876a0358a8d14d0c9f3da0e9b20c5d52b2a00fcf7d1c602f9a77'
+    [linux]$ curl -H "X-MBX-APIKEY: vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A" -X POST 'https://api.binance.com/api/v3/order?symbol=LTCBTC&side=BUY&type=LIMIT&timeInForce=GTC' -d 'quantity=1&price=0.1&recv_window=5000&timestamp=1499827319559&signature=0fd168b8ddb4876a0358a8d14d0c9f3da0e9b20c5d52b2a00fcf7d1c602f9a77'
     ```
 
 Note that the signature is different in example 3.
@@ -223,7 +223,7 @@ Key | Value
 `quantity` | 1
 `price` | 0.2
 `timestamp` | 1668481559918
-`recvWindow` | 5000
+`recv_window` | 5000
 
 
 **第一步: Payload**
@@ -231,7 +231,7 @@ Key | Value
 将参数列表排列成一个 string。 用 `&` 分隔每个参数。对于上述参数，签名 payload 如下所示：
 
 ```console
-symbol=BTCUSDT&side=SELL&type=LIMIT&timeInForce=GTC&quantity=1&price=0.2&timestamp=1668481559918&recvWindow=5000
+symbol=BTCUSDT&side=SELL&type=LIMIT&timeInForce=GTC&quantity=1&price=0.2&timestamp=1668481559918&recv_window=5000
 ```
 
 **第二步: 计算签名**
@@ -240,12 +240,12 @@ symbol=BTCUSDT&side=SELL&type=LIMIT&timeInForce=GTC&quantity=1&price=0.2&timesta
 2. 使用带有 SHA-256 hash 函数的 RSASSA-PKCS1-v1_5 算法对 payload 进行签名。
 
 ```console
-$ echo -n 'symbol=BTCUSDT&side=SELL&type=LIMIT&timeInForce=GTC&quantity=1&price=0.2&timestamp=1668481559918&recvWindow=5000' | openssl dgst -sha256 -sign ./test-prv-key.pem
+$ echo -n 'symbol=BTCUSDT&side=SELL&type=LIMIT&timeInForce=GTC&quantity=1&price=0.2&timestamp=1668481559918&recv_window=5000' | openssl dgst -sha256 -sign ./test-prv-key.pem
 ```
 3. 将输出编码为 base64 string。
 
 ```console
-$ echo -n 'symbol=BTCUSDT&side=SELL&type=LIMIT&timeInForce=GTC&quantity=1&price=0.2&timestamp=1668481559918&recvWindow=5000' | openssl dgst -sha256 -sign ./test-prv-key.pem | openssl enc -base64 -A
+$ echo -n 'symbol=BTCUSDT&side=SELL&type=LIMIT&timeInForce=GTC&quantity=1&price=0.2&timestamp=1668481559918&recv_window=5000' | openssl dgst -sha256 -sign ./test-prv-key.pem | openssl enc -base64 -A
 HZ8HOjiJ1s/igS9JA+n7+7Ti/ihtkRF5BIWcPIEluJP6tlbFM/Bf44LfZka/iemtahZAZzcO9TnI5uaXh3++lrqtNonCwp6/245UFWkiW1elpgtVAmJPbogcAv6rSlokztAfWk296ZJXzRDYAtzGH0gq7CgSJKfH+XxaCmR0WcvlKjNQnp12/eKXJYO4tDap8UCBLuyxDnR7oJKLHQHJLP0r0EAVOOSIbrFang/1WOq+Jaq4Efc4XpnTgnwlBbWTmhWDR1pvS9iVEzcSYLHT/fNnMRxFc7u+j3qI//5yuGuu14KR0MuQKKCSpViieD+fIti46sxPTsjSemoUKp0oXA==
 ```
 
@@ -258,7 +258,7 @@ HZ8HOjiJ1s%2FigS9JA%2Bn7%2B7Ti%2FihtkRF5BIWcPIEluJP6tlbFM%2FBf44LfZka%2FiemtahZA
 5. curl 命令:
 
 ```console
-curl -H "X-MBX-APIKEY: CAvIjXy3F44yW6Pou5k8Dy1swsYDWJZLeoK2r8G4cFDnE9nosRppc2eKc1T8TRTQ" -X POST 'https://api.binance.com/api/v3/order?symbol=BTCUSDT&side=SELL&type=LIMIT&timeInForce=GTC&quantity=1&price=0.2&timestamp=1668481559918&recvWindow=5000&signature=HZ8HOjiJ1s%2FigS9JA%2Bn7%2B7Ti%2FihtkRF5BIWcPIEluJP6tlbFM%2FBf44LfZka%2FiemtahZAZzcO9TnI5uaXh3%2B%2BlrqtNonCwp6%2F245UFWkiW1elpgtVAmJPbogcAv6rSlokztAfWk296ZJXzRDYAtzGH0gq7CgSJKfH%2BXxaCmR0WcvlKjNQnp12%2FeKXJYO4tDap8UCBLuyxDnR7oJKLHQHJLP0r0EAVOOSIbrFang%2F1WOq%2BJaq4Efc4XpnTgnwlBbWTmhWDR1pvS9iVEzcSYLHT%2FfNnMRxFc7u%2Bj3qI%2F%2F5yuGuu14KR0MuQKKCSpViieD%2BfIti46sxPTsjSemoUKp0oXA%3D%3D'
+curl -H "X-MBX-APIKEY: CAvIjXy3F44yW6Pou5k8Dy1swsYDWJZLeoK2r8G4cFDnE9nosRppc2eKc1T8TRTQ" -X POST 'https://api.binance.com/api/v3/order?symbol=BTCUSDT&side=SELL&type=LIMIT&timeInForce=GTC&quantity=1&price=0.2&timestamp=1668481559918&recv_window=5000&signature=HZ8HOjiJ1s%2FigS9JA%2Bn7%2B7Ti%2FihtkRF5BIWcPIEluJP6tlbFM%2FBf44LfZka%2FiemtahZAZzcO9TnI5uaXh3%2B%2BlrqtNonCwp6%2F245UFWkiW1elpgtVAmJPbogcAv6rSlokztAfWk296ZJXzRDYAtzGH0gq7CgSJKfH%2BXxaCmR0WcvlKjNQnp12%2FeKXJYO4tDap8UCBLuyxDnR7oJKLHQHJLP0r0EAVOOSIbrFang%2F1WOq%2BJaq4Efc4XpnTgnwlBbWTmhWDR1pvS9iVEzcSYLHT%2FfNnMRxFc7u%2Bj3qI%2F%2F5yuGuu14KR0MuQKKCSpViieD%2BfIti46sxPTsjSemoUKp0oXA%3D%3D'
 ```
 
 下面的示例 Bash 脚本执行上述类似的步骤：
@@ -1754,7 +1754,7 @@ trailingDelta|LONG|NO| 用于 `STOP_LOSS`, `STOP_LOSS_LIMIT`, `TAKE_PROFIT`, 和
 icebergQty | DECIMAL | NO | 仅有限价单(包括条件限价单与限价做事单)可以使用该参数，含义为创建冰山订单并指定冰山订单的数量。
 newOrderRespType | ENUM | NO | 指定响应类型 `ACK`, `RESULT`, or `FULL`; `MARKET` 与 `LIMIT` 订单默认为`FULL`, 其他默认为`ACK`。
 selfTradePreventionMode |ENUM| NO | 允许的 ENUM 取决于交易对的配置。支持的值有 `EXPIRE_TAKER`，`EXPIRE_MAKER`，`EXPIRE_BOTH`，`NONE`。
-recvWindow | LONG | NO |
+recv_window | LONG | NO |
 timestamp | LONG | YES |
 
 根据 order `type`的不同，某些参数强制要求，具体如下:
@@ -1965,7 +1965,7 @@ GET /api/v3/order
 symbol | STRING | YES |
 orderId | LONG | NO |
 origClientOrderId | STRING | NO |
-recvWindow | LONG | NO |
+recv_window | LONG | NO |
 timestamp | LONG | YES |
 
 注意:
@@ -2020,7 +2020,7 @@ orderId | LONG | NO |
 origClientOrderId | STRING | NO |
 newClientOrderId | STRING | NO |  用户自定义的本次撤销操作的ID(注意不是被撤销的订单的自定义ID)。如无指定会自动赋值。
 cancelRestrictions| ENUM | NO | 支持的值: <br>`ONLY_NEW` - 如果订单状态为 `NEW`，撤销将成功。<br> `ONLY_PARTIALLY_FILLED` - 如果订单状态为 `PARTIALLY_FILLED`，撤销将成功。
-recvWindow | LONG | NO |
+recv_window | LONG | NO |
 timestamp | LONG | YES |
 
 * `orderId` 与 `origClientOrderId` 必须至少发送一个.
@@ -2084,7 +2084,7 @@ DELETE /api/v3/openOrders
 名称 | 类型 | 是否必需 | 描述
 ------------ | ------------ | ------------ | ------------
 symbol | STRING | YES |
-recvWindow | LONG | NO | 不能大于 ```60000```
+recv_window | LONG | NO | 不能大于 ```60000```
 timestamp | LONG | YES |
 
 **数据源:**
@@ -2228,7 +2228,7 @@ icebergQty|DECIMAL|NO|
 newOrderRespType|ENUM|NO|指定响应类型: <br/> 指定响应类型 `ACK`, `RESULT`, or `FULL`; `MARKET` 与 `LIMIT` 订单默认为`FULL`, 其他默认为`ACK`。
 selfTradePreventionMode|ENUM|NO|允许的 ENUM 取决于交易对的配置。支持的值有 `EXPIRE_TAKER`，`EXPIRE_MAKER`，`EXPIRE_BOTH`，`NONE`。
 cancelRestrictions| ENUM | NO | 支持的值: <br>`ONLY_NEW` - 如果订单状态为 `NEW`，撤销将成功。<br> `ONLY_PARTIALLY_FILLED` - 如果订单状态为 `PARTIALLY_FILLED`，撤销将成功。
-recvWindow | LONG | NO | 不能大于 `60000`
+recv_window | LONG | NO | 不能大于 `60000`
 timestamp | LONG | YES |
 
 
@@ -2389,7 +2389,7 @@ GET /api/v3/openOrders
 名称 | 类型 | 是否必需 | 描述
 ------------ | ------------ | ------------ | ------------
 symbol | STRING | NO |
-recvWindow | LONG | NO |
+recv_window | LONG | NO |
 timestamp | LONG | YES |
 
 * 不带symbol参数，会返回所有交易对的挂单
@@ -2444,7 +2444,7 @@ orderId | LONG | NO | 只返回此orderID之后的订单，缺省返回最近的
 startTime | LONG | NO |
 endTime | LONG | NO |
 limit | INT | NO | Default 500; max 1000.
-recvWindow | LONG | NO |
+recv_window | LONG | NO |
 timestamp | LONG | YES |
 
 **注意:**
@@ -2516,7 +2516,7 @@ stopIcebergQty|DECIMAL|NO|
 stopLimitTimeInForce|ENUM|NO| 有效值 `GTC`/`FOK`/`IOC`
 newOrderRespType|ENUM|NO| 详见枚举定义：订单返回类型
 selfTradePreventionMode |ENUM| NO | 允许的 ENUM 取决于交易对的配置。支持的值有 `EXPIRE_TAKER`，`EXPIRE_MAKER`，`EXPIRE_BOTH`，`NONE`。
-recvWindow|LONG|NO| 不能大于 `60000`
+recv_window|LONG|NO| 不能大于 `60000`
 timestamp|LONG|YES|
 
 
@@ -2553,7 +2553,7 @@ symbol| STRING| YES|
 orderListId|LONG|NO| `orderListId` 或 `listClientOrderId` 必须被提供
 listClientOrderId|STRING|NO| `orderListId` 或 `listClientOrderId` 必须被提供
 newClientOrderId|STRING|NO| 用户自定义的本次撤销操作的ID(注意不是被撤销的订单的自定义ID)。如无指定会自动赋值。
-recvWindow|LONG|NO|不能大于 `60000`
+recv_window|LONG|NO|不能大于 `60000`
 timestamp|LONG|YES|
 
 其他注意点:
@@ -2642,7 +2642,7 @@ GET /api/v3/orderList
 ----|-----|----|----------
 orderListId|LONG|NO|   ```orderListId``` 或 ```origClientOrderId``` 必须提供一个。
 origClientOrderId|STRING|NO|  ```orderListId``` 或 ```origClientOrderId``` 必须提供一个。
-recvWindow|LONG|NO| 赋值不得大于 ```60000```
+recv_window|LONG|NO| 赋值不得大于 ```60000```
 timestamp|LONG|YES|
 
 **数据源:**
@@ -2692,7 +2692,7 @@ fromId|LONG|NO| 提供该项后, `startTime` 和 `endTime` 都不可提供
 startTime|LONG|NO|
 endTime|LONG|NO|
 limit|INT|NO| 默认值: 500; 最大值: 1000
-recvWindow|LONG|NO| 赋值不能超过 `60000`
+recv_window|LONG|NO| 赋值不能超过 `60000`
 timestamp|LONG|YES|
 
 **数据源:**
@@ -2759,7 +2759,7 @@ GET /api/v3/openOrderList
 
 名称| 类型|是否必需| 描述
 ----|-----|---|------------------
-recvWindow|LONG|NO| 赋值不能大于 ```60000```
+recv_window|LONG|NO| 赋值不能大于 ```60000```
 timestamp|LONG|YES|
 
 
@@ -2821,7 +2821,7 @@ icebergQty              | DECIMAL| NO | 仅有限价单可以使用该参数，�
 newOrderRespType        | ENUM   | NO | 指定响应类型:
 指定响应类型 `ACK`, `RESULT` 或 `FULL`; 默认为 `FULL`。
 selfTradePreventionMode |ENUM    | NO | 允许的 ENUM 取决于交易对的配置。支持的值有 `EXPIRE_TAKER`，`EXPIRE_MAKER`，`EXPIRE_BOTH`，`NONE`。
-recvWindow              | LONG   | NO | 赋值不能大于 `60000`
+recv_window              | LONG   | NO | 赋值不能大于 `60000`
 timestamp               | LONG | YES |
 
 **请注意:** `POST /api/v3/sor/order` 只支持 `限价` 和 `市场` 单， 并不支持 `quoteOrderQty`。
@@ -2937,7 +2937,7 @@ GET /api/v3/account
 
 名称 | 类型 | 是否必需 | 描述
 ------------ | ------------ | ------------ | ------------
-recvWindow | LONG | NO |
+recv_window | LONG | NO |
 timestamp | LONG | YES |
 
 **数据源:**
@@ -3001,7 +3001,7 @@ startTime | LONG | NO |
 endTime | LONG | NO |
 fromId | LONG | NO |返回该fromId之后的成交，缺省返回最近的成交
 limit | INT | NO | Default 500; max 1000.
-recvWindow | LONG | NO |
+recv_window | LONG | NO |
 timestamp | LONG | YES |
 
 
@@ -3050,7 +3050,7 @@ GET /api/v3/rateLimit/order
 **参数:**
 名称 | 类型| 是否必需 | 描述
 ------------ | ------------ | ------------ | ------------
-recvWindow | LONG | NO | 赋值不得大于 ```60000```
+recv_window | LONG | NO | 赋值不得大于 ```60000```
 timestamp | LONG | YES |
 
 **数据源:**
@@ -3101,7 +3101,7 @@ preventedMatchId    |LONG    | NO           |
 orderId             |LONG    | NO           |
 fromPreventedMatchId|LONG    | NO           |
 limit               |INT     | NO           | 默认：`500`；最大：`1000`
-recvWindow          | LONG   | NO           | 赋值不得大于 `60000`
+recv_window          | LONG   | NO           | 赋值不得大于 `60000`
 timestamp           | LONG   | YES          |
 
 **权重**
@@ -3156,7 +3156,7 @@ endTime                  |LONG   |No        |
 fromAllocationId         |INT    |No        |
 limit                    |INT    |No        |默认值 500； 最大值 1000
 orderId                  |LONG   |No        |
-recvWindow               |LONG   |No        |不能大于 `60000`
+recv_window               |LONG   |No        |不能大于 `60000`
 timestamp                |LONG   |No        |
 
 支持的参数组合:
