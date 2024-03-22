@@ -35,11 +35,11 @@ allocation
 
 ## B
 
-`baseAsset`
+`base_asset`
 * 基准资产; 指代交易对中的第一个资产(比如 `BTCUSDT`中的`BTC`), 表示被出售或者买进的资产。
 
 `baseAssetPrecision`
-* 基准资产精度; 接口 `GET /api/v3/exchangeInfo` 中的一个字段, 代表了基准资产(`baseAsset`)可以允许的最多小数位数。
+* 基准资产精度; 接口 `GET /api/v3/exchangeInfo` 中的一个字段, 代表了基准资产(`base_asset`)可以允许的最多小数位数。
 
 `baseCommissionPrecision`
 * 接口 `GET /api/v3/exchangeInfo` 中用来表示基准资产手续费可以允许的最多小数位数。
@@ -135,8 +135,8 @@ Data Source
 
 ## I
 
-`intervalNum`
-* 表示间隔时间, 例如如果`interval`的值是`SECOND`, 并且`intervalNum`是5, 那么表示为每5秒钟间隔。
+`interval_num`
+* 表示间隔时间, 例如如果`interval`的值是`SECOND`, 并且`interval_num`是5, 那么表示为每5秒钟间隔。
 
 `IOC` / Immediate or Canceled
 * `timeInForce` 的枚举值, 表示订单会尽量的成交，而不能成交的部分则会被交易所取消。
@@ -254,14 +254,14 @@ Order Book
 `quantity`
 * 订单量; 买卖订单时候基本资产(`base asset`)的数量。
 
-`quoteAsset`
+`quote_asset`
 * 定价资产; 在交易对中的第二个资产, 比如交易对`BTCUSDT`中的`USDT`;
 
 `quoteAssetPrecision`
-* 接口 `GET /api/v3/exchangeInfo` 中用来指明`quoteAsset`允许的最多小数位数。
+* 接口 `GET /api/v3/exchangeInfo` 中用来指明`quote_asset`允许的最多小数位数。
 
 `quoteCommissionPrecision`
-* 接口 `GET /api/v3/exchangeInfo` 中用来指明交易费用是`quoteAsset`允许的最多小数位数。
+* 接口 `GET /api/v3/exchangeInfo` 中用来指明交易费用是`quote_asset`允许的最多小数位数。
 
 `quoteOrderQty`
 * 市价单(`MARKET`)的下单接口中用于下反向市价单中的数量。

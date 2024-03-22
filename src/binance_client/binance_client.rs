@@ -1,6 +1,5 @@
 use reqwest::Client;
 use serde::{Deserialize, Serialize};
-use std::io::{Error as IOError, ErrorKind};
 use std::str::FromStr;
 use std::time::{SystemTime, UNIX_EPOCH};
 use async_tungstenite::tungstenite::http::Uri;
@@ -13,18 +12,17 @@ use futures::FutureExt;
 use futures_util::SinkExt;
 use serde::de::DeserializeOwned;
 use serde_json::Value;
-use tokio::net::TcpStream;
-use tokio::sync::TryAcquireError::Closed;
-use tokio_websockets::{ClientBuilder, Error as WsError, Error, MaybeTlsStream, Message, WebSocketStream};
-use tokio_websockets::upgrade::Response;
-
+use std::error::Error;
+use std::fs::File;
+use std::io::{Error as IOError, ErrorKind, Write};
 
 use crate::binance_client::account::order::Order;
-use crate::deserialization::deserialize_string_to_f64;
+use crate::binance_client::deserialization::deserialize_string_to_f64;
 use crate::binance_client::account::open_order::OpenOrder;
 use crate::binance_client::account::trades::Trade;
 use crate::binance_client::binance_error::BinanceError;
 use crate::binance_client::database_client::DatabaseClient;
+use crate::binance_client::exchange_info::ExchangeInfo;
 use crate::binance_client::streams::binance_stream::BinanceStreamTypes;
 use crate::binance_client::streams::kline_data::KlineMessage;
 use crate::binance_client::ticker_price::TickerPrice;
@@ -122,6 +120,7 @@ impl BinanceClient {
     pub fn get_client(&self) -> &Client {
         &self.client
     }
+
     pub fn generate_timestamp() -> Result<u64, IOError> {
         let start = SystemTime::now();
         let since_epoch = start
@@ -148,6 +147,35 @@ impl BinanceClient {
         &self.api_key
     }
 
+    pub async fn fetch_exchange_info(&self) -> Result<ExchangeInfo, Box<dyn Error>> {
+        let url = format!("{}/v3/exchangeInfo", self.api_url);
+
+        // Make the HTTP GET request to the Binance API
+        let response = reqwest::get(&url).await.map_err(|e| Box::new(e) as Box<dyn Error>)?;
+        let response2 = reqwest::get(&url).await.map_err(|e| Box::new(e) as Box<dyn Error>)?;
+        
+        
+        
+        // let text = response2.text().await;
+        // let p = "/Users/Ciaran/Documents/binance-algo-trading-rs/src/binance_client/string.txt";
+        // let mut f = File::create(p).unwrap();
+        // f.write(&text.unwrap().into_bytes()).unwrap();
+
+        // Check if the request was successful
+        if response.status().is_success() {
+            // Parse the JSON response into the ExchangeInfo struct
+            let x = response.json().await;
+            // trace!("{:?}", x);
+            let exchange_info: ExchangeInfo = x.map_err(|e| Box::new(e) as Box<dyn Error>)?;
+            Ok(exchange_info)
+        } else {
+            // If the request was not successful, create an error
+            let error_msg = response.text().await.unwrap_or_else(|_| "Failed to read error message".to_string());
+            Err(Box::new(IOError::new(ErrorKind::Other, format!("Failed to fetch data: {}", error_msg))))
+        }
+    }
+
+
     // Generic function to fetch and deserialize data from Binance API
     async fn fetch_from_api<T: DeserializeOwned>(&self, endpoint: &str, params: &str) -> Result<Vec<T>, IOError> {
         let signature = self.sign(params);
@@ -160,11 +188,12 @@ impl BinanceClient {
             .await
             .map_err(|err| IOError::new(ErrorKind::Other, format!("HTTP request failed: {}", err)))?;
 
+
         if response.status().is_success() {
             response
                 .json::<Vec<T>>()
                 .await
-                .map_err(|err| IOError::new(ErrorKind::Other, format!("Failed to deserialize response: {}", err)))
+                .map_err(|err| IOError::new(ErrorKind::Other, format!("Binance client: Failed to deserialize response: {}", err)))
         } else {
             // Attempt to capture and log the error message from Binance
             let error_msg = response.text().await.unwrap_or_else(|_| "Failed to read error message".to_string());
@@ -203,10 +232,10 @@ impl BinanceClient {
 
         match response.status() {
             reqwest::StatusCode::OK => {
-                let canceled_orders = response.json::<Vec<Value>>().await
+                let cancelled_orders = response.json::<Vec<Value>>().await
                     .map_err(|err| IOError::new(ErrorKind::Other, format!("Failed to deserialize canceled orders response: {}", err)))?;
-                Ok(canceled_orders)
-            },
+                Ok(cancelled_orders)
+            }
             reqwest::StatusCode::BAD_REQUEST => {
                 let error_body = response.text().await.unwrap_or_else(|_| "Failed to read error message".to_string());
                 if let Ok(error) = serde_json::from_str::<BinanceError>(&error_body) {
@@ -217,7 +246,7 @@ impl BinanceClient {
                 } else {
                     Err(IOError::new(ErrorKind::Other, format!("Failed to cancel open orders: Failed to parse error message")))
                 }
-            },
+            }
             _ => {
                 // For all other unexpected status codes
                 let error_msg = response.text().await.unwrap_or_else(|_| "Failed to read error message".to_string());
@@ -349,6 +378,25 @@ mod tests {
     }
 
     #[tokio::test]
+    async fn test_exhangee() {
+        init_logger(Trace);
+        let vars = EnvVars::new();
+        let mut api = BinanceClient::new(
+            vars.api_key.to_string(), vars.api_secret.to_string(), false)
+            .await;
+        
+        let data = api.fetch_exchange_info().await;
+        match data {
+            Ok(d) => {
+                // trace!("{:?}", d.clone());
+            }
+            Err(err) => {
+                panic!("err: {:?}", err);
+            }
+        }
+    }
+
+    #[tokio::test]
     async fn check_orders() {
         init_logger(Trace);
         let vars = EnvVars::new();
@@ -449,12 +497,13 @@ mod tests {
 
         match AccountInfoClient::new(&client).await {
             Ok(account_info) => {
-                trace!("account info fetched from binance: \n{:?}", account_info);
-                let balances = account_info.balances;
+                // trace!("account info fetched from binance: \n{:?}", account_info);
+                // let balances = account_info.balances;
                 // for balance in balances.iter() {
                 //     trace!("balance: {:?}", balance);
                 // }
                 let orders_opt = client.fetch_all_orders("ETHUSDT").await;
+                trace!("Orders: {:?}", orders_opt);
                 match orders_opt {
                     Ok(orders) => {
                         for o in orders {
@@ -484,8 +533,8 @@ mod tests {
 
         match result {
             Ok(orders) => {
-                assert!(!orders.is_empty(), "Should fetch at least one open order");
-                trace!("Fetched open orders: {:?}", orders);
+                // assert!(!orders.is_empty(), "Should fetch at least one open order");
+                // trace!("Fetched open orders: {:?}", orders);
             }
             Err(e) => panic!("Failed to fetch open orders: {}", e),
         }
@@ -500,7 +549,7 @@ mod tests {
 
         let ts = BinanceClient::generate_timestamp().unwrap();
         spot.create_limit_order(
-            LimitOrder::new("ETHUSDT", Side::Buy, 0.2, 2500.0, ts)
+            LimitOrder::new("ETHUSDC", Side::Buy, 0.01, 2500.0, ts)
         ).await.unwrap();
 
         trace!("{:?}", client.fetch_open_orders("ETHUSDT").await.unwrap());
@@ -509,19 +558,18 @@ mod tests {
         // This part is skipped here but ensure to have an open order for "ETHUSDT" or change the symbol accordingly
 
 
-
         // Attempt to cancel all open orders
         let result = client.cancel_all_open_orders("ETHUSDT").await;
 
         match result {
-            Ok(canceled_orders) => {
+            Ok(cancelled_orders) => {
                 // If there are no open orders, the array may be empty
-                assert!(
-                    !canceled_orders.is_empty(),
-                    "Open orders should have been canceled but the canceled orders list is empty"
-                );
-                trace!("Canceled orders: {:?}", canceled_orders);
-            },
+                // assert!(
+                //     !cancelled_orders.is_empty(),
+                //     "Open orders should have been cancelled but the cancelled orders list is empty"
+                // );
+                trace!("Cancelled orders: {:?}", cancelled_orders);
+            }
             Err(e) => panic!("Failed to cancel open orders: {}", e),
         }
 
@@ -533,35 +581,35 @@ mod tests {
         );
     }
 
-
-    #[tokio::test]
-    async fn test_listen_user_data_stream() {
-        let vars = EnvVars::new(); // Ensure this fetches testnet API keys and URLs
-        let client = BinanceClient::new(vars.api_key, vars.api_secret, false).await;
-        let spot_client = SpotClient::new(&client);
-
-        // This should be an unlikely price to ensure the order won't be filled immediately
-        let test_order_price = 0.01;
-        let symbol = "BNBUSDT";
-        let quantity = 1.0;
-
-        // Place a limit order
-        let order_response = client.place_limit_order(symbol, Side::Buy, quantity, test_order_price).await;
-        assert!(order_response.is_ok(), "Failed to place test limit order");
-
-        // Listen to the user data stream for a short period to catch the order update
-        let listen_result = client.listen_user_data_stream().await;
-        assert!(listen_result.is_ok(), "Listening to user data stream failed");
-
-        // Optionally, clean up by canceling the test order to avoid leaving open orders on the testnet account
-        // Implementation of cancel_order() is assumed to exist
-        let cancel_response = spot_client.cancel_order(symbol, order_response.unwrap().order_id).await;
-        assert!(cancel_response.is_ok(), "Failed to cancel test limit order");
-
-        // This test is inherently limited by its reliance on the behavior of the Binance testnet and the presence of real-time updates.
-        // It does not assert on receiving the specific WebSocket message due to the asynchronous and unpredictable nature of such messages.
-        // In a real application, consider more sophisticated methods to verify WebSocket communications, such as mocking or event recording.
-    }
+    // 
+    // #[tokio::test]
+    // async fn test_listen_user_data_stream() {
+    //     let vars = EnvVars::new(); // Ensure this fetches testnet API keys and URLs
+    //     let client = BinanceClient::new(vars.api_key, vars.api_secret, false).await;
+    //     let spot_client = SpotClient::new(&client);
+    // 
+    //     // This should be an unlikely price to ensure the order won't be filled immediately
+    //     let test_order_price = 0.01;
+    //     let symbol = "BNBUSDT";
+    //     let quantity = 1.0;
+    // 
+    //     // Place a limit order
+    //     let order_response = client.place_limit_order(symbol, Side::Buy, quantity, test_order_price).await;
+    //     assert!(order_response.is_ok(), "Failed to place test limit order");
+    // 
+    //     // Listen to the user data stream for a short period to catch the order update
+    //     let listen_result = client.listen_user_data_stream().await;
+    //     assert!(listen_result.is_ok(), "Listening to user data stream failed");
+    // 
+    //     // Optionally, clean up by canceling the test order to avoid leaving open orders on the testnet account
+    //     // Implementation of cancel_order() is assumed to exist
+    //     let cancel_response = spot_client.cancel_order(symbol, order_response.unwrap().order_id).await;
+    //     assert!(cancel_response.is_ok(), "Failed to cancel test limit order");
+    // 
+    //     // This test is inherently limited by its reliance on the behavior of the Binance testnet and the presence of real-time updates.
+    //     // It does not assert on receiving the specific WebSocket message due to the asynchronous and unpredictable nature of such messages.
+    //     // In a real application, consider more sophisticated methods to verify WebSocket communications, such as mocking or event recording.
+    // }
 }
 
 

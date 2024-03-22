@@ -326,7 +326,7 @@ You can find the current SOR configuration in Exchange Information (`GET /api/v3
 ```json
   "sors": [
     {
-      "baseAsset": "BTC",
+      "base_asset": "BTC",
       "symbols": [
         "BTCUSDT",
         "BTCUSDC",

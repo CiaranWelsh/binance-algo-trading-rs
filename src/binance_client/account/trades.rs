@@ -3,7 +3,7 @@ use crate::binance_client::account::order_status::OrderStatus;
 use crate::binance_client::order_types::order_type::OrderType;
 use crate::binance_client::order_types::side::Side;
 use crate::binance_client::order_types::time_in_force::TimeInForce;
-use crate::deserialization::*;
+use crate::binance_client::deserialization::*;
 
 
 
@@ -27,7 +27,10 @@ pub struct Trade {
     #[serde(rename = "commissionAsset")]
     pub commission_asset: String,
     pub time: u64,
+    #[serde(rename = "isBuyer")]
     pub is_buyer: bool,
+    #[serde(rename = "isMaker")]
     pub is_maker: bool,
+    #[serde(rename = "isBestMatch")]
     pub is_best_match: bool,
 }

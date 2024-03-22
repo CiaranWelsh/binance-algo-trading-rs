@@ -5,49 +5,49 @@
 ## 交易对过滤器
 ### PRICE_FILTER 价格过滤器
 价格过滤器用于检测order订单中price参数的合法性
-* `minPrice` 定义了 `price`/`stopPrice` 允许的最小值; `minPrice` == 0 的时候则失效。
-* `maxPrice` 定义了 `price`/`stopPrice` 允许的最大值; `maxPrice` == 0 的时候则失效。
-* `tickSize` 定义了 `price`/`stopPrice` 的步进间隔; `tickSize` == 0 的时候则失效。
+* `min_price` 定义了 `price`/`stopPrice` 允许的最小值; `min_price` == 0 的时候则失效。
+* `max_price` 定义了 `price`/`stopPrice` 允许的最大值; `max_price` == 0 的时候则失效。
+* `tick_size` 定义了 `price`/`stopPrice` 的步进间隔; `tick_size` == 0 的时候则失效。
 
 以上每一项均可为0，为0时代表这一项不再做限制。
 
 逻辑伪代码如下：
-* `price` >= `minPrice`
-* `price` <= `maxPrice`
-* `price` % `tickSize` == 0
+* `price` >= `min_price`
+* `price` <= `max_price`
+* `price` % `tick_size` == 0
 
 **/exchangeInfo 响应中的格式:**
 ```javascript
   {
     "filterType": "PRICE_FILTER",
-    "minPrice": "0.00000100",
-    "maxPrice": "100000.00000000",
-    "tickSize": "0.00000100"
+    "min_price": "0.00000100",
+    "max_price": "100000.00000000",
+    "tick_size": "0.00000100"
   }
 ```
 
 ### PERCENT_PRICE 价格振幅过滤器
 可以理解为一个瞬时的涨跌停限制，不允许价格瞬间剧烈浮动。
-`avgPriceMins` 指用过去几分钟的平均价格来计算价格基准. 0 表示用最新成交价格作为价格计准。
+`avg_price_mins` 指用过去几分钟的平均价格来计算价格基准. 0 表示用最新成交价格作为价格计准。
 
 逻辑伪代码如下：
-* `price` <= `weightedAveragePrice` * `multiplierUp`
-* `price` >= `weightedAveragePrice` * `multiplierDown`
+* `price` <= `weightedAveragePrice` * `multiplier_up`
+* `price` >= `weightedAveragePrice` * `multiplier_down`
 
 **/exchangeInfo 响应中的格式:**
 ```javascript
   {
     "filterType": "PERCENT_PRICE",
-    "multiplierUp": "1.3000",
-    "multiplierDown": "0.7000",
-    "avgPriceMins": 5
+    "multiplier_up": "1.3000",
+    "multiplier_down": "0.7000",
+    "avg_price_mins": 5
   }
 ```
 
 #### PERCENT_PRICE_BY_SIDE
 `PERCENT_PRICE_BY_SIDE` 过滤器定义了基于交易对平均价格的合法价格范围. 取决于`BUY`或者`SELL`, 价格范围可能有所不同.<br/>
 
-`avgPriceMins` 是用来计算平均价格的分钟数. 0 表示用最新价(last price).<br/>
+`avg_price_mins` 是用来计算平均价格的分钟数. 0 表示用最新价(last price).<br/>
 
 买向订单需要满足:
 
@@ -68,30 +68,30 @@
     "bidMultiplierDown": "0.2",
     "askMultiplierUp": "5",
     "askMultiplierDown": "0.8",
-    "avgPriceMins": 1
+    "avg_price_mins": 1
   }
 ```
 
 ### LOT_SIZE 订单尺寸
 "lots" 是拍卖术语，这个过滤器对订单中的 `quantity` 也就是数量参数进行合法性检查。包含三个部分：
 
-* `minQty` 表示 `quantity`/`icebergQty` 允许的最小值.
-* `maxQty` 表示 `quantity`/`icebergQty` 允许的最大值
-* `stepSize` 表示 `quantity`/`icebergQty` 允许的步进值。
+* `min_qty` 表示 `quantity`/`icebergQty` 允许的最小值.
+* `max_qty` 表示 `quantity`/`icebergQty` 允许的最大值
+* `step_size` 表示 `quantity`/`icebergQty` 允许的步进值。
 
 逻辑伪代码如下：
 
-* `quantity` >= `minQty`
-* `quantity` <= `maxQty`
-* `quantity` % `stepSize` == 0
+* `quantity` >= `min_qty`
+* `quantity` <= `max_qty`
+* `quantity` % `step_size` == 0
 
 **/exchangeInfo 响应中的格式:**
 ```javascript
   {
     "filterType": "LOT_SIZE",
-    "minQty": "0.00100000",
-    "maxQty": "100000.00000000",
-    "stepSize": "0.00100000"
+    "min_qty": "0.00100000",
+    "max_qty": "100000.00000000",
+    "step_size": "0.00100000"
   }
 ```
 
@@ -100,18 +100,18 @@ MIN_NOTIONAL过滤器定义了交易对订单所允许的最小名义价值(成�
 订单的名义价值是`价格`*`数量`。
 如果是高级订单(比如止盈止损订单`STOP_LOSS_LIMIT`)，名义价值会按照`stopPrice` * `quantity`来计算。
 如果是冰山订单，名义价值会按照`price` * `icebergQty`来计算。
-`applyToMarket`确定 `MIN_NOTIONAL`过滤器是否也将应用于`MARKET`订单。   
-由于`MARKET`订单没有价格，因此会在最后`avgPriceMins`分钟内使用平均价格。   
-`avgPriceMins`是计算平均价格的分钟数。 0表示使用最后的价格。 
+`apply_to_market`确定 `MIN_NOTIONAL`过滤器是否也将应用于`MARKET`订单。   
+由于`MARKET`订单没有价格，因此会在最后`avg_price_mins`分钟内使用平均价格。   
+`avg_price_mins`是计算平均价格的分钟数。 0表示使用最后的价格。 
 
 
 **/exchangeInfo 响应中的格式:**
 ```javascript
   {
     "filterType": "MIN_NOTIONAL",
-    "minNotional": "0.00100000",
-    "applyToMarket": true,
-    "avgPriceMins": 5
+    "min_notional": "0.00100000",
+    "apply_to_market": true,
+    "avg_price_mins": 5
   }
 ```
 
@@ -122,25 +122,25 @@ MIN_NOTIONAL过滤器定义了交易对订单所允许的最小名义价值(成�
 ```javascript
 {
    "filterType": "NOTIONAL",
-   "minNotional": "10.00000000",
+   "min_notional": "10.00000000",
    "applyMinToMarket": false,
    "maxNotional": "10000.00000000",
    "applyMaxToMarket": false,
-   "avgPriceMins": 5
+   "avg_price_mins": 5
 }
 ```
 
 名义价值过滤器(`NOTIONAL`)定义了订单在一个交易对上可以下单的名义价值区间.<br/><br/>
-`applyMinToMarket` 定义了 `minNotional` 是否适用于市价单(`MARKET`)  <br/>
+`applyMinToMarket` 定义了 `min_notional` 是否适用于市价单(`MARKET`)  <br/>
 `applyMaxToMarket` 定义了 `maxNotional` 是否适用于市价单(`MARKET`).
 
 要通过此过滤器, 订单的名义价值 (单价 x 数量, `price * quantity`) 需要满足如下条件:
 
 * `price * quantity` <= `maxNotional`
-* `price * quantity` >= `minNotional`
+* `price * quantity` >= `min_notional`
 
-对于市价单(`MARKET`), 用于计算的价格采用的是在 `avgPriceMins` 定义的时间之内的平均价.<br/>
-如果 `avgPriceMins` 为 0, 则采用最新的价格.
+对于市价单(`MARKET`), 用于计算的价格采用的是在 `avg_price_mins` 定义的时间之内的平均价.<br/>
+如果 `avg_price_mins` 为 0, 则采用最新的价格.
 
 ### ICEBERG_PARTS 冰山订单拆分数
 `ICEBERG_PARTS` 代表冰山订单最多可以拆分成多少个小订单。
@@ -157,23 +157,23 @@ MIN_NOTIONAL过滤器定义了交易对订单所允许的最小名义价值(成�
 ### MARKET_LOT_SIZE 市价订单尺寸
 `MARKET_LOT_SIZE`过滤器为交易对上的`MARKET`订单定义了`数量`(即拍卖中的"手数")规则。 共有3部分：
 
-* `minQty`定义了允许的最小`quantity`。
-* `maxQty`定义了允许的最大数量。
-* `stepSize`定义了可以增加/减少数量的间隔。
+* `min_qty`定义了允许的最小`quantity`。
+* `max_qty`定义了允许的最大数量。
+* `step_size`定义了可以增加/减少数量的间隔。
 
 为了通过 `market lot size`，`quantity` 必须满足以下条件：
 
-* `quantity` >= `minQty`
-* `quantity` <= `maxQty`
-* `quantity` % `stepSize` == 0
+* `quantity` >= `min_qty`
+* `quantity` <= `max_qty`
+* `quantity` % `step_size` == 0
 
 **/exchangeInfo 响应中的格式:**
 ```javascript
   {
     "filterType": "MARKET_LOT_SIZE",
-    "minQty": "0.00100000",
-    "maxQty": "100000.00000000",
-    "stepSize": "0.00100000"
+    "min_qty": "0.00100000",
+    "max_qty": "100000.00000000",
+    "step_size": "0.00100000"
   }
 ```
 
@@ -185,7 +185,7 @@ MIN_NOTIONAL过滤器定义了交易对订单所允许的最小名义价值(成�
 ```javascript
   {
     "filterType": "MAX_NUM_ORDERS",
-    "maxNumOrders": 25
+    "max_num_orders": 25
   }
 ```
 
@@ -197,7 +197,7 @@ MIN_NOTIONAL过滤器定义了交易对订单所允许的最小名义价值(成�
 ```javascript
   {
     "filterType": "MAX_NUM_ALGO_ORDERS",
-    "maxNumAlgoOrders": 5
+    "max_num_algo_orders": 5
   }
 ```
 
@@ -209,7 +209,7 @@ MIN_NOTIONAL过滤器定义了交易对订单所允许的最小名义价值(成�
 ```javascript
   {
     "filterType": "MAX_NUM_ICEBERG_ORDERS",
-    "maxNumIcebergOrders": 5
+    "max_num_iceberg_orders": 5
   }
 ```
 
@@ -228,7 +228,7 @@ MIN_NOTIONAL过滤器定义了交易对订单所允许的最小名义价值(成�
 ```javascript
 {
   "filterType": "MAX_POSITION",
-  "maxPosition": "10.00000000"
+  "max_position": "10.00000000"
 }
 ```
 
@@ -241,22 +241,22 @@ MIN_NOTIONAL过滤器定义了交易对订单所允许的最小名义价值(成�
 
 对于 `STOP_LOSS BUY`, `STOP_LOSS_LIMIT_BUY`, `TAKE_PROFIT SELL` 和 `TAKE_PROFIT_LIMIT SELL` 订单:
 
-* `trailingDelta` >= `minTrailingAboveDelta`
-* `trailingDelta` <= `maxTrailingAboveDelta`
+* `trailingDelta` >= `min_trailing_above_delta`
+* `trailingDelta` <= `max_trailing_above_delta`
 
 对于 `STOP_LOSS SELL`, `STOP_LOSS_LIMIT SELL`, `TAKE_PROFIT BUY`, 和 `TAKE_PROFIT_LIMIT BUY` 订单:
 
-* `trailingDelta` >= `minTrailingBelowDelta`
-* `trailingDelta` <= `maxTrailingBelowDelta`
+* `trailingDelta` >= `min_trailing_below_delta`
+* `trailingDelta` <= `max_trailing_below_delta`
 
  **/exchangeInfo format:**
 ```javascript
     {
           "filterType": "TRAILING_DELTA",
-          "minTrailingAboveDelta": 10,
-          "maxTrailingAboveDelta": 2000,
-          "minTrailingBelowDelta": 10,
-          "maxTrailingBelowDelta": 2000
+          "min_trailing_above_delta": 10,
+          "max_trailing_above_delta": 2000,
+          "min_trailing_below_delta": 10,
+          "max_trailing_below_delta": 2000
    }
 ```
 
@@ -269,7 +269,7 @@ MIN_NOTIONAL过滤器定义了交易对订单所允许的最小名义价值(成�
 ```javascript
   {
     "filterType": "EXCHANGE_MAX_NUM_ORDERS",
-    "maxNumOrders": 1000
+    "max_num_orders": 1000
   }
 ```
 
@@ -281,7 +281,7 @@ MIN_NOTIONAL过滤器定义了交易对订单所允许的最小名义价值(成�
 ```javascript
   {
     "filterType": "EXCHANGE_MAX_NUM_ALGO_ORDERS",
-    "maxNumAlgoOrders": 200
+    "max_num_algo_orders": 200
   }
 ```
 
@@ -295,6 +295,6 @@ MIN_NOTIONAL过滤器定义了交易对订单所允许的最小名义价值(成�
 ```javascript
 {
   "filterType": "EXCHANGE_MAX_NUM_ICEBERG_ORDERS",
-  "maxNumIcebergOrders": 10000
+  "max_num_iceberg_orders": 10000
 }
 ```

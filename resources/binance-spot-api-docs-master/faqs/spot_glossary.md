@@ -35,11 +35,11 @@ allocation
 
 ## B
 
-`baseAsset`
+`base_asset`
 * The first asset in the symbol (e.g. `BTC` is the `base asset` of symbol `BTCUSDT`), which represents the asset being bought and sold (the `quantity`).
 
 `baseAssetPrecision`
-* A field found in `GET /api/v3/exchangeInfo` that shows the number of decimals allowed on the `baseAsset`.
+* A field found in `GET /api/v3/exchangeInfo` that shows the number of decimals allowed on the `base_asset`.
 
 `baseCommissionPrecision`
 * A field found in `GET /api/v3/exchangeInfo` that represents the number of decimals base asset commission will be calculated to.
@@ -135,8 +135,8 @@ Data Source
 
 ## I
 
-`intervalNum`
-* Describes the amount of time in the interval (e.g. if `interval` is `SECOND` and `intervalNum` is 5, then this will be interpreted as every 5 seconds).
+`interval_num`
+* Describes the amount of time in the interval (e.g. if `interval` is `SECOND` and `interval_num` is 5, then this will be interpreted as every 5 seconds).
 
 `IOC` / Immediate or Canceled
 * `timeInForce` enum where the order tries to fill as much as possible, and the remaining unfilled quantity will expire.
@@ -257,11 +257,11 @@ Prevented Match
 `quantity`
 * Parameter used to specify the amount of the `base asset` to buy or sell.
 
-`quoteAsset`
+`quote_asset`
 * The second asset in the symbol (e.g. `USDT` is the `quote asset` of symbol `BTCUSDT`) which represents the asset being used to quote prices (the `price`).
 
 `quoteAssetPrecision`
-* A field found in `GET /api/v3/exchangeInfo` that shows the number of decimals allowed on the `quoteAsset`.
+* A field found in `GET /api/v3/exchangeInfo` that shows the number of decimals allowed on the `quote_asset`.
 
 `quoteCommissionPrecision`
 * A field found in `GET /api/v3/exchangeInfo` that represents the number of decimals quote asset commission will be calculated to.

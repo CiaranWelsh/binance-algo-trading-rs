@@ -19,8 +19,8 @@ use binance_api::binance_client::spot_orders::SpotClient;
 #[tokio::main]
 async fn main() {
     init_logger(Trace);
-    let base = "RAY";
-    let quote = "USDT";
+    let base = "ETH";
+    let quote = "USDC";
     let symbol = format!("{}{}", base, quote); 
 
     let account_size = 1000.0;
@@ -31,13 +31,13 @@ async fn main() {
     let binance_client = BinanceClient::new(vars.api_key, vars.api_secret, false).await;
     let spot_client = SpotClient::new(&binance_client);
 
-    let url = binance_client.api_url.clone() + "/v3/exchangeInfo?symbol=" + symbol.as_str();
-    let client = Client::new();
-    let response = client.get(url).send().await.unwrap().text().await.unwrap();
+    // let url = binance_client.api_url.clone() + "/v3/exchangeInfo?symbol=" + symbol.as_str();
+    // let client = Client::new();
+    // let response = client.get(url).send().await.unwrap().text().await.unwrap();
 
     // Parse the response JSON and extract the information related to order types
     // This is just a placeholder; actual implementation will depend on how you parse the JSON
-    println!("{}", response);
+    // println!("{}", response);
 
 
 
@@ -65,13 +65,13 @@ async fn main() {
     ).unwrap();
     take_profit_price = round(take_profit_price, 2);
     stop_loss_price = round(stop_loss_price, 2);
-    let stop_limit_price = stop_loss_price + 0.02;
+    let stop_limit_price = stop_loss_price + 0.1;
     position_size = round(position_size, 2);
     // position_size = 0.1;
     trace!("entry_price: {:?}", entry_price.price);
     trace!("take_profit_price: {:?}", take_profit_price);
     trace!("stop_loss_price: {:?}", stop_loss_price);
-    trace!("position_size: {:?}", position_size);
+    trace!("position_size: {:?} {}", position_size, base);
 
     let mo = MarketOrder::new_with_base_asset(symbol.clone(), Side::Buy, position_size);
 

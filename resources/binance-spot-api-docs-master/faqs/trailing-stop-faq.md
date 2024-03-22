@@ -54,13 +54,13 @@ Trailing order type | Side | Stop price condition       | Market price movement 
 
 For `STOP_LOSS` `BUY`, `STOP_LOSS_LIMIT` `BUY`, `TAKE_PROFIT` `SELL`, and `TAKE_PROFIT_LIMIT` `SELL` orders:
 
-* `trailingDelta` >= `minTrailingAboveDelta`
-* `trailingDelta` <= `maxTrailingAboveDelta`
+* `trailingDelta` >= `min_trailing_above_delta`
+* `trailingDelta` <= `max_trailing_above_delta`
 
 For `STOP_LOSS` `SELL`, `STOP_LOSS_LIMIT` `SELL`, `TAKE_PROFIT` `BUY`, and `TAKE_PROFIT_LIMIT` `BUY` orders:
 
-* `trailingDelta` >= `minTrailingBelowDelta`
-* `trailingDelta` <= `maxTrailingBelowDelta`
+* `trailingDelta` >= `min_trailing_below_delta`
+* `trailingDelta` <= `max_trailing_below_delta`
 
 ## Trailing Stop Order Scenarios
 

@@ -104,7 +104,7 @@
             <validValue name="True">1</validValue>
         </enum>
 
-        <enum name="rateLimitType" encodingType="uint8">
+        <enum name="rate_limit_type" encodingType="uint8">
             <validValue name="RawRequests" mbx:jsonValue="RAW_REQUESTS">0</validValue>
             <validValue name="Connections" mbx:jsonValue="CONNECTIONS">1</validValue>
             <validValue name="RequestWeight" mbx:jsonValue="REQUEST_WEIGHT">2</validValue>
@@ -257,16 +257,16 @@
     <sbe:message name="PriceFilter" id="1">
         <field id="1" name="filterType" type="filterType" presence="constant" valueRef="filterType.PriceFilter"/>
         <field id="2" name="priceExponent" type="exponent8"/>
-        <field id="3" name="minPrice" type="mantissa64" mbx:exponent="priceExponent"/>
-        <field id="4" name="maxPrice" type="mantissa64" mbx:exponent="priceExponent"/>
-        <field id="5" name="tickSize" type="mantissa64" mbx:exponent="priceExponent"/>
+        <field id="3" name="min_price" type="mantissa64" mbx:exponent="priceExponent"/>
+        <field id="4" name="max_price" type="mantissa64" mbx:exponent="priceExponent"/>
+        <field id="5" name="tick_size" type="mantissa64" mbx:exponent="priceExponent"/>
     </sbe:message>
     <sbe:message name="PercentPriceFilter" id="2">
         <field id="1" name="filterType" type="filterType" presence="constant" valueRef="filterType.PercentPrice"/>
         <field id="2" name="multiplierExponent" type="exponent8"/>
-        <field id="3" name="multiplierUp" type="mantissa64" mbx:exponent="multiplierExponent"/>
-        <field id="4" name="multiplierDown" type="mantissa64" mbx:exponent="multiplierExponent"/>
-        <field id="5" name="avgPriceMins" type="int32"/>
+        <field id="3" name="multiplier_up" type="mantissa64" mbx:exponent="multiplierExponent"/>
+        <field id="4" name="multiplier_down" type="mantissa64" mbx:exponent="multiplierExponent"/>
+        <field id="5" name="avg_price_mins" type="int32"/>
     </sbe:message>
     <sbe:message name="PercentPriceBySideFilter" id="3">
         <field id="1" name="filterType" type="filterType" presence="constant" valueRef="filterType.PercentPriceBySide"/>
@@ -275,30 +275,30 @@
         <field id="4" name="bidMultiplierDown" type="mantissa64" mbx:exponent="multiplierExponent"/>
         <field id="5" name="askMultiplierUp" type="mantissa64" mbx:exponent="multiplierExponent"/>
         <field id="6" name="askMultiplierDown" type="mantissa64" mbx:exponent="multiplierExponent"/>
-        <field id="7" name="avgPriceMins" type="int32"/>
+        <field id="7" name="avg_price_mins" type="int32"/>
     </sbe:message>
     <sbe:message name="LotSizeFilter" id="4">
         <field id="1" name="filterType" type="filterType" presence="constant" valueRef="filterType.LotSize"/>
         <field id="2" name="qtyExponent" type="exponent8"/>
-        <field id="3" name="minQty" type="mantissa64" mbx:exponent="qtyExponent"/>
-        <field id="4" name="maxQty" type="mantissa64" mbx:exponent="qtyExponent"/>
-        <field id="5" name="stepSize" type="mantissa64" mbx:exponent="qtyExponent"/>
+        <field id="3" name="min_qty" type="mantissa64" mbx:exponent="qtyExponent"/>
+        <field id="4" name="max_qty" type="mantissa64" mbx:exponent="qtyExponent"/>
+        <field id="5" name="step_size" type="mantissa64" mbx:exponent="qtyExponent"/>
     </sbe:message>
     <sbe:message name="MinNotionalFilter" id="5">
         <field id="1" name="filterType" type="filterType" presence="constant" valueRef="filterType.MinNotional"/>
         <field id="2" name="priceExponent" type="exponent8"/>
-        <field id="3" name="minNotional" type="mantissa64" mbx:exponent="priceExponent"/>
-        <field id="4" name="applyToMarket" type="boolEnum"/>
-        <field id="5" name="avgPriceMins" type="int32"/>
+        <field id="3" name="min_notional" type="mantissa64" mbx:exponent="priceExponent"/>
+        <field id="4" name="apply_to_market" type="boolEnum"/>
+        <field id="5" name="avg_price_mins" type="int32"/>
     </sbe:message>
     <sbe:message name="NotionalFilter" id="6">
         <field id="1" name="filterType" type="filterType" presence="constant" valueRef="filterType.Notional"/>
         <field id="2" name="priceExponent" type="exponent8"/>
-        <field id="3" name="minNotional" type="mantissa64" mbx:exponent="priceExponent"/>
+        <field id="3" name="min_notional" type="mantissa64" mbx:exponent="priceExponent"/>
         <field id="4" name="applyMinToMarket" type="boolEnum"/>
         <field id="5" name="maxNotional" type="mantissa64" mbx:exponent="priceExponent"/>
         <field id="6" name="applyMaxToMarket" type="boolEnum"/>
-        <field id="7" name="avgPriceMins" type="int32"/>
+        <field id="7" name="avg_price_mins" type="int32"/>
     </sbe:message>
     <sbe:message name="IcebergPartsFilter" id="7">
         <field id="1" name="filterType" type="filterType" presence="constant" valueRef="filterType.IcebergParts"/>
@@ -307,33 +307,33 @@
     <sbe:message name="MarketLotSizeFilter" id="8">
         <field id="1" name="filterType" type="filterType" presence="constant" valueRef="filterType.MarketLotSize"/>
         <field id="2" name="qtyExponent" type="exponent8"/>
-        <field id="3" name="minQty" type="mantissa64" mbx:exponent="qtyExponent"/>
-        <field id="4" name="maxQty" type="mantissa64" mbx:exponent="qtyExponent"/>
-        <field id="5" name="stepSize" type="mantissa64" mbx:exponent="qtyExponent"/>
+        <field id="3" name="min_qty" type="mantissa64" mbx:exponent="qtyExponent"/>
+        <field id="4" name="max_qty" type="mantissa64" mbx:exponent="qtyExponent"/>
+        <field id="5" name="step_size" type="mantissa64" mbx:exponent="qtyExponent"/>
     </sbe:message>
     <sbe:message name="MaxNumOrdersFilter" id="9">
         <field id="1" name="filterType" type="filterType" presence="constant" valueRef="filterType.MaxNumOrders"/>
-        <field id="2" name="maxNumOrders" type="int64"/>
+        <field id="2" name="max_num_orders" type="int64"/>
     </sbe:message>
     <sbe:message name="MaxNumAlgoOrdersFilter" id="10">
         <field id="1" name="filterType" type="filterType" presence="constant" valueRef="filterType.MaxNumAlgoOrders"/>
-        <field id="2" name="maxNumAlgoOrders" type="int64"/>
+        <field id="2" name="max_num_algo_orders" type="int64"/>
     </sbe:message>
     <sbe:message name="MaxNumIcebergOrdersFilter" id="11">
         <field id="1" name="filterType" type="filterType" presence="constant" valueRef="filterType.MaxNumIcebergOrders"/>
-        <field id="2" name="maxNumIcebergOrders" type="int64"/>
+        <field id="2" name="max_num_iceberg_orders" type="int64"/>
     </sbe:message>
     <sbe:message name="MaxPositionFilter" id="12">
         <field id="1" name="filterType" type="filterType" presence="constant" valueRef="filterType.MaxPosition"/>
         <field id="2" name="qtyExponent" type="exponent8"/>
-        <field id="3" name="maxPosition" type="mantissa64" mbx:exponent="qtyExponent"/>
+        <field id="3" name="max_position" type="mantissa64" mbx:exponent="qtyExponent"/>
     </sbe:message>
     <sbe:message name="TrailingDeltaFilter" id="13">
         <field id="1" name="filterType" type="filterType" presence="constant" valueRef="filterType.TrailingDelta"/>
-        <field id="2" name="minTrailingAboveDelta" type="int64"/>
-        <field id="3" name="maxTrailingAboveDelta" type="int64"/>
-        <field id="4" name="minTrailingBelowDelta" type="int64"/>
-        <field id="5" name="maxTrailingBelowDelta" type="int64"/>
+        <field id="2" name="min_trailing_above_delta" type="int64"/>
+        <field id="3" name="max_trailing_above_delta" type="int64"/>
+        <field id="4" name="min_trailing_below_delta" type="int64"/>
+        <field id="5" name="max_trailing_below_delta" type="int64"/>
     </sbe:message>
     <sbe:message name="TPlusSellFilter" id="14">
         <field id="1" name="filterType" type="filterType" presence="constant" valueRef="filterType.TPlusSell"/>
@@ -342,25 +342,25 @@
 
     <sbe:message name="ExchangeMaxNumOrdersFilter" id="15">
         <field id="1" name="filterType" type="filterType" presence="constant" valueRef="filterType.ExchangeMaxNumOrders"/>
-        <field id="2" name="maxNumOrders" type="int64"/>
+        <field id="2" name="max_num_orders" type="int64"/>
     </sbe:message>
     <sbe:message name="ExchangeMaxNumAlgoOrdersFilter" id="16">
         <field id="1" name="filterType" type="filterType" presence="constant" valueRef="filterType.ExchangeMaxNumAlgoOrders"/>
-        <field id="2" name="maxNumAlgoOrders" type="int64"/>
+        <field id="2" name="max_num_algo_orders" type="int64"/>
     </sbe:message>
     <sbe:message name="ExchangeMaxNumIcebergOrdersFilter" id="17">
         <field id="1" name="filterType" type="filterType" presence="constant" valueRef="filterType.ExchangeMaxNumIcebergOrders"/>
-        <field id="2" name="maxNumIcebergOrders" type="int64"/>
+        <field id="2" name="max_num_iceberg_orders" type="int64"/>
     </sbe:message>
 
     <!-- Endpoint responses begin here -->
     <sbe:message name="WebSocketResponse" id="50" description="Message wrapper for WebSocket API.">
         <field id="1" name="sbeSchemaIdVersionDeprecated" type="boolEnum"/>
         <field id="2" name="status" type="uint16"/>
-        <group id="100" name="rateLimits" dimensionType="groupSize16Encoding">
-            <field id="1" name="rateLimitType" type="rateLimitType"/>
+        <group id="100" name="rate_limits" dimensionType="groupSize16Encoding">
+            <field id="1" name="rate_limit_type" type="rate_limit_type"/>
             <field id="2" name="interval" type="rateLimitInterval"/>
-            <field id="3" name="intervalNum" type="uint8"/>
+            <field id="3" name="interval_num" type="uint8"/>
             <field id="4" name="rateLimit" type="int64" mbx:jsonPath="limit"/>
             <field id="5" name="current" type="int64" mbx:jsonPath="count"/>
         </group>
@@ -380,7 +380,7 @@
         <field id="1" name="authorizedSince" type="utcTimestampUs"/>
         <field id="2" name="connectedSince" type="utcTimestampUs"/>
         <field id="3" name="returnRateLimits" type="boolEnum"/>
-        <field id="4" name="serverTime" type="utcTimestampUs"/>
+        <field id="4" name="server_time" type="utcTimestampUs"/>
         <data id="200" name="apiKey" type="varString"/>
     </sbe:message>
 
@@ -389,7 +389,7 @@
         <field id="1" name="authorizedSince" type="utcTimestampUs" presence="optional"/>
         <field id="2" name="connectedSince" type="utcTimestampUs"/>
         <field id="3" name="returnRateLimits" type="boolEnum"/>
-        <field id="4" name="serverTime" type="utcTimestampUs"/>
+        <field id="4" name="server_time" type="utcTimestampUs"/>
         <data id="200" name="apiKey" type="optionalVarString"/>
     </sbe:message>
 
@@ -398,13 +398,13 @@
         <field id="1" name="authorizedSince" type="utcTimestampUs" presence="optional"/>
         <field id="2" name="connectedSince" type="utcTimestampUs"/>
         <field id="3" name="returnRateLimits" type="boolEnum"/>
-        <field id="4" name="serverTime" type="utcTimestampUs"/>
+        <field id="4" name="server_time" type="utcTimestampUs"/>
         <data id="200" name="apiKey" type="optionalVarString"/>
     </sbe:message>
 
     <sbe:message name="ErrorResponse" id="100">
         <field id="1" name="code" type="int16"/>
-        <field id="2" name="serverTime" type="utcTimestampUs" presence="optional"/>
+        <field id="2" name="server_time" type="utcTimestampUs" presence="optional"/>
         <field id="3" name="retryAfter" type="utcTimestampUs" presence="optional"/>
         <data id="200" name="msg" type="varString"/>
         <!-- May contain a "CancelReplaceOrderResponse" message -->
@@ -422,7 +422,7 @@
         - REST GET /api/v3/time
         - WebSocket "method":"time" -->
     <sbe:message name="ServerTimeResponse" id="102">
-        <field id="1" name="serverTime" type="utcTimestampUs"/>
+        <field id="1" name="server_time" type="utcTimestampUs"/>
     </sbe:message>
 
     <!-- Response for
@@ -431,11 +431,11 @@
     <sbe:message name="ExchangeInfoResponse" id="103">
         <!-- "timeZone" in JSON response is omitted. All timestamps in SBE
             responses are in UTC. -->
-        <!-- "serverTime" in JSON response is omitted. See GET /api/v3/time -->
-        <group id="100" name="rateLimits">
-            <field id="1" name="rateLimitType" type="rateLimitType"/>
+        <!-- "server_time" in JSON response is omitted. See GET /api/v3/time -->
+        <group id="100" name="rate_limits">
+            <field id="1" name="rate_limit_type" type="rate_limit_type"/>
             <field id="2" name="interval" type="rateLimitInterval"/>
-            <field id="3" name="intervalNum" type="uint8"/>
+            <field id="3" name="interval_num" type="uint8"/>
             <field id="4" name="rateLimit" type="int64" mbx:jsonPath="limit"/>
         </group>
 
@@ -492,15 +492,15 @@
             </group>
 
             <data id="200" name="symbol" type="varString8"/>
-            <data id="201" name="baseAsset" type="varString8"/>
-            <data id="202" name="quoteAsset" type="varString8"/>
+            <data id="201" name="base_asset" type="varString8"/>
+            <data id="202" name="quote_asset" type="varString8"/>
         </group>
 
         <group id="103" name="sors">
             <group id="1" name="sorSymbols">
                 <data id="200" name="symbol" type="varString8" mbx:jsonPath=".."/>
             </group>
-            <data id="200" name="baseAsset" type="varString8"/>
+            <data id="200" name="base_asset" type="varString8"/>
         </group>
     </sbe:message>
 
@@ -1437,12 +1437,12 @@
 
     <!-- Response for
         - REST GET /api/v3/rateLimit/order
-        - WebSocket "method":"account.rateLimits.orders" -->
+        - WebSocket "method":"account.rate_limits.orders" -->
     <sbe:message name="AccountOrderRateLimitResponse" id="402">
-        <group id="100" name="rateLimits" mbx:jsonPath="..">
-            <field id="1" name="rateLimitType" type="rateLimitType"/>
+        <group id="100" name="rate_limits" mbx:jsonPath="..">
+            <field id="1" name="rate_limit_type" type="rate_limit_type"/>
             <field id="2" name="interval" type="rateLimitInterval"/>
-            <field id="3" name="intervalNum" type="uint8"/>
+            <field id="3" name="interval_num" type="uint8"/>
             <field id="4" name="rateLimit" type="int64" mbx:jsonPath="limit"/>
             <field id="5" name="numOrders" type="int64" mbx:jsonPath="count"/>
         </group>

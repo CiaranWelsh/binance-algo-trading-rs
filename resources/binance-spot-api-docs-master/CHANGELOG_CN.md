@@ -183,7 +183,7 @@ User Data Streams
 |`GET /api/v3/myPreventedMatches`  <br> `myPreventedMatches`  - **使用 `preventedMatchId`** | 1 | 2
 |`GET /api/v3/myPreventedMatches`  <br> `myPreventedMatches`  - **使用 `orderId`**|10|20|
 |`GET /api/v3/account` <br> `account.status` |10 |20|
-|`GET /api/v3/rateLimit/order` <br> `account.rateLimits.orders`|20|40|
+|`GET /api/v3/rateLimit/order` <br> `account.rate_limits.orders`|20|40|
 |`GET /api/v3/exchangeInfo` <br> `exchangeInfo`|10|20|
 |`GET /api/v3/depth`<br> `depth`  - **Limit 1-100**|1|2|
 |`GET /api/v3/depth` <br> `depth` - **Limit 101-500**|5|10|
@@ -295,7 +295,7 @@ Websocket API
 
 * 修改了几个bugs: 当下单时设置 `type=MARKET` 和 `quoteOrderQty`, 也被称为“反向市价单”:
     * 当处于极端市场情况下, 订单不会返回部分成交，或者成交的数量为0甚至是负数.
-    * 当这种反向市价单的成交数量超过交易对的 `maxQty`, 订单会因为违反`MARKET_LOT_SIZE` 过滤器而被拒绝.
+    * 当这种反向市价单的成交数量超过交易对的 `max_qty`, 订单会因为违反`MARKET_LOT_SIZE` 过滤器而被拒绝.
 * 修复一个OCO订单的bug: 当使用 `trailingDelta` 时候, 当任何leg被触发时, `trailingTime` 值可能不正确.
 * 这些接口的返回数据中添加新字段 `transactTime` :
     * `DELETE /api/v3/order`
@@ -408,8 +408,8 @@ Websocket API
 虽然以下更改将在发布日期后 **大约一周内生效**，但是与其相关的文档已经被更改了：
 
 * 过滤器评估的更改：
-    * 之前的行为: `LOT_SIZE` 和 `MARKET_LOT_SIZE` 要求 (`quantity` - `minQty`) % `stepSize` == 0。
-    * 新行为: 现在已更改为 (`quantity` % `stepSize`) == 0。
+    * 之前的行为: `LOT_SIZE` 和 `MARKET_LOT_SIZE` 要求 (`quantity` - `min_qty`) % `step_size` == 0。
+    * 新行为: 现在已更改为 (`quantity` % `step_size`) == 0。
 * 使用 `quoteOrderQty` 的 `MARKET`订单的错误修复：
     * 之前的行为: 订单的状态将始终为 `FILLED`，即使订单没有完全成交。
     * 新行为: 如果订单由于流动性不足而没有完全成交，则订单状态将为 `EXPIRED`，仅当订单完全成交时状态为 `FILLED`。
@@ -798,7 +798,7 @@ SPOT API
     * 更新将在几天后上线，升级完毕后才会开启此功能。
 * `GET /api/v3/exchangeInfo` 在`symbols`列表里返回新数据`cancelReplaceAllowed`。
 * 添加新的过滤器 `NOTIONAL`
-    * 基于`minNotional` 与 `maxNotional` 值来限制名义价值 (`price * quantity`)
+    * 基于`min_notional` 与 `maxNotional` 值来限制名义价值 (`price * quantity`)
 * 添加新的过滤器 `EXCHANGE_MAX_NUM_ICEBERG_ORDERS`
     * 账号最大冰山挂单数
 
@@ -918,7 +918,7 @@ USER DATA STREAM
 
 ## 2022-02-24
 
-* 现货规则`PRICE_FILTER`里面的 `(price-minPrice) % tickSize == 0` 改成 `price % tickSize == 0`
+* 现货规则`PRICE_FILTER`里面的 `(price-min_price) % tick_size == 0` 改成 `price % tick_size == 0`
 * 新添加了一个规则 `PERCENT_PRICE_BY_SIDE`.
 * 接口 `GET api/v3/depth` 的变动:
     * `limit` 原先必须是固定值(比如 5, 10, 20, 50, 100, 500, 1000, 5000), 现在可以是在1-5000之间的任意的正整数, 服务器会返回指定的limit数量。(比如如果设置limit=3, 会返回前3个最好的卖价和买价)
@@ -1038,8 +1038,8 @@ WEB SOCKET 连接限制
   * /api/v3/ticker/price 无symbol参数时，权重增加到2。
   * /api/v3/ticker/bookTicker 无symbol参数时，权重增加到2。
   * DELETE /api/v3/order 现在会返回订单撤销前所处的末次状态。
-  * `MIN_NOTIONAL` 新增两个参数: `applyToMarket` (是否对市价单生效) and `avgPriceMins` (对市价单生效时，估算金额时使用过去几分钟的平均价格?).
-  *  /api/v1/exchangeInfo 中的限制增加了`intervalNum`. `intervalNum`表示该限制针对多少时间间隔进行统计. 例如: `intervalNum`= 5, `interval` = minute, 表示该限制对每5分钟内的行为进行统计。
+  * `MIN_NOTIONAL` 新增两个参数: `apply_to_market` (是否对市价单生效) and `avg_price_mins` (对市价单生效时，估算金额时使用过去几分钟的平均价格?).
+  *  /api/v1/exchangeInfo 中的限制增加了`interval_num`. `interval_num`表示该限制针对多少时间间隔进行统计. 例如: `interval_num`= 5, `interval` = minute, 表示该限制对每5分钟内的行为进行统计。
 
 #### 如何计算过去n分钟平均价格:
   1. [对过去n分钟所有订单的数量\*价格求和] / 过去n分钟所有订单的数量

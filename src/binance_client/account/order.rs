@@ -3,7 +3,7 @@ use crate::binance_client::account::order_status::OrderStatus;
 use crate::binance_client::order_types::order_type::OrderType;
 use crate::binance_client::order_types::side::Side;
 use crate::binance_client::order_types::time_in_force::TimeInForce;
-use crate::deserialization::*;
+use crate::binance_client::deserialization::*;
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Order {

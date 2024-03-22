@@ -52,13 +52,13 @@
 
 对于 `STOP_LOSS` 买单, `STOP_LOSS_LIMIT` 买单, `TAKE_PROFIT` 卖单, 和 `TAKE_PROFIT_LIMIT` 卖单:
 
-* `trailingDelta` >= `minTrailingAboveDelta`
-* `trailingDelta` <= `maxTrailingAboveDelta`
+* `trailingDelta` >= `min_trailing_above_delta`
+* `trailingDelta` <= `max_trailing_above_delta`
 
 对于 `STOP_LOSS` 卖单, `STOP_LOSS_LIMIT` 卖单, `TAKE_PROFIT` 买单, 和 `TAKE_PROFIT_LIMIT` 买单:
 
-* `trailingDelta` >= `minTrailingBelowDelta`
-* `trailingDelta` <= `maxTrailingBelowDelta`
+* `trailingDelta` >= `min_trailing_below_delta`
+* `trailingDelta` <= `max_trailing_below_delta`
 
 ## 追踪止盈止损订单用例
 

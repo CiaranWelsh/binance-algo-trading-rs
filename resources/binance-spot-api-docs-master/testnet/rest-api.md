@@ -123,12 +123,12 @@ Sample Payload below:
     * MINUTE => M
     * HOUR => H
     * DAY => D
-* `intervalNum` describes the amount of the interval. For example, `intervalNum` 5 with `intervalLetter` M means "Every 5 minutes".
-* The `/api/v3/exchangeInfo` `rateLimits` array contains objects related to the exchange's `RAW_REQUESTS`, `REQUEST_WEIGHT`, and `ORDERS` rate limits. These are further defined in the `ENUM definitions` section under `Rate limiters (rateLimitType)`.
+* `interval_num` describes the amount of the interval. For example, `interval_num` 5 with `intervalLetter` M means "Every 5 minutes".
+* The `/api/v3/exchangeInfo` `rate_limits` array contains objects related to the exchange's `RAW_REQUESTS`, `REQUEST_WEIGHT`, and `ORDERS` rate limits. These are further defined in the `ENUM definitions` section under `Rate limiters (rate_limit_type)`.
 * A 429 will be returned when either request rate limit or order rate limit is violated.
 
 ## IP Limits
-* Every request will contain `X-MBX-USED-WEIGHT-(intervalNum)(intervalLetter)` in the response headers which has the current used weight for the IP for all request rate limiters defined.
+* Every request will contain `X-MBX-USED-WEIGHT-(interval_num)(intervalLetter)` in the response headers which has the current used weight for the IP for all request rate limiters defined.
 * Each route has a `weight` which determines for the number of requests each endpoint counts for. Heavier endpoints and endpoints that do operations on multiple symbols will have a heavier `weight`.
 * When a 429 is received, it's your obligation as an API to back off and not spam the API.
 * **Repeatedly violating rate limits and/or failing to back off after receiving 429s will result in an automated IP ban (HTTP status 418).**
@@ -137,7 +137,7 @@ Sample Payload below:
 * **The limits on the API are based on the IPs, not the API keys.**
 
 ## Order Rate Limits
-* Every successful order response will contain a `X-MBX-ORDER-COUNT-(intervalNum)(intervalLetter)` header which has the current order count for the account for all order rate limiters defined. To monitor order count usage, refer to `GET api/v3/rateLimit/order`.
+* Every successful order response will contain a `X-MBX-ORDER-COUNT-(interval_num)(intervalLetter)` header which has the current order count for the account for all order rate limiters defined. To monitor order count usage, refer to `GET api/v3/rateLimit/order`.
 * When the order count exceeds the limit, you will receive a 429 error without the `Retry-After` header. Please check the Order Rate Limit rules using `GET api/v3/exchangeInfo` and wait for reactivation accordingly.
 * Rejected/unsuccessful orders are not guaranteed to have `X-MBX-ORDER-COUNT-**` headers in the response.
 * **The order rate limit is counted against each account**.
@@ -189,7 +189,7 @@ USER_STREAM | Endpoint requires sending a valid API-Key.
 * The logic is as follows:
 
   ```javascript
-  if (timestamp < (serverTime + 1000) && (serverTime - timestamp) <= recv_window) {
+  if (timestamp < (server_time + 1000) && (server_time - timestamp) <= recv_window) {
     // process request
   } else {
     // reject request
@@ -583,14 +583,14 @@ s-> seconds; m -> minutes; h -> hours; d -> days; w -> weeks; M -> months
 * 1w
 * 1M
 
-**Rate limiters (rateLimitType)**
+**Rate limiters (rate_limit_type)**
 * REQUEST_WEIGHT
 
 ```json
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000
     }
 ```
@@ -599,9 +599,9 @@ s-> seconds; m -> minutes; h -> hours; d -> days; w -> weeks; M -> months
 
 ```json
     {
-      "rateLimitType": "ORDERS",
+      "rate_limit_type": "ORDERS",
       "interval": "SECOND",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 10
     }
 ```
@@ -609,9 +609,9 @@ s-> seconds; m -> minutes; h -> hours; d -> days; w -> weeks; M -> months
 
 ```json
     {
-      "rateLimitType": "RAW_REQUESTS",
+      "rate_limit_type": "RAW_REQUESTS",
       "interval": "MINUTE",
-      "intervalNum": 5,
+      "interval_num": 5,
       "limit": 61000
     }
 ```
@@ -661,7 +661,7 @@ Memory
 **Response:**
 ```javascript
 {
-  "serverTime": 1499827319559
+  "server_time": 1499827319559
 }
 ```
 
@@ -699,10 +699,10 @@ Memory
 ```javascript
 {
   "timezone": "UTC",
-  "serverTime": 1565246363776,
-  "rateLimits": [
+  "server_time": 1565246363776,
+  "rate_limits": [
     {
-      // These are defined in the `ENUM definitions` section under `Rate Limiters (rateLimitType)`.
+      // These are defined in the `ENUM definitions` section under `Rate Limiters (rate_limit_type)`.
       // All limits are optional
     }
   ],
@@ -714,9 +714,9 @@ Memory
     {
       "symbol": "ETHBTC",
       "status": "TRADING",
-      "baseAsset": "ETH",
+      "base_asset": "ETH",
       "baseAssetPrecision": 8,
-      "quoteAsset": "BTC",
+      "quote_asset": "BTC",
       "quotePrecision": 8, // will be removed in future api versions (v4+)
       "quoteAssetPrecision": 8,
       "baseCommissionPrecision": 8,
@@ -753,7 +753,7 @@ Memory
   ],
   "sors": [
     {
-      "baseAsset": "BTC",
+      "base_asset": "BTC",
       "symbols": [
         "BTCUSDT",
         "BTCUSDC"
@@ -3208,16 +3208,16 @@ Memory
 [
 
   {
-    "rateLimitType": "ORDERS",
+    "rate_limit_type": "ORDERS",
     "interval": "SECOND",
-    "intervalNum": 10,
+    "interval_num": 10,
     "limit": 50,
     "count": 0
   },
   {
-    "rateLimitType": "ORDERS",
+    "rate_limit_type": "ORDERS",
     "interval": "DAY",
-    "intervalNum": 1,
+    "interval_num": 1,
     "limit": 160000,
     "count": 0
   }

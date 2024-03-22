@@ -190,7 +190,7 @@ Please refer to the table for more details:
 |`GET /api/v3/myPreventedMatches`  <br> `myPreventedMatches`  - **Using `preventedMatchId`** | 1 | 2
 |`GET /api/v3/myPreventedMatches`  <br> `myPreventedMatches`  - **Using `orderId`**|10|20|
 |`GET /api/v3/account` <br> `account.status` |10 |20|
-|`GET /api/v3/rateLimit/order` <br> `account.rateLimits.orders`|20|40|
+|`GET /api/v3/rateLimit/order` <br> `account.rate_limits.orders`|20|40|
 |`GET /api/v3/exchangeInfo` <br> `exchangeInfo`|10|20|
 |`GET /api/v3/depth`<br> `depth`  - **Limit 1-100**|1|2|
 |`GET /api/v3/depth` <br> `depth` - **Limit 101-500**|5|10|
@@ -308,7 +308,7 @@ Websocket API
 
 * Fixed multiple bugs with orders that use `type=MARKET` and `quoteOrderQty`, also known as “reverse market orders”:
     * Reverse market orders are no longer partially filled, or filled for zero or negative quantity under extreme market conditions.
-    * `MARKET_LOT_SIZE` filter now correctly rejects reverse market orders that go over the symbol's `maxQty`.
+    * `MARKET_LOT_SIZE` filter now correctly rejects reverse market orders that go over the symbol's `max_qty`.
 * Fixed a bug where OCO orders using `trailingDelta` could have an incorrect `trailingTime` value after either leg of the OCO is touched. 
 * New field `transactTime` will appear in order cancellation responses. This affects the following requests:
     * `DELETE /api/v3/order`
@@ -422,8 +422,8 @@ GENERAL CHANGES
 The following changes will take effect **approximately a week from the release date**, but the rest of the documentation has been updated to reflect the future changes: 
 
 * Changes to Filter Evaluation: 
-    * Previous behavior: `LOT_SIZE` and `MARKET_LOT_SIZE` required that (`quantity` - `minQty`) % `stepSize` == 0. 
-    * New behavior: This has now been changed to (`quantity` % `stepSize`) == 0.
+    * Previous behavior: `LOT_SIZE` and `MARKET_LOT_SIZE` required that (`quantity` - `min_qty`) % `step_size` == 0. 
+    * New behavior: This has now been changed to (`quantity` % `step_size`) == 0.
 * Bug fix with reverse `MARKET` orders (i.e., `MARKET` using `quoteOrderQty`):
     * Previous behavior: Reverse market orders would always have the status `FILLED` even if the order did not fully fill due to low liquidity.
     * New behavior: If the reverse market order did not fully fill due to low liquidity the order status will be `EXPIRED`, and `FILLED` only if the order was completely filled.
@@ -817,7 +817,7 @@ SPOT API
         * e.g. If the `MAX_NUM_ORDERS` filter is 10, and the total number of open orders on the account is also 10, when using `POST /api/v3/order/cancelReplace` both the cancel order placement and new order will fail because of the filter.
     * The change is being rolled out in the next few days, thus this feature will be enabled once the upgrade is completed.
 * New filter `NOTIONAL` has been added.
-    * Defines the allowed notional value (`price * quantity`) based on a configured `minNotional` and `maxNotional`
+    * Defines the allowed notional value (`price * quantity`) based on a configured `min_notional` and `maxNotional`
 * New exchange filter `EXCHANGE_MAX_NUM_ICEBERG_ORDERS` has been added.
     * Defines the limit of open iceberg orders on an account
 
@@ -931,7 +931,7 @@ USER DATA STREAM
 
 ## 2022-02-24
 
-* `(price-minPrice) % tickSize == 0` rule in `PRICE_FILTER` has been changed to `price % tickSize == 0`.
+* `(price-min_price) % tick_size == 0` rule in `PRICE_FILTER` has been changed to `price % tick_size == 0`.
 * A new filter `PERCENT_PRICE_BY_SIDE` has been added.
 * Changes to GET `api/v3/depth`
     * The `limit` value can be outside of the previous values (i.e. 5, 10, 20, 50, 100, 500, 1000,5000) and will return the correct limit. (i.e. if limit=3 then the response will be the top 3 bids and asks)
@@ -1235,8 +1235,8 @@ By end of Q1 2020, the following endpoints will be removed from the API. The doc
     * MINUTE => M
     * HOUR => H
     * DAY => D
-* New Headers `X-MBX-USED-WEIGHT-(intervalNum)(intervalLetter)` will give your current used request weight for the (intervalNum)(intervalLetter) rate limiter. For example, if there is a one minute request rate weight limiter set, you will get a `X-MBX-USED-WEIGHT-1M` header in the response. The legacy header `X-MBX-USED-WEIGHT` will still be returned and will represent the current used weight for the one minute request rate weight limit.
-* New Header `X-MBX-ORDER-COUNT-(intervalNum)(intervalLetter)`that is updated on any valid order placement and tracks your current order count for the interval; rejected/unsuccessful orders are not guaranteed to have `X-MBX-ORDER-COUNT-**` headers in the response.
+* New Headers `X-MBX-USED-WEIGHT-(interval_num)(intervalLetter)` will give your current used request weight for the (interval_num)(intervalLetter) rate limiter. For example, if there is a one minute request rate weight limiter set, you will get a `X-MBX-USED-WEIGHT-1M` header in the response. The legacy header `X-MBX-USED-WEIGHT` will still be returned and will represent the current used weight for the one minute request rate weight limit.
+* New Header `X-MBX-ORDER-COUNT-(interval_num)(intervalLetter)`that is updated on any valid order placement and tracks your current order count for the interval; rejected/unsuccessful orders are not guaranteed to have `X-MBX-ORDER-COUNT-**` headers in the response.
     * Eg. `X-MBX-ORDER-COUNT-1S` for "orders per 1 second" and `X-MBX-ORDER-COUNT-1D` for orders per "one day"
 * GET api/v1/depth now supports `limit` 5000 and 10000; weights are 50 and 100 respectively.
 * GET api/v1/exchangeInfo has a new parameter `ocoAllowed`.
@@ -1285,8 +1285,8 @@ By end of Q1 2020, the following endpoints will be removed from the API. The doc
 * /api/v3/ticker/price increased to weight of 2 for a no symbol query.
 * /api/v3/ticker/bookTicker increased weight of 2 for a no symbol query.
 * DELETE /api/v3/order will now return an execution report of the final state of the order.
-* `MIN_NOTIONAL` filter has two new parameters: `applyToMarket` (whether or not the filter is applied to MARKET orders) and `avgPriceMins` (the number of minutes over which the price averaged for the notional estimation).
-* `intervalNum` added to /api/v1/exchangeInfo limits. `intervalNum` describes the amount of the interval. For example: `intervalNum` 5, with `interval` minute, means "every 5 minutes".
+* `MIN_NOTIONAL` filter has two new parameters: `apply_to_market` (whether or not the filter is applied to MARKET orders) and `avg_price_mins` (the number of minutes over which the price averaged for the notional estimation).
+* `interval_num` added to /api/v1/exchangeInfo limits. `interval_num` describes the amount of the interval. For example: `interval_num` 5, with `interval` minute, means "every 5 minutes".
 
 #### Explanation for the average price calculation:
 1. (qty * price) of all trades / sum of qty of all trades over previous 5 minutes.
@@ -1295,7 +1295,7 @@ By end of Q1 2020, the following endpoints will be removed from the API. The doc
    For example if the last trade was 20 minutes ago, that trade's price is the 5 min average.
 
 3. If there is no trade on the symbol, there is no average price and market orders cannot be placed.
-   On a new symbol with `applyToMarket` enabled on the `MIN_NOTIONAL` filter, market orders cannot be placed until there is at least 1 trade.
+   On a new symbol with `apply_to_market` enabled on the `MIN_NOTIONAL` filter, market orders cannot be placed until there is at least 1 trade.
 
 4. The current average price can be checked here: `https://api.binance.com/api/v3/avgPrice?symbol=<symbol>`
    For example:

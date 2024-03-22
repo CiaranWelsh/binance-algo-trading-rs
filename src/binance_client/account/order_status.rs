@@ -10,7 +10,7 @@ pub enum OrderStatus {
     // The order has been fully executed, and no quantity remains to be filled.
     Filled,
     // The order has been canceled by the user, and no further execution will occur for this order.
-    Cancelled,
+    Canceled,
     // arely seen): The cancel request has been received, but the order has not yet been canceled.
     PendingCancel,
     // The order was not accepted by the system and thus was not placed.

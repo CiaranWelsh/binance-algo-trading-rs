@@ -82,25 +82,25 @@
     "workingTime": 1655716096505,
     "selfTradePreventionMode": "NONE"
   },
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "ORDERS",
+      "rate_limit_type": "ORDERS",
       "interval": "SECOND",
-      "intervalNum": 10,
+      "interval_num": 10,
       "limit": 50,
       "count": 12
     },
     {
-      "rateLimitType": "ORDERS",
+      "rate_limit_type": "ORDERS",
       "interval": "DAY",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 160000,
       "count": 4043
     },
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 321
     }
@@ -118,25 +118,25 @@
     "code": -2010,
     "msg": "Account has insufficient balance for requested action."
   },
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "ORDERS",
+      "rate_limit_type": "ORDERS",
       "interval": "SECOND",
-      "intervalNum": 10,
+      "interval_num": 10,
       "limit": 50,
       "count": 13
     },
     {
-      "rateLimitType": "ORDERS",
+      "rate_limit_type": "ORDERS",
       "interval": "DAY",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 160000,
       "count": 4044
     },
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 322
     }
@@ -180,7 +180,7 @@
     <td>错误描述。请求失败则显示</td>
   </tr>
   <tr>
-    <td><code>rateLimits</code></td>
+    <td><code>rate_limits</code></td>
     <td>ARRAY</td>
     <td>NO</td>
     <td>速率限制状态。请看 <a href="#速率限制">速率限制</a></td>
@@ -219,7 +219,7 @@
 
 * [`exchangeInfo`](#交易规范信息) 有包含与速率限制相关的信息。
 * 根据不同的间隔，有多种频率限制类型。
-* 从响应中的可选 `rateLimits` 字段，能看到当前的频率限制状态。
+* 从响应中的可选 `rate_limits` 字段，能看到当前的频率限制状态。
 * 如果违反任何速率限制（访问频次限制或下单速率限制），将收到429。
 
 ## 如何咨询频率限制
@@ -231,13 +231,13 @@
   "id": "7069b743-f477-4ae3-81db-db9b8df085d2",
   "status": 200,
   "result": {
-    "serverTime": 1656400526260
+    "server_time": 1656400526260
   },
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 70
     }
@@ -249,9 +249,9 @@
 
 | 名称             | 类型    | 是否必须    | 描述
 | --------------- | ------- | --------- | -----------
-| `rateLimitType` | ENUM    | YES       | 频率限制类型: `REQUEST_WEIGHT`, `ORDERS`
+| `rate_limit_type` | ENUM    | YES       | 频率限制类型: `REQUEST_WEIGHT`, `ORDERS`
 | `interval`      | ENUM    | YES       | 频率限制间隔: `SECOND`, `MINUTE`, `HOUR`, `DAY`
-| `intervalNum`   | INT     | YES       | 频率限制间隔乘数
+| `interval_num`   | INT     | YES       | 频率限制间隔乘数
 | `limit`         | INT     | YES       | 每个间隔的请求限制
 | `count`         | INT     | YES       | 每个间隔的当前使用情况
 
@@ -270,14 +270,14 @@ API 有多种频率限制间隔。
 
 ### 如何显示/隐藏频率限制信息
 
-默认情况下，每个响应都包含 `rateLimits` 字段。
+默认情况下，每个响应都包含 `rate_limits` 字段。
 
 但是，频率限制信息可能非常大。
-如果您对每个请求的详细频率限制状态不感兴趣，可以从响应中省略 `rateLimits` 字段。
+如果您对每个请求的详细频率限制状态不感兴趣，可以从响应中省略 `rate_limits` 字段。
 
 * 请求中的可选 `returnRateLimits` boolean 参数。
 
-  使用 `returnRateLimits` 参数控制是否包含 `rateLimits` 字段以响应单个请求。
+  使用 `returnRateLimits` 参数控制是否包含 `rate_limits` 字段以响应单个请求。
 
   默认请求和响应：
 
@@ -286,7 +286,7 @@ API 有多种频率限制间隔。
   ```
 
   ```json
-  {"id":1,"status":200,"result":{"serverTime":1656400526260},"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":6000,"count":70}]}
+  {"id":1,"status":200,"result":{"server_time":1656400526260},"rate_limits":[{"rate_limit_type":"REQUEST_WEIGHT","interval":"MINUTE","interval_num":1,"limit":6000,"count":70}]}
   ```
 
   没有频率限制状态的请求和响应：
@@ -296,12 +296,12 @@ API 有多种频率限制间隔。
   ```
 
   ```json
-  {"id":2,"status":200,"result":{"serverTime":1656400527891}}
+  {"id":2,"status":200,"result":{"server_time":1656400527891}}
   ```
 
 * 连接 URL 中可选的 `returnRateLimits` boolean 参数。
 
-  如果您希望在默认情况下从所有响应中省略 `rateLimits`，可以在 query string 中使用 `returnRateLimits` 参数：
+  如果您希望在默认情况下从所有响应中省略 `rate_limits`，可以在 query string 中使用 `returnRateLimits` 参数：
 
   ```
   wss://ws-api.binance.com:443/ws-api/v3?returnRateLimits=false
@@ -311,7 +311,7 @@ API 有多种频率限制间隔。
 
   如果您_想_查看特定请求的频率限制，您需要特定传 `"returnRateLimits"：true` 参数。
 
-**注意:** 如果您在响应中隐藏 `rateLimits` 字段，您的请求仍然还是会受到频率限制的。
+**注意:** 如果您在响应中隐藏 `rate_limits` 字段，您的请求仍然还是会受到频率限制的。
 
 
 ## IP 访问限制
@@ -337,11 +337,11 @@ API 有多种频率限制间隔。
   "id": "7069b743-f477-4ae3-81db-db9b8df085d2",
   "status": 200,
   "result": [],
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 70
     }
@@ -359,15 +359,15 @@ API 有多种频率限制间隔。
     "code": -1003,
     "msg": "Way too much request weight used; IP banned until 1659146400000. Please use WebSocket Streams for live updates to avoid bans.",
     "data": {
-      "serverTime": 1659142907531,
+      "server_time": 1659142907531,
       "retryAfter": 1659146400000
     }
   },
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 2411
     }
@@ -379,7 +379,7 @@ API 有多种频率限制间隔。
 * 每个下单请求都会计入到**订单限额**。
   * 成功的订单会更新 `ORDERS` 频率限制类型。
   * 被拒绝或不成功的订单可能会也可能不会更新 `ORDERS` 计数。
-* 使用 [`account.rateLimits.orders`](#账户订单率限制-user_data) 请求跟踪当前的订单率限制。
+* 使用 [`account.rate_limits.orders`](#账户订单率限制-user_data) 请求跟踪当前的订单率限制。
 * 订单速率限制适用于**每一个账户**，并由账户的所有 API key 共享。
 * 如果您超过订单速率限制，请求会失败，状态为 `429`。
   * 这错误代码表示您有责任停止发送请求，不得滥用API。
@@ -408,25 +408,25 @@ API 有多种频率限制间隔。
     "workingTime": 1655716096505,
     "selfTradePreventionMode": "NONE"
   },
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "ORDERS",
+      "rate_limit_type": "ORDERS",
       "interval": "SECOND",
-      "intervalNum": 10,
+      "interval_num": 10,
       "limit": 50,
       "count": 12
     },
     {
-      "rateLimitType": "ORDERS",
+      "rate_limit_type": "ORDERS",
       "interval": "DAY",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 160000,
       "count": 4043
     },
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 321
     }
@@ -473,7 +473,7 @@ API 有多种频率限制间隔。
 * 请求处理逻辑:
 
   ```javascript
-  if (timestamp < (serverTime + 1000) && (serverTime - timestamp) <= recv_window) {
+  if (timestamp < (server_time + 1000) && (server_time - timestamp) <= recv_window) {
     // 处理请求
   } else {
     // 拒绝请求
@@ -938,11 +938,11 @@ NONE
   "id": "922bcc6e-9de8-440d-9e84-7c80933a8d0d",
   "status": 200,
   "result": {},
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 1
     }
@@ -976,13 +976,13 @@ NONE
   "id": "187d3cb2-942d-484c-8271-4e2141bbadb1",
   "status": 200,
   "result": {
-    "serverTime": 1656400526260
+    "server_time": 1656400526260
   },
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 1
     }
@@ -1061,31 +1061,31 @@ NONE
   "status": 200,
   "result": {
     "timezone": "UTC",
-    "serverTime": 1655969291181,
+    "server_time": 1655969291181,
     // 全局速率限制。请参阅 "速率限制" 部分。
-    "rateLimits": [
+    "rate_limits": [
       {
-        "rateLimitType": "REQUEST_WEIGHT",    // 速率限制类型: REQUEST_WEIGHT，ORDERS，CONNECTIONS
+        "rate_limit_type": "REQUEST_WEIGHT",    // 速率限制类型: REQUEST_WEIGHT，ORDERS，CONNECTIONS
         "interval": "MINUTE",                 // 速率限制间隔: SECOND，MINUTE，DAY
-        "intervalNum": 1,                     // 速率限制间隔乘数 (i.e.，"1 minute")
+        "interval_num": 1,                     // 速率限制间隔乘数 (i.e.，"1 minute")
         "limit": 6000                         // 每个间隔的速率限制
       },
       {
-        "rateLimitType": "ORDERS",
+        "rate_limit_type": "ORDERS",
         "interval": "SECOND",
-        "intervalNum": 10,
+        "interval_num": 10,
         "limit": 50
       },
       {
-        "rateLimitType": "ORDERS",
+        "rate_limit_type": "ORDERS",
         "interval": "DAY",
-        "intervalNum": 1,
+        "interval_num": 1,
         "limit": 160000
       },
       {
-        "rateLimitType": "CONNECTIONS",
+        "rate_limit_type": "CONNECTIONS",
         "interval": "MINUTE",
-        "intervalNum": 5,
+        "interval_num": 5,
         "limit": 300
       }
     ],
@@ -1097,9 +1097,9 @@ NONE
       {
         "symbol": "BNBBTC",
         "status": "TRADING",
-        "baseAsset": "BNB",
+        "base_asset": "BNB",
         "baseAssetPrecision": 8,
-        "quoteAsset": "BTC",
+        "quote_asset": "BTC",
         "quotePrecision": 8,
         "quoteAssetPrecision": 8,
         "baseCommissionPrecision": 8,
@@ -1124,15 +1124,15 @@ NONE
         "filters": [
           {
             "filterType": "PRICE_FILTER",
-            "minPrice": "0.00000100",
-            "maxPrice": "100000.00000000",
-            "tickSize": "0.00000100"
+            "min_price": "0.00000100",
+            "max_price": "100000.00000000",
+            "tick_size": "0.00000100"
           },
           {
             "filterType": "LOT_SIZE",
-            "minQty": "0.00100000",
-            "maxQty": "100000.00000000",
-            "stepSize": "0.00100000"
+            "min_qty": "0.00100000",
+            "max_qty": "100000.00000000",
+            "step_size": "0.00100000"
           }
         ],
         "permissions": [
@@ -1148,7 +1148,7 @@ NONE
     ],
     "sors": [
       {
-        "baseAsset": "BTC",
+        "base_asset": "BTC",
         "symbols": [
           "BTCUSDT",
           "BTCUSDC"
@@ -1156,11 +1156,11 @@ NONE
       }
     ]
   },
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 20
     }
@@ -1268,11 +1268,11 @@ NONE
       ]
     ]
   },
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 5
     }
@@ -1329,11 +1329,11 @@ NONE
       "isBestMatch": true
     }
   ],
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 10
     }
@@ -1391,11 +1391,11 @@ NONE
       "isBestMatch": true
     }
   ],
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 10
     }
@@ -1473,11 +1473,11 @@ NONE
       "M": true             // 交易是否是最好价格匹配。
     }
   ],
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 2
     }
@@ -1570,11 +1570,11 @@ months    | `1M`
       "0"                 // 忽略此参数
     ]
   ],
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 2
     }
@@ -1648,11 +1648,11 @@ uiKlines 是返回修改后的k线数据，针对k线图的呈现进行了优化
       "0"                 // 忽略此参数
     ]
   ],
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 2
     }
@@ -1696,11 +1696,11 @@ uiKlines 是返回修改后的k线数据，针对k线图的呈现进行了优化
     "price": "0.01378135",
     "closeTime": 1694061154503
   },
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 1
     }
@@ -1810,11 +1810,11 @@ uiKlines 是返回修改后的k线数据，针对k线图的呈现进行了优化
     "lastId": 194968287,        // 最后一个交易 ID
     "count": 272173             // 成交笔数
   },
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 2
     }
@@ -1842,11 +1842,11 @@ uiKlines 是返回修改后的k线数据，针对k线图的呈现进行了优化
     "lastId": 194968287,        // 最后一个交易ID
     "count": 272173             // 成交笔数
   },
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 2
     }
@@ -1908,11 +1908,11 @@ uiKlines 是返回修改后的k线数据，针对k线图的呈现进行了优化
       "count": 5281861
     }
   ],
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 2
     }
@@ -2012,11 +2012,11 @@ uiKlines 是返回修改后的k线数据，针对k线图的呈现进行了优化
     "lastId": 3220849281,
     "count": 697727
   },
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 4
     }
@@ -2066,11 +2066,11 @@ uiKlines 是返回修改后的k线数据，针对k线图的呈现进行了优化
       "count": 98698
     }
   ],
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 8
     }
@@ -2100,11 +2100,11 @@ uiKlines 是返回修改后的k线数据，针对k线图的呈现进行了优化
     "lastId": 3220849281,                        // 区间内的最后一个交易的交易ID
     "count": 697727                              // 区间内的交易数量
   },
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 4
     }
@@ -2148,11 +2148,11 @@ With `symbols`:
       "count": 98698
     }
   ],
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 8
     }
@@ -2296,11 +2296,11 @@ days    | `1d`, `2d` ... `7d`
     "lastId": 195365758,        // 最后交易 ID
     "count": 2387994            // 成交笔数
   },
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 4
     }
@@ -2328,11 +2328,11 @@ days    | `1d`, `2d` ... `7d`
     "lastId": 195365758,        // 最后交易 ID
     "count": 2387994            // 成交笔数
   },
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 4
     }
@@ -2382,11 +2382,11 @@ days    | `1d`, `2d` ... `7d`
       "count": 35549628
     }
   ],
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 8
     }
@@ -2467,11 +2467,11 @@ days    | `1d`, `2d` ... `7d`
     "symbol": "BNBBTC",
     "price": "0.01361900"
   },
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 2
     }
@@ -2499,11 +2499,11 @@ days    | `1d`, `2d` ... `7d`
       "price": "331.10000000"
     }
   ],
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 4
     }
@@ -2589,11 +2589,11 @@ days    | `1d`, `2d` ... `7d`
     "askPrice": "0.01358100",
     "askQty": "17.83700000"
   },
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 2
     }
@@ -2623,11 +2623,11 @@ days    | `1d`, `2d` ... `7d`
       "askQty": "0.01512000"
     }
   ],
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 4
     }
@@ -2686,7 +2686,7 @@ days    | `1d`, `2d` ... `7d`
     "authorizedSince": 1649729878532,
     "connectedSince": 1649729873021,
     "returnRateLimits": false,
-    "serverTime": 1649729878630
+    "server_time": 1649729878630
   }
 }
 ```
@@ -2723,7 +2723,7 @@ NONE
     "authorizedSince": 1649729878532,
     "connectedSince": 1649729873021,
     "returnRateLimits": false,
-    "serverTime": 1649730611671
+    "server_time": 1649730611671
   }
 }
 ```
@@ -2763,7 +2763,7 @@ NONE
     "authorizedSince": null,
     "connectedSince": 1649729873021,
     "returnRateLimits": false,
-    "serverTime": 1649730611671
+    "server_time": 1649730611671
   }
 }
 ```
@@ -3045,25 +3045,25 @@ NONE
     "clientOrderId": "4d96324ff9d44481926157ec08158a40",
     "transactTime": 1660801715639
   },
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "ORDERS",
+      "rate_limit_type": "ORDERS",
       "interval": "SECOND",
-      "intervalNum": 10,
+      "interval_num": 10,
       "limit": 50,
       "count": 1
     },
     {
-      "rateLimitType": "ORDERS",
+      "rate_limit_type": "ORDERS",
       "interval": "DAY",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 160000,
       "count": 1
     },
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 1
     }
@@ -3094,25 +3094,25 @@ NONE
     "workingTime": 1660801715639,
     "selfTradePreventionMode": "NONE"
   },
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "ORDERS",
+      "rate_limit_type": "ORDERS",
       "interval": "SECOND",
-      "intervalNum": 10,
+      "interval_num": 10,
       "limit": 50,
       "count": 1
     },
     {
-      "rateLimitType": "ORDERS",
+      "rate_limit_type": "ORDERS",
       "interval": "DAY",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 160000,
       "count": 1
     },
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 1
     }
@@ -3160,25 +3160,25 @@ NONE
     ],
     "selfTradePreventionMode": "NONE"
   },
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "ORDERS",
+      "rate_limit_type": "ORDERS",
       "interval": "SECOND",
-      "intervalNum": 10,
+      "interval_num": 10,
       "limit": 50,
       "count": 1
     },
     {
-      "rateLimitType": "ORDERS",
+      "rate_limit_type": "ORDERS",
       "interval": "DAY",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 160000,
       "count": 1
     },
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 1
     }
@@ -3258,11 +3258,11 @@ NONE
   "id": "6ffebe91-01d9-43ac-be99-57cf062e0e30",
   "status": 200,
   "result": {},
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 1
     }
@@ -3293,11 +3293,11 @@ NONE
       "discount": "0.25000000"                 // 当用BNB支付佣金时，在标准佣金上按此比率打折。
     }
   },
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 20
     }
@@ -3424,11 +3424,11 @@ NONE
     "preventedMatchId": 0,              // 这仅在订单因 STP 而过期时可见
     "preventedQuantity": "1.200000"     // 这仅在订单因 STP 而过期时可见
   },
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 4
     }
@@ -3567,11 +3567,11 @@ NONE
     "strategyType": 1000000,            // 如果订单设置了 strategyType 会出现
     "selfTradePreventionMode": "NONE"
   },
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 2
     }
@@ -3644,11 +3644,11 @@ NONE
       }
     ]
   },
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 1
     }
@@ -4008,25 +4008,25 @@ NONE
       "selfTradePreventionMode": "NONE"
     }
   },
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "ORDERS",
+      "rate_limit_type": "ORDERS",
       "interval": "SECOND",
-      "intervalNum": 10,
+      "interval_num": 10,
       "limit": 50,
       "count": 1
     },
     {
-      "rateLimitType": "ORDERS",
+      "rate_limit_type": "ORDERS",
       "interval": "DAY",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 160000,
       "count": 1
     },
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 1
     }
@@ -4053,25 +4053,25 @@ NONE
       "newOrderResponse": null
     }
   },
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "ORDERS",
+      "rate_limit_type": "ORDERS",
       "interval": "SECOND",
-      "intervalNum": 10,
+      "interval_num": 10,
       "limit": 50,
       "count": 1
     },
     {
-      "rateLimitType": "ORDERS",
+      "rate_limit_type": "ORDERS",
       "interval": "DAY",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 160000,
       "count": 1
     },
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 1
     }
@@ -4114,25 +4114,25 @@ NONE
       }
     }
   },
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "ORDERS",
+      "rate_limit_type": "ORDERS",
       "interval": "SECOND",
-      "intervalNum": 10,
+      "interval_num": 10,
       "limit": 50,
       "count": 1
     },
     {
-      "rateLimitType": "ORDERS",
+      "rate_limit_type": "ORDERS",
       "interval": "DAY",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 160000,
       "count": 1
     },
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 1
     }
@@ -4172,25 +4172,25 @@ NONE
       }
     }
   },
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "ORDERS",
+      "rate_limit_type": "ORDERS",
       "interval": "SECOND",
-      "intervalNum": 10,
+      "interval_num": 10,
       "limit": 50,
       "count": 1
     },
     {
-      "rateLimitType": "ORDERS",
+      "rate_limit_type": "ORDERS",
       "interval": "DAY",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 160000,
       "count": 1
     },
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 1
     }
@@ -4220,25 +4220,25 @@ NONE
       }
     }
   },
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "ORDERS",
+      "rate_limit_type": "ORDERS",
       "interval": "SECOND",
-      "intervalNum": 10,
+      "interval_num": 10,
       "limit": 50,
       "count": 1
     },
     {
-      "rateLimitType": "ORDERS",
+      "rate_limit_type": "ORDERS",
       "interval": "DAY",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 160000,
       "count": 1
     },
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 1
     }
@@ -4328,11 +4328,11 @@ NONE
       "selfTradePreventionMode": "NONE"
     }
   ],
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 6
     }
@@ -4464,11 +4464,11 @@ NONE
       ]
     }
   ],
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 1
     }
@@ -4630,25 +4630,25 @@ NONE
       }
     ]
   },
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "ORDERS",
+      "rate_limit_type": "ORDERS",
       "interval": "SECOND",
-      "intervalNum": 10,
+      "interval_num": 10,
       "limit": 50,
       "count": 2
     },
     {
-      "rateLimitType": "ORDERS",
+      "rate_limit_type": "ORDERS",
       "interval": "DAY",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 160000,
       "count": 2
     },
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 1
     }
@@ -4764,11 +4764,11 @@ NONE
       }
     ]
   },
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 4
     }
@@ -4930,11 +4930,11 @@ NONE
       }
     ]
   },
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 1
     }
@@ -5007,11 +5007,11 @@ NONE
       ]
     }
   ],
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 6
     }
@@ -5109,11 +5109,11 @@ NONE
       "usedSor": true
     }
   ],
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 1
     }
@@ -5172,11 +5172,11 @@ NONE
   "id": "3a4437e2-41a3-4c19-897c-9cadc5dce8b6",
   "status": 200,
   "result": {},
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 1
     }
@@ -5206,11 +5206,11 @@ NONE
       "discount": "0.25000000"                     // 当用BNB支付佣金时，在标准佣金上按此比率打折。
     }
   },
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 20
     }
@@ -5297,11 +5297,11 @@ NONE
     ],
     "uid": 354937868
   },
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 20
     }
@@ -5314,7 +5314,7 @@ NONE
 ```javascript
 {
   "id": "d3783d8d-f8d1-4d2c-b8a0-b7596af5a664",
-  "method": "account.rateLimits.orders",
+  "method": "account.rate_limits.orders",
   "params": {
     "apiKey": "vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A",
     "signature": "76289424d6e288f4dc47d167ac824e859dabf78736f4348abbbac848d719eb94",
@@ -5348,25 +5348,25 @@ NONE
   "status": 200,
   "result": [
     {
-      "rateLimitType": "ORDERS",
+      "rate_limit_type": "ORDERS",
       "interval": "SECOND",
-      "intervalNum": 10,
+      "interval_num": 10,
       "limit": 50,
       "count": 0
     },
     {
-      "rateLimitType": "ORDERS",
+      "rate_limit_type": "ORDERS",
       "interval": "DAY",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 160000,
       "count": 0
     }
   ],
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 40
     }
@@ -5461,11 +5461,11 @@ NONE
       "preventedQuantity": "1.200000"     // 这仅在订单因 STP 而过期时可见
     }
   ],
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 20
     }
@@ -5552,11 +5552,11 @@ OCO 的状态报告与 [`orderList.status`](#查询-OCO-user_data) 相同。
       ]
     }
   ],
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 20
     }
@@ -5656,11 +5656,11 @@ OCO 的状态报告与 [`orderList.status`](#查询-OCO-user_data) 相同。
       "isBestMatch": true
     }
   ],
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 20
     }
@@ -5737,11 +5737,11 @@ timestamp           | LONG   | YES          |
       "transactTime": 1669101687094
     }
   ],
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 20
     }
@@ -5824,11 +5824,11 @@ timestamp           | LONG   | YES          |
       "isAllocator": false
     }
   ],
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 20
     }
@@ -5900,12 +5900,12 @@ timestamp           | LONG   | YES          |
       }
     }
   ],
-  "rateLimits":
+  "rate_limits":
   [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 20
     }
@@ -5962,11 +5962,11 @@ timestamp           | LONG   | YES          |
   "result": {
     "listenKey": "xs0mRXdAKlIPDRFrlPcw0qI41Eh3ixNntmymGyhrhgqo7L6FuLaWArTD7RLP"
   },
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 2
     }
@@ -6010,11 +6010,11 @@ timestamp           | LONG   | YES          |
   "id": "815d5fce-0880-4287-a567-80badf004c74",
   "status": 200,
   "response": {},
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 2
     }
@@ -6056,11 +6056,11 @@ timestamp           | LONG   | YES          |
   "id": "819e1b1b-8c06-485b-a13e-131326c69599",
   "status": 200,
   "response": {},
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 2
     }

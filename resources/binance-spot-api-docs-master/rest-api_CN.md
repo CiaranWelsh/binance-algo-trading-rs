@@ -50,11 +50,11 @@
   * MINUTE => M
   * HOUR => H
   * DAY => D
-* 在 `/api/v3/exchangeInfo`接口中`rateLimits`数组里包含有REST接口(不限于本篇的REST接口)的访问限制。包括带权重的访问频次限制、下单速率限制。本篇`枚举定义`章节有限制类型的进一步说明。
+* 在 `/api/v3/exchangeInfo`接口中`rate_limits`数组里包含有REST接口(不限于本篇的REST接口)的访问限制。包括带权重的访问频次限制、下单速率限制。本篇`枚举定义`章节有限制类型的进一步说明。
 * 违反任何一个速率限制时（访问频次限制或下单速率限制），将返回429。
 
 ## IP 访问限制
-* 每个请求将包含一个`X-MBX-USED-WEIGHT-(intervalNum)(intervalLetter)`的头，其中包含当前IP所有请求的已使用权重。
+* 每个请求将包含一个`X-MBX-USED-WEIGHT-(interval_num)(intervalLetter)`的头，其中包含当前IP所有请求的已使用权重。
 * 每一个接口均有一个相应的权重(weight)，有的接口根据参数不同可能拥有不同的权重。越消耗资源的接口权重就会越大。
 * 收到429时，您有责任停止发送请求，不得滥用API。
 * **收到429后仍然继续违反访问限制，会被封禁IP，并收到418错误码**
@@ -63,8 +63,8 @@
 * **访问限制是基于IP的，而不是API Key**
 
 ## 下单频率限制
-* 每个成功的下单回报将包含一个`X-MBX-ORDER-COUNT-(intervalNum)(intervalLetter)`的头，其中包含当前账户已用的下单限制数量。
-* 当下单数超过限制时，会收到带有429但不含`Retry-After`头的响应。请检查 `GET api/v3/exchangeInfo` 的下单频率限制 (rateLimitType = ORDERS) 并等待封禁时间结束。
+* 每个成功的下单回报将包含一个`X-MBX-ORDER-COUNT-(interval_num)(intervalLetter)`的头，其中包含当前账户已用的下单限制数量。
+* 当下单数超过限制时，会收到带有429但不含`Retry-After`头的响应。请检查 `GET api/v3/exchangeInfo` 的下单频率限制 (rate_limit_type = ORDERS) 并等待封禁时间结束。
 * 被拒绝或不成功的下单并不保证回报中包含以上头内容。
 * **下单频率限制是基于每个账户计数的。**
 * 用户可以通过接口 `GET api/v3/rateLimit/order` 来查询当前的下单量.
@@ -110,7 +110,7 @@ MARKET_DATA | 需要有效的API-KEY
 * 逻辑伪代码：
 
   ```javascript
-  if (timestamp < (serverTime + 1000) && (serverTime - timestamp) <= recv_window) {
+  if (timestamp < (server_time + 1000) && (server_time - timestamp) <= recv_window) {
     // process request
   } else {
     // reject request
@@ -489,15 +489,15 @@ s -> 秒; m -> 分钟; h -> 小时; d -> 天; w -> 周; M -> 月
 * 1w
 * 1M
 
-**限制种类 (rateLimitType):**
+**限制种类 (rate_limit_type):**
 
 * REQUESTS_WEIGHT - 单位时间请求权重之和上限
 
 ```json
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000
     }
 ```
@@ -506,9 +506,9 @@ s -> 秒; m -> 分钟; h -> 小时; d -> 天; w -> 周; M -> 月
 
 ```json
     {
-      "rateLimitType": "ORDERS",
+      "rate_limit_type": "ORDERS",
       "interval": "SECOND",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 10
     }
 ```
@@ -517,9 +517,9 @@ s -> 秒; m -> 分钟; h -> 小时; d -> 天; w -> 周; M -> 月
 
 ```json
     {
-      "rateLimitType": "RAW_REQUESTS",
+      "rate_limit_type": "RAW_REQUESTS",
       "interval": "MINUTE",
-      "intervalNum": 5,
+      "interval_num": 5,
       "limit": 61000
     }
 ```
@@ -569,7 +569,7 @@ NONE
 **响应:**
 ```javascript
 {
-  "serverTime": 1499827319559
+  "server_time": 1499827319559
 }
 ```
 
@@ -608,30 +608,30 @@ GET /api/v3/exchangeInfo
 ```javascript
 {
   "timezone": "UTC",
-  "serverTime": 1508631584636,
-  "rateLimits": [
+  "server_time": 1508631584636,
+  "rate_limits": [
     {
-      "rateLimitType": "REQUESTS_WEIGHT",
+      "rate_limit_type": "REQUESTS_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 1200 // 每分钟调用的所有接口权重之和不得超过1200
     },
     {
-      "rateLimitType": "ORDERS",
+      "rate_limit_type": "ORDERS",
       "interval": "SECOND",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 10 // 每秒钟所有订单/撤单次数不得超过10
     },
     {
-      "rateLimitType": "ORDERS",
+      "rate_limit_type": "ORDERS",
       "interval": "DAY",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 100000 // 每天订单/撤单不得超过10万
     },
     {
-      "rateLimitType": "RAW_REQUESTS",
+      "rate_limit_type": "RAW_REQUESTS",
       "interval": "MINUTE",
-      "intervalNum": 5,
+      "interval_num": 5,
       "limit": 5000 // 每5分钟调用订单次数不得超过5000
     }
   ],
@@ -640,9 +640,9 @@ GET /api/v3/exchangeInfo
     {
       "symbol": "ETHBTC",
       "status": "TRADING",
-      "baseAsset": "ETH",
+      "base_asset": "ETH",
       "baseAssetPrecision": 8,
-      "quoteAsset": "BTC",
+      "quote_asset": "BTC",
       "quotePrecision": 8,
       "quoteAssetPrecision": 8,
       "orderTypes": ["LIMIT", "MARKET"],
@@ -652,21 +652,21 @@ GET /api/v3/exchangeInfo
       "filters": [
         {
           "filterType": "PRICE_FILTER",
-          "minPrice": "0.00000100",
-          "maxPrice": "100000.00000000",
-          "tickSize": "0.00000100"
+          "min_price": "0.00000100",
+          "max_price": "100000.00000000",
+          "tick_size": "0.00000100"
         },
         {
           "filterType": "LOT_SIZE",
-          "minQty": "0.00100000",
-          "maxQty": "100000.00000000",
-          "stepSize": "0.00100000"
+          "min_qty": "0.00100000",
+          "max_qty": "100000.00000000",
+          "step_size": "0.00100000"
         },
         {
           "filterType": "MIN_NOTIONAL",
-          "minNotional": "0.00100000",
-          "applyToMarket": true,
-          "avgPriceMins": 5
+          "min_notional": "0.00100000",
+          "apply_to_market": true,
+          "avg_price_mins": 5
         }
       ],
       "permissions": [
@@ -681,7 +681,7 @@ GET /api/v3/exchangeInfo
   ],
   "sors": [
     {
-      "baseAsset": "BTC",
+      "base_asset": "BTC",
       "symbols": [
         "BTCUSDT",
         "BTCUSDC"
@@ -3060,16 +3060,16 @@ timestamp | LONG | YES |
 ```javascript
 [
   {
-    "rateLimitType": "ORDERS",
+    "rate_limit_type": "ORDERS",
     "interval": "SECOND",
-    "intervalNum": 10,
+    "interval_num": 10,
     "limit": 10000,
     "count": 0
   },
   {
-    "rateLimitType": "ORDERS",
+    "rate_limit_type": "ORDERS",
     "interval": "DAY",
-    "intervalNum": 1,
+    "interval_num": 1,
     "limit": 20000,
     "count": 0
   }

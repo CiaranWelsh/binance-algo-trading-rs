@@ -165,25 +165,25 @@ Example of successful response:
     "workingTime": 1655716096505,
     "selfTradePreventionMode": "NONE"
   },
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "ORDERS",
+      "rate_limit_type": "ORDERS",
       "interval": "SECOND",
-      "intervalNum": 10,
+      "interval_num": 10,
       "limit": 50,
       "count": 12
     },
     {
-      "rateLimitType": "ORDERS",
+      "rate_limit_type": "ORDERS",
       "interval": "DAY",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 160000,
       "count": 4043
     },
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 321
     }
@@ -201,25 +201,25 @@ Example of failed response:
     "code": -2010,
     "msg": "Account has insufficient balance for requested action."
   },
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "ORDERS",
+      "rate_limit_type": "ORDERS",
       "interval": "SECOND",
-      "intervalNum": 10,
+      "interval_num": 10,
       "limit": 50,
       "count": 13
     },
     {
-      "rateLimitType": "ORDERS",
+      "rate_limit_type": "ORDERS",
       "interval": "DAY",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 160000,
       "count": 4044
     },
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 322
     }
@@ -263,7 +263,7 @@ Response fields:
     <td>Error description. Present if request failed</td>
   </tr>
   <tr>
-    <td><code>rateLimits</code></td>
+    <td><code>rate_limits</code></td>
     <td>ARRAY</td>
     <td>NO</td>
     <td>Rate limiting status. See <a href="#rate-limits">Rate limits</a></td>
@@ -304,7 +304,7 @@ The connection is per **IP address**.
 
 * Current API rate limits can be queried using the [`exchangeInfo`](#exchange-information) request.
 * There are multiple rate limit types across multiple intervals.
-* Responses can indicate current rate limit status in the optional `rateLimits` field.
+* Responses can indicate current rate limit status in the optional `rate_limits` field.
 * Requests fail with status `429` when order rate limits or request rate limits are violated.
 
 ### How to interpret rate limits
@@ -316,13 +316,13 @@ A response with rate limit status may look like this:
   "id": "7069b743-f477-4ae3-81db-db9b8df085d2",
   "status": 200,
   "result": {
-    "serverTime": 1656400526260
+    "server_time": 1656400526260
   },
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 70
     }
@@ -330,13 +330,13 @@ A response with rate limit status may look like this:
 }
 ```
 
-The `rateLimits` array describes all currently active rate limits affected by the request.
+The `rate_limits` array describes all currently active rate limits affected by the request.
 
 | Name            | Type    | Mandatory | Description
 | --------------- | ------- | --------- | -----------
-| `rateLimitType` | ENUM    | YES       | Rate limit type: `REQUEST_WEIGHT`, `ORDERS`
+| `rate_limit_type` | ENUM    | YES       | Rate limit type: `REQUEST_WEIGHT`, `ORDERS`
 | `interval`      | ENUM    | YES       | Rate limit interval: `SECOND`, `MINUTE`, `HOUR`, `DAY`
-| `intervalNum`   | INT     | YES       | Rate limit interval multiplier
+| `interval_num`   | INT     | YES       | Rate limit interval multiplier
 | `limit`         | INT     | YES       | Request limit per interval
 | `count`         | INT     | YES       | Current usage per interval
 
@@ -358,15 +358,15 @@ even if shorter rate limit count is zero.
 
 ### How to show/hide rate limit information
 
-`rateLimits` field is included with every response by default.
+`rate_limits` field is included with every response by default.
 
 However, rate limit information can be quite bulky.
 If you are not interested in detailed rate limit status of every request,
-the `rateLimits` field can be omitted from responses to reduce their size.
+the `rate_limits` field can be omitted from responses to reduce their size.
 
 * Optional `returnRateLimits` boolean parameter in request.
 
-  Use `returnRateLimits` parameter to control whether to include `rateLimits` fields in response to individual requests.
+  Use `returnRateLimits` parameter to control whether to include `rate_limits` fields in response to individual requests.
 
   Default request and response:
 
@@ -375,7 +375,7 @@ the `rateLimits` field can be omitted from responses to reduce their size.
   ```
 
   ```json
-  {"id":1,"status":200,"result":{"serverTime":1656400526260},"rateLimits":[{"rateLimitType":"REQUEST_WEIGHT","interval":"MINUTE","intervalNum":1,"limit":6000,"count":70}]}
+  {"id":1,"status":200,"result":{"server_time":1656400526260},"rate_limits":[{"rate_limit_type":"REQUEST_WEIGHT","interval":"MINUTE","interval_num":1,"limit":6000,"count":70}]}
   ```
 
   Request and response without rate limit status:
@@ -385,12 +385,12 @@ the `rateLimits` field can be omitted from responses to reduce their size.
   ```
 
   ```json
-  {"id":2,"status":200,"result":{"serverTime":1656400527891}}
+  {"id":2,"status":200,"result":{"server_time":1656400527891}}
   ```
 
 * Optional `returnRateLimits` boolean parameter in connection URL.
 
-  If you wish to omit `rateLimits` from all responses by default,
+  If you wish to omit `rate_limits` from all responses by default,
   use `returnRateLimits` parameter in the query string instead:
 
   ```
@@ -402,7 +402,7 @@ the `rateLimits` field can be omitted from responses to reduce their size.
   If you _want_ to see rate limits for a particular request,
   you need to explicitly pass the `"returnRateLimits": true` parameter.
 
-**Note:** Your requests are still rate limited if you hide the `rateLimits` field in responses.
+**Note:** Your requests are still rate limited if you hide the `rate_limits` field in responses.
 
 ## IP limits
 
@@ -428,11 +428,11 @@ Successful response indicating that in 1 minute you have used 70 weight out of y
   "id": "7069b743-f477-4ae3-81db-db9b8df085d2",
   "status": 200,
   "result": [],
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 70
     }
@@ -450,15 +450,15 @@ Failed response indicating that you are banned and the ban will last until epoch
     "code": -1003,
     "msg": "Way too much request weight used; IP banned until 1659146400000. Please use WebSocket Streams for live updates to avoid bans.",
     "data": {
-      "serverTime": 1659142907531,
+      "server_time": 1659142907531,
       "retryAfter": 1659146400000
     }
   },
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 2411
     }
@@ -471,7 +471,7 @@ Failed response indicating that you are banned and the ban will last until epoch
 * Every request to place an order counts towards your **order limit**.
   * Successfully placed orders update the `ORDERS` rate limit type.
   * Rejected or unsuccessful orders might or might not update the `ORDERS` count.
-* Use the [`account.rateLimits.orders`](#account-order-rate-limits-user_data) request to keep track of the current order rate limits.
+* Use the [`account.rate_limits.orders`](#account-order-rate-limits-user_data) request to keep track of the current order rate limits.
 * Order rate limit is maintained **per account** and is shared by all API keys of the account.
 * If you go over the order rate limit, requests fail with status `429`.
   * This status code indicates you should back off and stop spamming the API.
@@ -500,25 +500,25 @@ Successful response indicating that you have placed 12 orders in 10 seconds, and
     "workingTime": 1655716096505,
     "selfTradePreventionMode": "NONE"
   },
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "ORDERS",
+      "rate_limit_type": "ORDERS",
       "interval": "SECOND",
-      "intervalNum": 10,
+      "interval_num": 10,
       "limit": 50,
       "count": 12
     },
     {
-      "rateLimitType": "ORDERS",
+      "rate_limit_type": "ORDERS",
       "interval": "DAY",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 160000,
       "count": 4043
     },
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 321
     }
@@ -564,7 +564,7 @@ Security type | API key  | Signature | Description
 * Request processing logic is as follows:
 
   ```javascript
-  if (timestamp < (serverTime + 1000) && (serverTime - timestamp) <= recv_window) {
+  if (timestamp < (server_time + 1000) && (server_time - timestamp) <= recv_window) {
     // process request
   } else {
     // reject request
@@ -1050,11 +1050,11 @@ Memory
   "id": "922bcc6e-9de8-440d-9e84-7c80933a8d0d",
   "status": 200,
   "result": {},
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 1
     }
@@ -1088,13 +1088,13 @@ Memory
   "id": "187d3cb2-942d-484c-8271-4e2141bbadb1",
   "status": 200,
   "result": {
-    "serverTime": 1656400526260
+    "server_time": 1656400526260
   },
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 1
     }
@@ -1173,31 +1173,31 @@ Memory
   "status": 200,
   "result": {
     "timezone": "UTC",
-    "serverTime": 1655969291181,
+    "server_time": 1655969291181,
     // Global rate limits. See "Rate limits" section.
-    "rateLimits": [
+    "rate_limits": [
       {
-        "rateLimitType": "REQUEST_WEIGHT",    // Rate limit type: REQUEST_WEIGHT, ORDERS, CONNECTIONS
+        "rate_limit_type": "REQUEST_WEIGHT",    // Rate limit type: REQUEST_WEIGHT, ORDERS, CONNECTIONS
         "interval": "MINUTE",                 // Rate limit interval: SECOND, MINUTE, DAY
-        "intervalNum": 1,                     // Rate limit interval multiplier (i.e., "1 minute")
+        "interval_num": 1,                     // Rate limit interval multiplier (i.e., "1 minute")
         "limit": 6000                         // Rate limit per interval
       },
       {
-        "rateLimitType": "ORDERS",
+        "rate_limit_type": "ORDERS",
         "interval": "SECOND",
-        "intervalNum": 10,
+        "interval_num": 10,
         "limit": 50
       },
       {
-        "rateLimitType": "ORDERS",
+        "rate_limit_type": "ORDERS",
         "interval": "DAY",
-        "intervalNum": 1,
+        "interval_num": 1,
         "limit": 160000
       },
       {
-        "rateLimitType": "CONNECTIONS",
+        "rate_limit_type": "CONNECTIONS",
         "interval": "MINUTE",
-        "intervalNum": 5,
+        "interval_num": 5,
         "limit": 300
       }
     ],
@@ -1209,9 +1209,9 @@ Memory
       {
         "symbol": "BNBBTC",
         "status": "TRADING",
-        "baseAsset": "BNB",
+        "base_asset": "BNB",
         "baseAssetPrecision": 8,
-        "quoteAsset": "BTC",
+        "quote_asset": "BTC",
         "quotePrecision": 8,
         "quoteAssetPrecision": 8,
         "baseCommissionPrecision": 8,
@@ -1236,15 +1236,15 @@ Memory
         "filters": [
           {
             "filterType": "PRICE_FILTER",
-            "minPrice": "0.00000100",
-            "maxPrice": "100000.00000000",
-            "tickSize": "0.00000100"
+            "min_price": "0.00000100",
+            "max_price": "100000.00000000",
+            "tick_size": "0.00000100"
           },
           {
             "filterType": "LOT_SIZE",
-            "minQty": "0.00100000",
-            "maxQty": "100000.00000000",
-            "stepSize": "0.00100000"
+            "min_qty": "0.00100000",
+            "max_qty": "100000.00000000",
+            "step_size": "0.00100000"
           }
         ],
         "permissions": [
@@ -1260,7 +1260,7 @@ Memory
     ],
     "sors": [
       {
-        "baseAsset": "BTC",
+        "base_asset": "BTC",
         "symbols": [
           "BTCUSDT",
           "BTCUSDC"
@@ -1268,11 +1268,11 @@ Memory
       }
     ]
   },
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 20
     }
@@ -1380,11 +1380,11 @@ Memory
       ]
     ]
   },
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 2
     }
@@ -1441,11 +1441,11 @@ Memory
       "isBestMatch": true
     }
   ],
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 2
     }
@@ -1503,11 +1503,11 @@ Database
       "isBestMatch": true
     }
   ],
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 10
     }
@@ -1587,11 +1587,11 @@ Database
       "M": true             // Was the trade the best price match?
     }
   ],
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 2
     }
@@ -1686,11 +1686,11 @@ Database
       "0"                 // Unused field, ignore
     ]
   ],
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 2
     }
@@ -1766,11 +1766,11 @@ Database
       "0"                 // Unused field, ignore
     ]
   ],
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 2
     }
@@ -1814,11 +1814,11 @@ Memory
     "price": "9.35751834",        // Average price
     "closeTime": 1694061154503    // Last trade time
   },
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 2
     }
@@ -1930,11 +1930,11 @@ Memory
     "lastId": 194968287,        // Last trade ID
     "count": 272173             // Number of trades
   },
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 2
     }
@@ -1962,11 +1962,11 @@ Memory
     "lastId": 194968287,        // Last trade ID
     "count": 272173             // Number of trades
   },
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 2
     }
@@ -2028,11 +2028,11 @@ If more than one symbol is requested, response returns an array:
       "count": 5281861
     }
   ],
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 2
     }
@@ -2130,11 +2130,11 @@ With `symbol`:
     "lastId": 3220849281,
     "count": 697727
   },
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 4
     }
@@ -2184,11 +2184,11 @@ With `symbols`:
       "count": 98698
     }
   ],
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 8
     }
@@ -2218,11 +2218,11 @@ With `symbol`:
     "lastId": 3220849281,                        // Trade ID of the last trade in the interval
     "count": 697727                              // Number of trades in the interval
   },
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 4
     }
@@ -2266,11 +2266,11 @@ With `symbols`:
       "count": 98698
     }
   ],
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 8
     }
@@ -2415,11 +2415,11 @@ Database
     "lastId": 195365758,        // Last trade ID
     "count": 2387994            // Number of trades
   },
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 4
     }
@@ -2447,11 +2447,11 @@ Database
     "lastId": 195365758,        // Last trade ID
     "count": 2387994            // Number of trades
   },
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 4
     }
@@ -2501,11 +2501,11 @@ If more than one symbol is requested, response returns an array:
       "count": 35549628
     }
   ],
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 8
     }
@@ -2586,11 +2586,11 @@ Memory
     "symbol": "BNBBTC",
     "price": "0.01361900"
   },
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 2
     }
@@ -2618,11 +2618,11 @@ If more than one symbol is requested, response returns an array:
       "price": "331.10000000"
     }
   ],
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 4
     }
@@ -2708,11 +2708,11 @@ Memory
     "askPrice": "0.01358100",
     "askQty": "17.83700000"
   },
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 2
     }
@@ -2742,11 +2742,11 @@ If more than one symbol is requested, response returns an array:
       "askQty": "0.01512000"
     }
   ],
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 4
     }
@@ -2805,7 +2805,7 @@ Memory
     "authorizedSince": 1649729878532,
     "connectedSince": 1649729873021,
     "returnRateLimits": false,
-    "serverTime": 1649729878630
+    "server_time": 1649729878630
   }
 }
 ```
@@ -2844,7 +2844,7 @@ Memory
     "authorizedSince": 1649729878532,
     "connectedSince": 1649729873021,
     "returnRateLimits": false,
-    "serverTime": 1649730611671
+    "server_time": 1649730611671
   }
 }
 ```
@@ -2885,7 +2885,7 @@ Memory
     "authorizedSince": null,
     "connectedSince": 1649729873021,
     "returnRateLimits": false,
-    "serverTime": 1649730611671
+    "server_time": 1649730611671
   }
 }
 ```
@@ -3174,25 +3174,25 @@ Response format is selected by using the `newOrderRespType` parameter.
     "clientOrderId": "4d96324ff9d44481926157ec08158a40",
     "transactTime": 1660801715639
   },
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "ORDERS",
+      "rate_limit_type": "ORDERS",
       "interval": "SECOND",
-      "intervalNum": 10,
+      "interval_num": 10,
       "limit": 50,
       "count": 1
     },
     {
-      "rateLimitType": "ORDERS",
+      "rate_limit_type": "ORDERS",
       "interval": "DAY",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 160000,
       "count": 1
     },
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 1
     }
@@ -3223,25 +3223,25 @@ Response format is selected by using the `newOrderRespType` parameter.
     "workingTime": 1660801715639,
     "selfTradePreventionMode": "NONE"
   },
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "ORDERS",
+      "rate_limit_type": "ORDERS",
       "interval": "SECOND",
-      "intervalNum": 10,
+      "interval_num": 10,
       "limit": 50,
       "count": 1
     },
     {
-      "rateLimitType": "ORDERS",
+      "rate_limit_type": "ORDERS",
       "interval": "DAY",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 160000,
       "count": 1
     },
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000
 ,
       "count": 1
@@ -3291,25 +3291,25 @@ Response format is selected by using the `newOrderRespType` parameter.
       }
     ]
   },
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "ORDERS",
+      "rate_limit_type": "ORDERS",
       "interval": "SECOND",
-      "intervalNum": 10,
+      "interval_num": 10,
       "limit": 50,
       "count": 1
     },
     {
-      "rateLimitType": "ORDERS",
+      "rate_limit_type": "ORDERS",
       "interval": "DAY",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 160000,
       "count": 1
     },
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 1
     }
@@ -3391,11 +3391,11 @@ Without `computeCommissionRates`:
   "id": "6ffebe91-01d9-43ac-be99-57cf062e0e30",
   "status": 200,
   "result": {},
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 1
     }
@@ -3425,11 +3425,11 @@ With `computeCommissionRates`:
       "discount": "0.25000000"                //Standard commission is reduced by this rate when paying in BNB.
     }
   },
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 20
     }
@@ -3558,11 +3558,11 @@ Memory => Database
     "preventedMatchId": 0,              // present only if the order expired due to STP
     "preventedQuantity": "1.200000"     // present only if the order expired due to STP
   },
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 4
     }
@@ -3703,11 +3703,11 @@ When an individual order is canceled:
     "strategyType": 1000000,            // present only if strategyType set for the order
     "selfTradePreventionMode": "NONE"
   },
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 1
     }
@@ -3780,11 +3780,11 @@ When an OCO is canceled:
       }
     ]
   },
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 1
     }
@@ -4147,25 +4147,25 @@ If both cancel and placement succeed, you get the following response with `"stat
       "selfTradePreventionMode": "NONE"
     }
   },
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "ORDERS",
+      "rate_limit_type": "ORDERS",
       "interval": "SECOND",
-      "intervalNum": 10,
+      "interval_num": 10,
       "limit": 50,
       "count": 1
     },
     {
-      "rateLimitType": "ORDERS",
+      "rate_limit_type": "ORDERS",
       "interval": "DAY",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 160000,
       "count": 1
     },
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 1
     }
@@ -4193,25 +4193,25 @@ and returns the following response with `"status": 400`:
       "newOrderResponse": null
     }
   },
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "ORDERS",
+      "rate_limit_type": "ORDERS",
       "interval": "SECOND",
-      "intervalNum": 10,
+      "interval_num": 10,
       "limit": 50,
       "count": 1
     },
     {
-      "rateLimitType": "ORDERS",
+      "rate_limit_type": "ORDERS",
       "interval": "DAY",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 160000,
       "count": 1
     },
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 1
     }
@@ -4255,25 +4255,25 @@ and the `"data"` field detailing which operation succeeded, which failed, and wh
       }
     }
   },
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "ORDERS",
+      "rate_limit_type": "ORDERS",
       "interval": "SECOND",
-      "intervalNum": 10,
+      "interval_num": 10,
       "limit": 50,
       "count": 1
     },
     {
-      "rateLimitType": "ORDERS",
+      "rate_limit_type": "ORDERS",
       "interval": "DAY",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 160000,
       "count": 1
     },
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 1
     }
@@ -4315,25 +4315,25 @@ and the `"data"` field detailing which operation succeeded, which failed, and wh
       }
     }
   },
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "ORDERS",
+      "rate_limit_type": "ORDERS",
       "interval": "SECOND",
-      "intervalNum": 10,
+      "interval_num": 10,
       "limit": 50,
       "count": 1
     },
     {
-      "rateLimitType": "ORDERS",
+      "rate_limit_type": "ORDERS",
       "interval": "DAY",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 160000,
       "count": 1
     },
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 1
     }
@@ -4363,25 +4363,25 @@ If both operations fail, response will have `"status": 400`:
       }
     }
   },
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "ORDERS",
+      "rate_limit_type": "ORDERS",
       "interval": "SECOND",
-      "intervalNum": 10,
+      "interval_num": 10,
       "limit": 50,
       "count": 1
     },
     {
-      "rateLimitType": "ORDERS",
+      "rate_limit_type": "ORDERS",
       "interval": "DAY",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 160000,
       "count": 1
     },
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 1
     }
@@ -4471,11 +4471,11 @@ If all symbols are requested, use the `symbol` field to tell which symbol the or
       "selfTradePreventionMode": "NONE"
     }
   ],
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 6
     }
@@ -4610,11 +4610,11 @@ Cancellation reports for orders and OCOs have the same format as in [`order.canc
       ]
     }
   ],
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 1
     }
@@ -4781,25 +4781,25 @@ See [`order.place`](#place-new-order-trade) for more examples.
       }
     ]
   },
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "ORDERS",
+      "rate_limit_type": "ORDERS",
       "interval": "SECOND",
-      "intervalNum": 10,
+      "interval_num": 10,
       "limit": 50,
       "count": 2
     },
     {
-      "rateLimitType": "ORDERS",
+      "rate_limit_type": "ORDERS",
       "interval": "DAY",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 160000,
       "count": 2
     },
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 1
     }
@@ -4916,11 +4916,11 @@ Database
       }
     ]
   },
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 4
     }
@@ -5083,11 +5083,11 @@ Matching Engine
       }
     ]
   },
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 1
     }
@@ -5160,11 +5160,11 @@ Database
       ]
     }
   ],
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 6
     }
@@ -5262,11 +5262,11 @@ Matching Engine
       "usedSor": true
     }
   ],
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 1
     }
@@ -5326,11 +5326,11 @@ Without `computeCommissionRates`:
   "id": "3a4437e2-41a3-4c19-897c-9cadc5dce8b6",
   "status": 200,
   "result": {},
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 1
     }
@@ -5360,11 +5360,11 @@ With `computeCommissionRates`:
       "discount": "0.25"                           //Standard commission is reduced by this rate when paying in BNB.
     }
   },
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 20
     }
@@ -5451,11 +5451,11 @@ Memory => Database
     ],
     "uid": 354937868
   },
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000
 ,
       "count": 20
@@ -5469,7 +5469,7 @@ Memory => Database
 ```javascript
 {
   "id": "d3783d8d-f8d1-4d2c-b8a0-b7596af5a664",
-  "method": "account.rateLimits.orders",
+  "method": "account.rate_limits.orders",
   "params": {
     "apiKey": "vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A",
     "signature": "76289424d6e288f4dc47d167ac824e859dabf78736f4348abbbac848d719eb94",
@@ -5503,25 +5503,25 @@ Memory
   "status": 200,
   "result": [
     {
-      "rateLimitType": "ORDERS",
+      "rate_limit_type": "ORDERS",
       "interval": "SECOND",
-      "intervalNum": 10,
+      "interval_num": 10,
       "limit": 50,
       "count": 0
     },
     {
-      "rateLimitType": "ORDERS",
+      "rate_limit_type": "ORDERS",
       "interval": "DAY",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 160000,
       "count": 0
     }
   ],
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 40
     }
@@ -5618,11 +5618,11 @@ Note that some fields are optional and included only for orders that set them.
       "preventedQuantity": "1.200000"   // This field only appears if the order expired due to STP.
     }
   ],
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 20
     }
@@ -5709,11 +5709,11 @@ Status reports for OCOs are identical to [`orderList.status`](#query-oco-user_da
       ]
     }
   ],
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 20
     }
@@ -5813,11 +5813,11 @@ Memory => Database
       "isBestMatch": true
     }
   ],
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 20
     }
@@ -5895,11 +5895,11 @@ Database
       "transactTime": 1669101687094
     }
   ],
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 20
     }
@@ -5982,11 +5982,11 @@ Database
       "isAllocator": false
     }
   ],
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 20
     }
@@ -6056,12 +6056,12 @@ Database
       }
     }
   ],
-  "rateLimits":
+  "rate_limits":
   [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 20
     }
@@ -6118,11 +6118,11 @@ Subscribe to the received listen key on WebSocket Stream afterwards.
   "result": {
     "listenKey": "xs0mRXdAKlIPDRFrlPcw0qI41Eh3ixNntmymGyhrhgqo7L6FuLaWArTD7RLP"
   },
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 2
     }
@@ -6171,11 +6171,11 @@ Memory
   "id": "815d5fce-0880-4287-a567-80badf004c74",
   "status": 200,
   "response": {},
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 2
     }
@@ -6217,11 +6217,11 @@ Memory
   "id": "819e1b1b-8c06-485b-a13e-131326c69599",
   "status": 200,
   "response": {},
-  "rateLimits": [
+  "rate_limits": [
     {
-      "rateLimitType": "REQUEST_WEIGHT",
+      "rate_limit_type": "REQUEST_WEIGHT",
       "interval": "MINUTE",
-      "intervalNum": 1,
+      "interval_num": 1,
       "limit": 6000,
       "count": 2
     }

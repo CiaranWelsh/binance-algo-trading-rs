@@ -326,7 +326,7 @@ BTCUSDP quantity 5 price 28,000
 ```json
   "sors": [
     {
-      "baseAsset": "BTC",
+      "base_asset": "BTC",
       "symbols": [
         "BTCUSDT",
         "BTCUSDC",
@@ -398,7 +398,7 @@ BTCUSDP quantity 5 price 28,000
 ```json
   "sors": [
     {
-      "baseAsset": "BTC",
+      "base_asset": "BTC",
       "symbols": [
         "BTCUSDT",
         "BTCUSDC",

@@ -1,5 +1,5 @@
 use serde::Deserialize;
-use crate::deserialization::deserialize_string_to_f64;
+use crate::binance_client::deserialization::deserialize_string_to_f64;
 #[derive(Debug, Deserialize)]
 pub struct TickerPrice {
     pub symbol: String,

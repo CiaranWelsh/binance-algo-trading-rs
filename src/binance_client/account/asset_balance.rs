@@ -2,7 +2,7 @@ use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use std::error::Error;
 use crate::binance_client::binance_client::BinanceClient;
-use crate::deserialization::deserialize_string_to_f64;
+use crate::binance_client::deserialization::deserialize_string_to_f64;
 
 
 #[derive(Debug, Serialize, Deserialize, PartialEq)]

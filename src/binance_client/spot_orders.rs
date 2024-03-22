@@ -1,11 +1,9 @@
-use std::collections::HashMap;
 use reqwest::{Client, StatusCode};
 use serde::{Deserialize, Serialize};
 use std::io::{Error as IOError, ErrorKind};
 use log::trace;
 use serde_json::Value;
 use crate::binance_client::binance_client::BinanceClient;
-use crate::binance_client::order_types::cancel_order_response::CancelOrderResponse;
 use crate::binance_client::order_types::limit_order::LimitOrder;
 use crate::binance_client::order_types::market_order::MarketOrder;
 use crate::binance_client::order_types::oco_order::OcoOrder;

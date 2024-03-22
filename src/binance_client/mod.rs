@@ -12,3 +12,5 @@ pub mod database_config;
 pub mod load_env;
 mod binance_error;
 mod ticker_price;
+pub(crate) mod deserialization;
+mod exchange_info;

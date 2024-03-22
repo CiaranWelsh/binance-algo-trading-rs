@@ -6,47 +6,47 @@ Filters come in two forms: `symbol filters` and `exchange filters`.
 ### PRICE_FILTER
 The `PRICE_FILTER` defines the `price` rules for a symbol. There are 3 parts:
 
-* `minPrice` defines the minimum `price`/`stopPrice` allowed; disabled on `minPrice` == 0.
-* `maxPrice` defines the maximum `price`/`stopPrice` allowed; disabled on `maxPrice` == 0.
-* `tickSize` defines the intervals that a `price`/`stopPrice` can be increased/decreased by; disabled on `tickSize` == 0.
+* `min_price` defines the minimum `price`/`stopPrice` allowed; disabled on `min_price` == 0.
+* `max_price` defines the maximum `price`/`stopPrice` allowed; disabled on `max_price` == 0.
+* `tick_size` defines the intervals that a `price`/`stopPrice` can be increased/decreased by; disabled on `tick_size` == 0.
 
 Any of the above variables can be set to 0, which disables that rule in the `price filter`. In order to pass the `price filter`, the following must be true for `price`/`stopPrice` of the enabled rules:
 
-* `price` >= `minPrice`
-* `price` <= `maxPrice`
-* `price` % `tickSize` == 0
+* `price` >= `min_price`
+* `price` <= `max_price`
+* `price` % `tick_size` == 0
 
 **/exchangeInfo format:**
 ```javascript
 {
   "filterType": "PRICE_FILTER",
-  "minPrice": "0.00000100",
-  "maxPrice": "100000.00000000",
-  "tickSize": "0.00000100"
+  "min_price": "0.00000100",
+  "max_price": "100000.00000000",
+  "tick_size": "0.00000100"
 }
 ```
 
 ### PERCENT_PRICE
 The `PERCENT_PRICE` filter defines the valid range for the price based on the average of the previous trades.
-`avgPriceMins` is the number of minutes the average price is calculated over. 0 means the last price is used.
+`avg_price_mins` is the number of minutes the average price is calculated over. 0 means the last price is used.
 
 In order to pass the `percent price`, the following must be true for `price`:
-* `price` <= `weightedAveragePrice` * `multiplierUp`
-* `price` >= `weightedAveragePrice` * `multiplierDown`
+* `price` <= `weightedAveragePrice` * `multiplier_up`
+* `price` >= `weightedAveragePrice` * `multiplier_down`
 
 **/exchangeInfo format:**
 ```javascript
 {
   "filterType": "PERCENT_PRICE",
-  "multiplierUp": "1.3000",
-  "multiplierDown": "0.7000",
-  "avgPriceMins": 5
+  "multiplier_up": "1.3000",
+  "multiplier_down": "0.7000",
+  "avg_price_mins": 5
 }
 ```
 
 ### PERCENT_PRICE_BY_SIDE
 The `PERCENT_PRICE_BY_SIDE` filter defines the valid range for the price based on the average of the previous trades.<br/>
-`avgPriceMins` is the number of minutes the average price is calculated over. 0 means the last price is used. <br/>
+`avg_price_mins` is the number of minutes the average price is calculated over. 0 means the last price is used. <br/>
 There is a different range depending on whether the order is placed on the `BUY` side or the `SELL` side.
 
 Buy orders will succeed on this filter if:
@@ -65,7 +65,7 @@ Sell orders will succeed on this filter if:
     "bidMultiplierDown": "0.2",
     "askMultiplierUp": "5",
     "askMultiplierDown": "0.8",
-    "avgPriceMins": 1
+    "avg_price_mins": 1
   }
 ```
 
@@ -73,66 +73,66 @@ Sell orders will succeed on this filter if:
 ### LOT_SIZE
 The `LOT_SIZE` filter defines the `quantity` (aka "lots" in auction terms) rules for a symbol. There are 3 parts:
 
-* `minQty` defines the minimum `quantity`/`icebergQty` allowed.
-* `maxQty` defines the maximum `quantity`/`icebergQty` allowed.
-* `stepSize` defines the intervals that a `quantity`/`icebergQty` can be increased/decreased by.
+* `min_qty` defines the minimum `quantity`/`icebergQty` allowed.
+* `max_qty` defines the maximum `quantity`/`icebergQty` allowed.
+* `step_size` defines the intervals that a `quantity`/`icebergQty` can be increased/decreased by.
 
 In order to pass the `lot size`, the following must be true for `quantity`/`icebergQty`:
 
-* `quantity` >= `minQty`
-* `quantity` <= `maxQty`
-* `quantity` % `stepSize` == 0
+* `quantity` >= `min_qty`
+* `quantity` <= `max_qty`
+* `quantity` % `step_size` == 0
 
 **/exchangeInfo format:**
 ```javascript
 {
   "filterType": "LOT_SIZE",
-  "minQty": "0.00100000",
-  "maxQty": "100000.00000000",
-  "stepSize": "0.00100000"
+  "min_qty": "0.00100000",
+  "max_qty": "100000.00000000",
+  "step_size": "0.00100000"
 }
 ```
 
 ### MIN_NOTIONAL
 The `MIN_NOTIONAL` filter defines the minimum notional value allowed for an order on a symbol.
 An order's notional value is the `price` * `quantity`.
-`applyToMarket` determines whether or not the `MIN_NOTIONAL` filter will also be applied to `MARKET` orders.
-Since `MARKET` orders have no price, the average price is used over the last `avgPriceMins` minutes.
-`avgPriceMins` is the number of minutes the average price is calculated over. 0 means the last price is used.
+`apply_to_market` determines whether or not the `MIN_NOTIONAL` filter will also be applied to `MARKET` orders.
+Since `MARKET` orders have no price, the average price is used over the last `avg_price_mins` minutes.
+`avg_price_mins` is the number of minutes the average price is calculated over. 0 means the last price is used.
 
 
 **/exchangeInfo format:**
 ```javascript
 {
   "filterType": "MIN_NOTIONAL",
-  "minNotional": "0.00100000",
-  "applyToMarket": true,
-  "avgPriceMins": 5
+  "min_notional": "0.00100000",
+  "apply_to_market": true,
+  "avg_price_mins": 5
 }
 ```
 
 ### NOTIONAL
 The `NOTIONAL` filter defines the acceptable notional range allowed for an order on a symbol. <br/><br/>
-`applyMinToMarket` determines whether the `minNotional` will be applied to `MARKET` orders. <br/>
+`applyMinToMarket` determines whether the `min_notional` will be applied to `MARKET` orders. <br/>
 `applyMaxToMarket` determines whether the `maxNotional` will be applied to `MARKET` orders.
 
 In order to pass this filter, the notional (`price * quantity`) has to pass the following conditions:
 
 * `price * quantity` <= `maxNotional`
-* `price * quantity` >= `minNotional`
+* `price * quantity` >= `min_notional`
 
-For `MARKET` orders, the average price used over the last `avgPriceMins` minutes will be used for calculation. <br/>
-If the `avgPriceMins` is 0, then the last price will be used.
+For `MARKET` orders, the average price used over the last `avg_price_mins` minutes will be used for calculation. <br/>
+If the `avg_price_mins` is 0, then the last price will be used.
 
 **/exchangeInfo format:**
 ```javascript
 {
    "filterType": "NOTIONAL",
-   "minNotional": "10.00000000",
+   "min_notional": "10.00000000",
    "applyMinToMarket": false,
    "maxNotional": "10000.00000000",
    "applyMaxToMarket": false,
-   "avgPriceMins": 5
+   "avg_price_mins": 5
 }
 ```
 
@@ -150,23 +150,23 @@ The `ICEBERG_PARTS` filter defines the maximum parts an iceberg order can have. 
 ### MARKET_LOT_SIZE
 The `MARKET_LOT_SIZE` filter defines the `quantity` (aka "lots" in auction terms) rules for `MARKET` orders on a symbol. There are 3 parts:
 
-* `minQty` defines the minimum `quantity` allowed.
-* `maxQty` defines the maximum `quantity` allowed.
-* `stepSize` defines the intervals that a `quantity` can be increased/decreased by.
+* `min_qty` defines the minimum `quantity` allowed.
+* `max_qty` defines the maximum `quantity` allowed.
+* `step_size` defines the intervals that a `quantity` can be increased/decreased by.
 
 In order to pass the `market lot size`, the following must be true for `quantity`:
 
-* `quantity` >= `minQty`
-* `quantity` <= `maxQty`
-* `quantity` % `stepSize` == 0
+* `quantity` >= `min_qty`
+* `quantity` <= `max_qty`
+* `quantity` % `step_size` == 0
 
 **/exchangeInfo format:**
 ```javascript
 {
   "filterType": "MARKET_LOT_SIZE",
-  "minQty": "0.00100000",
-  "maxQty": "100000.00000000",
-  "stepSize": "0.00100000"
+  "min_qty": "0.00100000",
+  "max_qty": "100000.00000000",
+  "step_size": "0.00100000"
 }
 ```
 
@@ -178,7 +178,7 @@ Note that both "algo" orders and normal orders are counted for this filter.
 ```javascript
 {
   "filterType": "MAX_NUM_ORDERS",
-  "maxNumOrders": 25
+  "max_num_orders": 25
 }
 ```
 
@@ -190,7 +190,7 @@ The `MAX_NUM_ALGO_ORDERS` filter defines the maximum number of "algo" orders an 
 ```javascript
 {
   "filterType": "MAX_NUM_ALGO_ORDERS",
-  "maxNumAlgoOrders": 5
+  "max_num_algo_orders": 5
 }
 ```
 
@@ -202,7 +202,7 @@ An `ICEBERG` order is any order where the `icebergQty` is > 0.
 ```javascript
 {
   "filterType": "MAX_NUM_ICEBERG_ORDERS",
-  "maxNumIcebergOrders": 5
+  "max_num_iceberg_orders": 5
 }
 ```
 
@@ -221,7 +221,7 @@ If an order's `quantity` can cause the position to overflow, this will also fail
 ```javascript
 {
   "filterType":"MAX_POSITION",
-  "maxPosition":"10.00000000"
+  "max_position":"10.00000000"
 }
 ```
 
@@ -233,13 +233,13 @@ In order for a trailing stop order to pass this filter, the following must be tr
 
 For `STOP_LOSS BUY`, `STOP_LOSS_LIMIT_BUY`,`TAKE_PROFIT SELL` and `TAKE_PROFIT_LIMIT SELL` orders: 
 
-* `trailingDelta` >= `minTrailingAboveDelta`
-* `trailingDelta` <= `maxTrailingAboveDelta` 
+* `trailingDelta` >= `min_trailing_above_delta`
+* `trailingDelta` <= `max_trailing_above_delta` 
 
 For `STOP_LOSS SELL`, `STOP_LOSS_LIMIT SELL`, `TAKE_PROFIT BUY`, and `TAKE_PROFIT_LIMIT BUY` orders:
 
-* `trailingDelta` >= `minTrailingBelowDelta`
-* `trailingDelta` <= `maxTrailingBelowDelta`
+* `trailingDelta` >= `min_trailing_below_delta`
+* `trailingDelta` <= `max_trailing_below_delta`
 
 
 **/exchangeInfo format:**
@@ -247,10 +247,10 @@ For `STOP_LOSS SELL`, `STOP_LOSS_LIMIT SELL`, `TAKE_PROFIT BUY`, and `TAKE_PROFI
 ```javascript
     {
           "filterType": "TRAILING_DELTA",
-          "minTrailingAboveDelta": 10,
-          "maxTrailingAboveDelta": 2000,
-          "minTrailingBelowDelta": 10,
-          "maxTrailingBelowDelta": 2000
+          "min_trailing_above_delta": 10,
+          "max_trailing_above_delta": 2000,
+          "min_trailing_below_delta": 10,
+          "max_trailing_below_delta": 2000
    }
 ```
 
@@ -264,7 +264,7 @@ Note that both "algo" orders and normal orders are counted for this filter.
 ```javascript
 {
   "filterType": "EXCHANGE_MAX_NUM_ORDERS",
-  "maxNumOrders": 1000
+  "max_num_orders": 1000
 }
 ```
 
@@ -276,7 +276,7 @@ The `EXCHANGE_MAX_NUM_ALGO_ORDERS` filter defines the maximum number of "algo" o
 ```javascript
 {
   "filterType": "EXCHANGE_MAX_NUM_ALGO_ORDERS",
-  "maxNumAlgoOrders": 200
+  "max_num_algo_orders": 200
 }
 ```
 
@@ -287,6 +287,6 @@ The `EXCHANGE_MAX_NUM_ICEBERG_ORDERS` filter defines the maximum number of icebe
 ```javascript
 {
   "filterType": "EXCHANGE_MAX_NUM_ICEBERG_ORDERS",
-  "maxNumIcebergOrders": 10000
+  "max_num_iceberg_orders": 10000
 }
 ```
