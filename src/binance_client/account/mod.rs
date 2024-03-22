@@ -4,5 +4,5 @@ pub mod order;
 pub mod open_order;
 pub mod postgresql;
 pub mod commission_rates;
-mod order_status;
+pub mod order_status;
 pub mod trades;

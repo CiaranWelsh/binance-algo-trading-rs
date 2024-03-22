@@ -5,7 +5,7 @@
 ## A
 
 `ACK`
-* `newOrderRespType` enum. Stands for a type of order response in JSON where only the following fields are emitted: `symbol`, `orderId`, `orderListId`, `clientOrderId`, and `transactTime`.
+* `newOrderRespType` enum. Stands for a type of order response in JSON where only the following fields are emitted: `symbol`, `order_id`, `order_list_id`, `client_order_id`, and `transactTime`.
 
 `aggTrade`/Aggregate trade
 * Aggregation of one or more individual trades from the same taker order that got filled at the same time and price.
@@ -66,7 +66,7 @@ allocation
 `CANCELED`
 * Order `status` indicating the order has been canceled by the user.
 
-`clientOrderId`
+`client_order_id`
 * A field, which can be set by the user, in the JSON response for `POST /api/v3/order` to identify the newly placed order.
 
 `commission`
@@ -210,7 +210,7 @@ Memory
 * Order `status` where a order has been successfully sent to the Matching Engine.
 
 `newClientOrderId`
-* Parameter used in the SPOT API to assign the `clientOrderId` for the order being placed or the cancel message.
+* Parameter used in the SPOT API to assign the `client_order_id` for the order being placed or the cancel message.
 
 Notional value
 * The `price` * `qty` value.
@@ -225,14 +225,14 @@ Notional value
 Order Book
 * List of the open bids and asks for a symbol.
 
-`orderId`
+`order_id`
 * A field in the order response that uniquely identifies the order on a symbol.
 
 `origQty`
 * The original `quantity` that was sent during order placement.
 
-`origClientOrderId`
-* Field used when canceling or querying an order by providing the `clientOrderId`.
+`orig_client_order_id`
+* Field used when canceling or querying an order by providing the `client_order_id`.
 
 ---
 

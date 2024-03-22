@@ -44,37 +44,38 @@ use crate::binance_client::order_types::time_in_force::TimeInForce;
 /// This creates a new OCO order for the `BTCUSDT` symbol, selling 0.5 BTC, with a limit order price of 9500 USDT,
 /// a stop order trigger price of 9400 USDT, and a stop-limit price of 9300 USDT.
 #[derive(Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct OcoOrder {
     pub symbol: String,
     pub side: Side,
     pub quantity: f64,
     pub price: f64,
     // Limit order price
-    #[serde(rename = "stopPrice")]
+    
     pub stop_price: f64,
     // Stop order price
-    #[serde(rename = "stopLimitPrice")]
+    
     pub stop_limit_price: f64,
     // Optional: Stop limit price, if different from stop price
-    #[serde(rename = "limitIcebergQty")]
+    
     pub limit_iceberg_qty: Option<f64>,
     // Optional: Used to make the limit order an iceberg order
-    #[serde(rename = "stopIcebergQty")]
+    
     pub stop_iceberg_qty: Option<f64>,
     // Optional: Used to make the stop limit order an iceberg order
-    #[serde(rename = "stopLimitTimeInForce")]
+    
     pub stop_limit_time_in_force: Option<TimeInForce>,
     // Optional: This defines how long the stop limit order will be active
-    #[serde(rename = "newOrderRespType")]
+    
     pub new_order_resp_type: Option<String>,
     // Optional: Set the response type received
-    #[serde(rename = "listClientOrderId")]
+    
     pub list_client_order_id: Option<String>,
     // Optional: A unique Id for the entire orderList
-    #[serde(rename = "limitClientOrderId")]
+    
     pub limit_client_order_id: Option<String>,
     // Optional: A unique Id for the limit order
-    #[serde(rename = "stopClientOrderId")]
+    
     pub stop_client_order_id: Option<String>,
     // Optional: A unique Id for the stop order
     pub recv_window: Option<u64>,

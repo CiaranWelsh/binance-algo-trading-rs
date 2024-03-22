@@ -67,9 +67,9 @@
   "status": 200,
   "result": {
     "symbol": "BTCUSDT",
-    "orderId": 12510053279,
-    "orderListId": -1,
-    "clientOrderId": "a097fe6304b20a7e4fc436",
+    "order_id": 12510053279,
+    "order_list_id": -1,
+    "client_order_id": "a097fe6304b20a7e4fc436",
     "transactTime": 1655716096505,
     "price": "0.10000000",
     "origQty": "10.00000000",
@@ -393,9 +393,9 @@ API 有多种频率限制间隔。
   "status": 200,
   "result": {
     "symbol": "BTCUSDT",
-    "orderId": 12510053279,
-    "orderListId": -1,
-    "clientOrderId": "a097fe6304b20a7e4fc436",
+    "order_id": 12510053279,
+    "order_list_id": -1,
+    "client_order_id": "a097fe6304b20a7e4fc436",
     "transactTime": 1655716096505,
     "price": "0.10000000",
     "origQty": "10.00000000",
@@ -3009,9 +3009,9 @@ NONE
 
 备注：
 
-* `newClientOrderId` 指定订单的 `clientOrderId` 值。
+* `newClientOrderId` 指定订单的 `client_order_id` 值。
 
-  仅当前一个订单已成交或过期时，才会接受具有相同 `clientOrderId` 的新订单。
+  仅当前一个订单已成交或过期时，才会接受具有相同 `client_order_id` 的新订单。
 
 * 任何 `LIMIT` 或 `LIMIT_MAKER` 订单都可以通过指定 `icebergQty` 变成冰山订单。
 
@@ -3040,9 +3040,9 @@ NONE
   "status": 200,
   "result": {
     "symbol": "BTCUSDT",
-    "orderId": 12569099453,
-    "orderListId": -1, // 单个订单会一直是 -1
-    "clientOrderId": "4d96324ff9d44481926157ec08158a40",
+    "order_id": 12569099453,
+    "order_list_id": -1, // 单个订单会一直是 -1
+    "client_order_id": "4d96324ff9d44481926157ec08158a40",
     "transactTime": 1660801715639
   },
   "rate_limits": [
@@ -3079,9 +3079,9 @@ NONE
   "status": 200,
   "result": {
     "symbol": "BTCUSDT",
-    "orderId": 12569099453,
-    "orderListId": -1, // 单个订单会一直是 -1
-    "clientOrderId": "4d96324ff9d44481926157ec08158a40",
+    "order_id": 12569099453,
+    "order_list_id": -1, // 单个订单会一直是 -1
+    "client_order_id": "4d96324ff9d44481926157ec08158a40",
     "transactTime": 1660801715639,
     "price": "23416.10000000",
     "origQty": "0.00847000",
@@ -3128,9 +3128,9 @@ NONE
   "status": 200,
   "result": {
     "symbol": "BTCUSDT",
-    "orderId": 12569099453,
-    "orderListId": -1,
-    "clientOrderId": "4d96324ff9d44481926157ec08158a40",
+    "order_id": 12569099453,
+    "order_list_id": -1,
+    "client_order_id": "4d96324ff9d44481926157ec08158a40",
     "transactTime": 1660801715793,
     "price": "23416.10000000",
     "origQty": "0.00847000",
@@ -3313,7 +3313,7 @@ NONE
   "method": "order.status",
   "params": {
     "symbol": "BTCUSDT",
-    "orderId": 12569099453,
+    "order_id": 12569099453,
     "apiKey": "vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A",
     "signature": "2c3aab5a078ee4ea465ecd95523b77289f61476c2f238ec10c55ea6cb11a6f35",
     "timestamp": 1660801720951
@@ -3345,15 +3345,15 @@ NONE
         <td></td>
     </tr>
     <tr>
-        <td><code>orderId</code></td>
+        <td><code>order_id</code></td>
         <td>INT</td>
         <td rowspan="2">YES</td>
-        <td>按 <code>orderId</code> 查找顺序</td>
+        <td>按 <code>order_id</code> 查找顺序</td>
     </tr>
     <tr>
-        <td><code>origClientOrderId</code></td>
+        <td><code>orig_client_order_id</code></td>
         <td>STRING</td>
-        <td>按 <code>clientOrderId</code> 查找顺序</td>
+        <td>按 <code>client_order_id</code> 查找顺序</td>
     </tr>
     <tr>
         <td><code>apiKey</code></td>
@@ -3384,7 +3384,7 @@ NONE
 
 备注：
 
-* 如果同时指定了 `orderId` 和 `origClientOrderId` 参数，仅使用 `orderId` 并忽略 `origClientOrderId`。
+* 如果同时指定了 `order_id` 和 `orig_client_order_id` 参数，仅使用 `order_id` 并忽略 `orig_client_order_id`。
 
 * 对于某些历史订单，`cummulativeQuoteQty` 响应字段可能为负数，意味着此时数据不可用。
 
@@ -3398,9 +3398,9 @@ NONE
   "status": 200,
   "result": {
     "symbol": "BTCUSDT",
-    "orderId": 12569099453,
-    "orderListId": -1,                  // OCO订单的ID，不然就是-1
-    "clientOrderId": "4d96324ff9d44481926157",
+    "order_id": 12569099453,
+    "order_list_id": -1,                  // OCO订单的ID，不然就是-1
+    "client_order_id": "4d96324ff9d44481926157",
     "price": "23416.10000000",
     "origQty": "0.00847000",
     "executedQty": "0.00847000",
@@ -3445,7 +3445,7 @@ NONE
   "method": "order.cancel",
   "params": {
     "symbol": "BTCUSDT",
-    "origClientOrderId": "4d96324ff9d44481926157",
+    "orig_client_order_id": "4d96324ff9d44481926157",
     "apiKey": "vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A",
     "signature": "33d5b721f278ae17a52f004a82a6f68a70c68e7dd6776ed0be77a455ab855282",
     "timestamp": 1660801715830
@@ -3477,15 +3477,15 @@ NONE
         <td></td>
     </tr>
     <tr>
-        <td><code>orderId</code></td>
+        <td><code>order_id</code></td>
         <td>INT</td>
         <td rowspan="2">YES</td>
-        <td>按 <code>orderId</code> 取消订单</td>
+        <td>按 <code>order_id</code> 取消订单</td>
     </tr>
     <tr>
-        <td><code>origClientOrderId</code></td>
+        <td><code>orig_client_order_id</code></td>
         <td>STRING</td>
-        <td>按 <code>clientOrderId</code> 取消订单</td>
+        <td>按 <code>client_order_id</code> 取消订单</td>
     </tr>
     <tr>
         <td><code>newClientOrderId</code></td>
@@ -3528,9 +3528,9 @@ NONE
 
 备注：
 
-* 如果同时指定了 `orderId` 和 `origClientOrderId` 参数，仅使用 `orderId` 并忽略 `origClientOrderId`。
+* 如果同时指定了 `order_id` 和 `orig_client_order_id` 参数，仅使用 `order_id` 并忽略 `orig_client_order_id`。
 
-* `newClientOrderId` 将替换已取消订单的 `clientOrderId`，为新订单腾出空间。
+* `newClientOrderId` 将替换已取消订单的 `client_order_id`，为新订单腾出空间。
 
 * 如果您取消属于 OCO 对的订单，则整个 OCO 将被取消。
 
@@ -3547,10 +3547,10 @@ NONE
   "status": 200,
   "result": {
     "symbol": "BTCUSDT",
-    "origClientOrderId": "4d96324ff9d44481926157",  // 被取消的 clientOrderId
-    "orderId": 12569099453,
-    "orderListId": -1,                              // OCO订单的ID，不然就是 -1
-    "clientOrderId": "91fe37ce9e69c90d6358c0",      // 请求的 newClientOrderId
+    "orig_client_order_id": "4d96324ff9d44481926157",  // 被取消的 client_order_id
+    "order_id": 12569099453,
+    "order_list_id": -1,                              // OCO订单的ID，不然就是 -1
+    "client_order_id": "91fe37ce9e69c90d6358c0",      // 请求的 newClientOrderId
     "transactTime": 1684804350068,
     "price": "23416.10000000",
     "origQty": "0.00847000",
@@ -3586,7 +3586,7 @@ NONE
  "id": "16eaf097-bbec-44b9-96ff-e97e6e875870",
   "status": 200,
   "result": {
-    "orderListId": 19431,
+    "order_list_id": 19431,
     "contingencyType": "OCO",
     "listStatusType": "ALL_DONE",
     "listOrderStatus": "ALL_DONE",
@@ -3596,23 +3596,23 @@ NONE
     "orders": [
       {
         "symbol": "BTCUSDT",
-        "orderId": 12569099453,
-        "clientOrderId": "bX5wROblo6YeDwa9iTLeyY"
+        "order_id": 12569099453,
+        "client_order_id": "bX5wROblo6YeDwa9iTLeyY"
       },
       {
         "symbol": "BTCUSDT",
-        "orderId": 12569099454,
-        "clientOrderId": "Tnu2IP0J5Y4mxw3IATBfmW"
+        "order_id": 12569099454,
+        "client_order_id": "Tnu2IP0J5Y4mxw3IATBfmW"
       }
     ],
     // OCO leg 状态格式与单个订单相同。
     "orderReports": [
       {
         "symbol": "BTCUSDT",
-        "origClientOrderId": "bX5wROblo6YeDwa9iTLeyY",
-        "orderId": 12569099453,
-        "orderListId": 19431,
-        "clientOrderId": "OFFXQtxVFZ6Nbcg4PgE2DA",
+        "orig_client_order_id": "bX5wROblo6YeDwa9iTLeyY",
+        "order_id": 12569099453,
+        "order_list_id": 19431,
+        "client_order_id": "OFFXQtxVFZ6Nbcg4PgE2DA",
         "transactTime": 1684804350068,
         "price": "23450.50000000",
         "origQty": "0.00850000"
@@ -3627,10 +3627,10 @@ NONE
       },
       {
         "symbol": "BTCUSDT",
-        "origClientOrderId": "Tnu2IP0J5Y4mxw3IATBfmW",
-        "orderId": 12569099454,
-        "orderListId": 19431,
-        "clientOrderId": "OFFXQtxVFZ6Nbcg4PgE2DA",
+        "orig_client_order_id": "Tnu2IP0J5Y4mxw3IATBfmW",
+        "order_id": 12569099454,
+        "order_list_id": 19431,
+        "client_order_id": "OFFXQtxVFZ6Nbcg4PgE2DA",
         "transactTime": 1684804350068,
         "price": "23400.00000000",
         "origQty": "0.00850000"
@@ -3729,12 +3729,12 @@ NONE
         <td><code>cancelOrderId</code></td>
         <td>INT</td>
         <td rowspan="2">YES</td>
-        <td>按 <code>orderId</code> 取消订单</td>
+        <td>按 <code>order_id</code> 取消订单</td>
     </tr>
     <tr>
         <td><code>cancelOrigClientOrderId</code></td>
         <td>STRING</td>
-        <td>按 <code>clientOrderId</code> 取消订单</td>
+        <td>按 <code>client_order_id</code> 取消订单</td>
     </tr>
     <tr>
         <td><code>cancelNewClientOrderId</code></td>
@@ -3936,13 +3936,13 @@ NONE
 
 * 如果同时指定了 `cancelOrderId` 和 `cancelOrigClientOrderId` 参数，仅使用 `cancelOrderId` 并忽略 `cancelOrigClientOrderId`。
 
-* `cancelNewClientOrderId` 将替换已撤销订单的 `clientOrderId`，为新订单腾出空间。
+* `cancelNewClientOrderId` 将替换已撤销订单的 `client_order_id`，为新订单腾出空间。
 
-* `newClientOrderId` 指定下单的 `clientOrderId` 值。
+* `newClientOrderId` 指定下单的 `client_order_id` 值。
 
-  仅当前一个订单已成交或过期时，才会接受具有相同 `clientOrderId` 的新订单。
+  仅当前一个订单已成交或过期时，才会接受具有相同 `client_order_id` 的新订单。
 
-  新订单可以重用已取消订单的旧 `clientOrderId`。
+  新订单可以重用已取消订单的旧 `client_order_id`。
 
 * 此 cancel-replace 操作**不是事务性的**。
 
@@ -3974,10 +3974,10 @@ NONE
     // 某些字段是可选的，仅在订单中有设置它们时才包括。
     "cancelResponse": {
       "symbol": "BTCUSDT",
-      "origClientOrderId": "4d96324ff9d44481926157",  // 请求的 cancelOrigClientOrderId
-      "orderId": 125690984230,
-      "orderListId": -1,
-      "clientOrderId": "91fe37ce9e69c90d6358c0",      // 请求的 cancelNewClientOrderId
+      "orig_client_order_id": "4d96324ff9d44481926157",  // 请求的 cancelOrigClientOrderId
+      "order_id": 125690984230,
+      "order_list_id": -1,
+      "client_order_id": "91fe37ce9e69c90d6358c0",      // 请求的 cancelNewClientOrderId
       "transactTime": 1684804350068,
       "price": "23450.00000000",
       "origQty": "0.00847000",
@@ -3993,9 +3993,9 @@ NONE
     // 某些字段是可选的，仅在订单中有设置它们时才包括。
     "newOrderResponse": {
       "symbol": "BTCUSDT",
-      "orderId": 12569099453,
-      "orderListId": -1,
-      "clientOrderId": "bX5wROblo6YeDwa9iTLeyY",      // 请求的 newClientOrderId
+      "order_id": 12569099453,
+      "order_list_id": -1,
+      "client_order_id": "bX5wROblo6YeDwa9iTLeyY",      // 请求的 newClientOrderId
       "transactTime": 1660813156959,
       "price": "23416.10000000",
       "origQty": "0.00847000",
@@ -4093,10 +4093,10 @@ NONE
       "newOrderResult": "FAILURE",
       "cancelResponse": {
         "symbol": "BTCUSDT",
-        "origClientOrderId": "4d96324ff9d44481926157",
-        "orderId": 125690984230,
-        "orderListId": -1,
-        "clientOrderId": "91fe37ce9e69c90d6358c0",
+        "orig_client_order_id": "4d96324ff9d44481926157",
+        "order_id": 125690984230,
+        "order_list_id": -1,
+        "client_order_id": "91fe37ce9e69c90d6358c0",
         "transactTime": 1684804350068,
         "price": "23450.00000000",
         "origQty": "0.00847000",
@@ -4156,9 +4156,9 @@ NONE
       },
       "newOrderResponse": {
         "symbol": "BTCUSDT",
-        "orderId": 12569099453,
-        "orderListId": -1,
-        "clientOrderId": "bX5wROblo6YeDwa9iTLeyY",
+        "order_id": 12569099453,
+        "order_list_id": -1,
+        "client_order_id": "bX5wROblo6YeDwa9iTLeyY",
         "transactTime": 1660813156959,
         "price": "23416.10000000",
         "origQty": "0.00847000",
@@ -4307,9 +4307,9 @@ NONE
   "result": [
     {
       "symbol": "BTCUSDT",
-      "orderId": 12569099453,
-      "orderListId": -1,
-      "clientOrderId": "4d96324ff9d44481926157",
+      "order_id": 12569099453,
+      "order_list_id": -1,
+      "client_order_id": "4d96324ff9d44481926157",
       "price": "23416.10000000",
       "origQty": "0.00847000",
       "executedQty": "0.00720000",
@@ -4386,10 +4386,10 @@ NONE
   "result": [
     {
       "symbol": "BTCUSDT",
-      "origClientOrderId": "4d96324ff9d44481926157",
-      "orderId": 12569099453,
-      "orderListId": -1,
-      "clientOrderId": "91fe37ce9e69c90d6358c0",
+      "orig_client_order_id": "4d96324ff9d44481926157",
+      "order_id": 12569099453,
+      "order_list_id": -1,
+      "client_order_id": "91fe37ce9e69c90d6358c0",
       "price": "23416.10000000",
       "origQty": "0.00847000",
       "executedQty": "0.00001000",
@@ -4406,7 +4406,7 @@ NONE
       "selfTradePreventionMode": "NONE"
     },
     {
-      "orderListId": 19431,
+      "order_list_id": 19431,
       "contingencyType": "OCO",
       "listStatusType": "ALL_DONE",
       "listOrderStatus": "ALL_DONE",
@@ -4416,22 +4416,22 @@ NONE
       "orders": [
         {
           "symbol": "BTCUSDT",
-          "orderId": 12569099453,
-          "clientOrderId": "bX5wROblo6YeDwa9iTLeyY"
+          "order_id": 12569099453,
+          "client_order_id": "bX5wROblo6YeDwa9iTLeyY"
         },
         {
           "symbol": "BTCUSDT",
-          "orderId": 12569099454,
-          "clientOrderId": "Tnu2IP0J5Y4mxw3IATBfmW"
+          "order_id": 12569099454,
+          "client_order_id": "Tnu2IP0J5Y4mxw3IATBfmW"
         }
       ],
       "orderReports": [
         {
           "symbol": "BTCUSDT",
-          "origClientOrderId": "bX5wROblo6YeDwa9iTLeyY",
-          "orderId": 12569099453,
-          "orderListId": 19431,
-          "clientOrderId": "OFFXQtxVFZ6Nbcg4PgE2DA",
+          "orig_client_order_id": "bX5wROblo6YeDwa9iTLeyY",
+          "order_id": 12569099453,
+          "order_list_id": 19431,
+          "client_order_id": "OFFXQtxVFZ6Nbcg4PgE2DA",
           "transactTime": 1684804350068,
           "price": "23450.50000000",
           "origQty": "0.00850000",
@@ -4446,10 +4446,10 @@ NONE
         },
         {
           "symbol": "BTCUSDT",
-          "origClientOrderId": "Tnu2IP0J5Y4mxw3IATBfmW",
-          "orderId": 12569099454,
-          "orderListId": 19431,
-          "clientOrderId": "OFFXQtxVFZ6Nbcg4PgE2DA",
+          "orig_client_order_id": "Tnu2IP0J5Y4mxw3IATBfmW",
+          "order_id": 12569099454,
+          "order_list_id": 19431,
+          "client_order_id": "OFFXQtxVFZ6Nbcg4PgE2DA",
           "transactTime": 1684804350068,
           "price": "23400.00000000",
           "origQty": "0.00850000",
@@ -4540,7 +4540,7 @@ NONE
 
   只有当前一个 OCO 已满或完全过期时，才会接受具有相同 `listClientOrderId` 的新 OCO。
 
-  `listClientOrderId` 与单个订单的 `clientOrderId` 不同。
+  `listClientOrderId` 与单个订单的 `client_order_id` 不同。
 
 * legs 的价格限制：
 
@@ -4573,7 +4573,7 @@ NONE
   "id": "57833dc0-e3f2-43fb-ba20-46480973b0aa",
   "status": 200,
   "result": {
-    "orderListId": 1274512,
+    "order_list_id": 1274512,
     "contingencyType": "OCO",
     "listStatusType": "EXEC_STARTED",
     "listOrderStatus": "EXECUTING",
@@ -4583,21 +4583,21 @@ NONE
     "orders": [
       {
         "symbol": "BTCUSDT",
-        "orderId": 12569138901,
-        "clientOrderId": "BqtFCj5odMoWtSqGk2X9tU"
+        "order_id": 12569138901,
+        "client_order_id": "BqtFCj5odMoWtSqGk2X9tU"
       },
       {
         "symbol": "BTCUSDT",
-        "orderId": 12569138902,
-        "clientOrderId": "jLnZpj5enfMXTuhKB1d0us"
+        "order_id": 12569138902,
+        "client_order_id": "jLnZpj5enfMXTuhKB1d0us"
       }
     ],
     "orderReports": [
       {
         "symbol": "BTCUSDT",
-        "orderId": 12569138901,
-        "orderListId": 1274512,
-        "clientOrderId": "BqtFCj5odMoWtSqGk2X9tU",
+        "order_id": 12569138901,
+        "order_list_id": 1274512,
+        "client_order_id": "BqtFCj5odMoWtSqGk2X9tU",
         "transactTime": 1660801713793,
         "price": "23410.00000000",
         "origQty": "0.00650000",
@@ -4613,9 +4613,9 @@ NONE
       },
       {
         "symbol": "BTCUSDT",
-        "orderId": 12569138902,
-        "orderListId": 1274512,
-        "clientOrderId": "jLnZpj5enfMXTuhKB1d0us",
+        "order_id": 12569138902,
+        "order_list_id": 1274512,
+        "client_order_id": "jLnZpj5enfMXTuhKB1d0us",
         "transactTime": 1660801713793,
         "price": "23420.00000000",
         "origQty": "0.00650000",
@@ -4663,7 +4663,7 @@ NONE
   "id": "b53fd5ff-82c7-4a04-bd64-5f9dc42c2100",
   "method": "orderList.status",
   "params": {
-    "origClientOrderId": "08985fedd9ea2cf6b28996"
+    "orig_client_order_id": "08985fedd9ea2cf6b28996"
     "apiKey": "vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A",
     "signature": "d12f4e8892d46c0ddfbd43d556ff6d818581b3be22a02810c2c20cb719aed6a4",
     "timestamp": 1660801713965
@@ -4691,15 +4691,15 @@ NONE
 </thead>
 <tbody>
     <tr>
-        <td><code>origClientOrderId</code></td>
+        <td><code>orig_client_order_id</code></td>
         <td>STRING</td>
         <td rowspan="2">YES</td>
         <td>通过 <code>listClientOrderId</code> 获取 OCO </td>
     </tr>
     <tr>
-        <td><code>orderListId</code></td>
+        <td><code>order_list_id</code></td>
         <td>INT</td>
-        <td>通过 <code>orderListId</code> 获取 OCO</td>
+        <td>通过 <code>order_list_id</code> 获取 OCO</td>
     </tr>
     <tr>
         <td><code>apiKey</code></td>
@@ -4730,9 +4730,9 @@ NONE
 
 备注：
 
-* `origClientOrderId` 指的是 OCO 本身的 `listClientOrderId`。
+* `orig_client_order_id` 指的是 OCO 本身的 `listClientOrderId`。
 
-* 如果同时指定了 `origClientOrderId` 和 `orderListId` 参数，仅使用 `origClientOrderId` 并忽略 `orderListId`。
+* 如果同时指定了 `orig_client_order_id` 和 `order_list_id` 参数，仅使用 `orig_client_order_id` 并忽略 `order_list_id`。
 
 **数据源:**
 数据库
@@ -4744,7 +4744,7 @@ NONE
   "id": "b53fd5ff-82c7-4a04-bd64-5f9dc42c2100",
   "status": 200,
   "result": {
-    "orderListId": 1274512,
+    "order_list_id": 1274512,
     "contingencyType": "OCO",
     "listStatusType": "EXEC_STARTED",
     "listOrderStatus": "EXECUTING",
@@ -4754,13 +4754,13 @@ NONE
     "orders": [
       {
         "symbol": "BTCUSDT",
-        "orderId": 12569138901,
-        "clientOrderId": "BqtFCj5odMoWtSqGk2X9tU"
+        "order_id": 12569138901,
+        "client_order_id": "BqtFCj5odMoWtSqGk2X9tU"
       },
       {
         "symbol": "BTCUSDT",
-        "orderId": 12569138902,
-        "clientOrderId": "jLnZpj5enfMXTuhKB1d0us"
+        "order_id": 12569138902,
+        "client_order_id": "jLnZpj5enfMXTuhKB1d0us"
       }
     ]
   },
@@ -4784,7 +4784,7 @@ NONE
   "method": "orderList.cancel",
   "params": {
     "symbol": "BTCUSDT",
-    "orderListId": 1274512,
+    "order_list_id": 1274512,
     "apiKey": "vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A",
     "signature": "4973f4b2fee30bf6d45e4a973e941cc60fdd53c8dd5a25edeac96f5733c0ccee",
     "timestamp": 1660801720210
@@ -4816,10 +4816,10 @@ NONE
         <td></td>
     </tr>
     <tr>
-        <td><code>orderListId</code></td>
+        <td><code>order_list_id</code></td>
         <td>INT</td>
         <td rowspan="2">YES</td>
-        <td>通过 <code>orderListId</code> 撤销 OCO</td>
+        <td>通过 <code>order_list_id</code> 撤销 OCO</td>
     </tr>
     <tr>
         <td><code>listClientOrderId</code></td>
@@ -4861,7 +4861,7 @@ NONE
 
 备注：
 
-* 如果同时指定了 `orderListId` 和 `listClientOrderId` 参数，仅使用 `orderListId` 并忽略 `listClientOrderId`。
+* 如果同时指定了 `order_list_id` 和 `listClientOrderId` 参数，仅使用 `order_list_id` 并忽略 `listClientOrderId`。
 
 * 使用 [`order.cancel`](#撤销订单-TRADE) 取消单个 leg 也将会取消整个 OCO。
 
@@ -4875,7 +4875,7 @@ NONE
   "id": "c5899911-d3f4-47ae-8835-97da553d27d0",
   "status": 200,
   "result": {
-    "orderListId": 1274512,
+    "order_list_id": 1274512,
     "contingencyType": "OCO",
     "listStatusType": "ALL_DONE",
     "listOrderStatus": "ALL_DONE",
@@ -4885,21 +4885,21 @@ NONE
     "orders": [
       {
         "symbol": "BTCUSDT",
-        "orderId": 12569138901,
-        "clientOrderId": "BqtFCj5odMoWtSqGk2X9tU"
+        "order_id": 12569138901,
+        "client_order_id": "BqtFCj5odMoWtSqGk2X9tU"
       },
       {
         "symbol": "BTCUSDT",
-        "orderId": 12569138902,
-        "clientOrderId": "jLnZpj5enfMXTuhKB1d0us"
+        "order_id": 12569138902,
+        "client_order_id": "jLnZpj5enfMXTuhKB1d0us"
       }
     ],
     "orderReports": [
       {
         "symbol": "BTCUSDT",
-        "orderId": 12569138901,
-        "orderListId": 1274512,
-        "clientOrderId": "BqtFCj5odMoWtSqGk2X9tU",
+        "order_id": 12569138901,
+        "order_list_id": 1274512,
+        "client_order_id": "BqtFCj5odMoWtSqGk2X9tU",
         "transactTime": 1660801720215,
         "price": "23410.00000000",
         "origQty": "0.00650000",
@@ -4914,9 +4914,9 @@ NONE
       },
       {
         "symbol": "BTCUSDT",
-        "orderId": 12569138902,
-        "orderListId": 1274512,
-        "clientOrderId": "jLnZpj5enfMXTuhKB1d0us",
+        "order_id": 12569138902,
+        "order_list_id": 1274512,
+        "client_order_id": "jLnZpj5enfMXTuhKB1d0us",
         "transactTime": 1660801720215,
         "price": "23420.00000000",
         "origQty": "0.00650000",
@@ -4986,7 +4986,7 @@ NONE
   "status": 200,
   "result": [
     {
-      "orderListId": 0,
+      "order_list_id": 0,
       "contingencyType": "OCO",
       "listStatusType": "EXEC_STARTED",
       "listOrderStatus": "EXECUTING",
@@ -4996,13 +4996,13 @@ NONE
       "orders": [
         {
           "symbol": "BTCUSDT",
-          "orderId": 4,
-          "clientOrderId": "CUhLgTXnX5n2c0gWiLpV4d"
+          "order_id": 4,
+          "client_order_id": "CUhLgTXnX5n2c0gWiLpV4d"
         },
         {
           "symbol": "BTCUSDT",
-          "orderId": 5,
-          "clientOrderId": "1ZqG7bBuYwaF4SU8CwnwHm"
+          "order_id": 5,
+          "client_order_id": "1ZqG7bBuYwaF4SU8CwnwHm"
         }
       ]
     }
@@ -5080,9 +5080,9 @@ NONE
   "result": [
     {
       "symbol": "BTCUSDT",
-      "orderId": 2,
-      "orderListId": -1,
-      "clientOrderId": "sBI1KM6nNtOfj5tccZSKly",
+      "order_id": 2,
+      "order_list_id": -1,
+      "client_order_id": "sBI1KM6nNtOfj5tccZSKly",
       "transactTime": 1689149087774,
       "price": "31000.00000000",
       "origQty": "0.50000000",
@@ -5402,7 +5402,7 @@ NONE
 名称                | 类型    | 是否必需 | 描述
 ------------------- | ------- | --------- | ------------
 `symbol`            | STRING  | YES       |
-`orderId`           | INT     | NO        | 起始订单ID
+`order_id`           | INT     | NO        | 起始订单ID
 `startTime`         | INT     | NO        |
 `endTime`           | INT     | NO        |
 `limit`             | INT     | NO        | 默认 500; 最大值 1000
@@ -5413,11 +5413,11 @@ NONE
 
 备注：
 
-* 如果指定了 `startTime` 和/或 `endTime`，则忽略 `orderId`。
+* 如果指定了 `startTime` 和/或 `endTime`，则忽略 `order_id`。
 
   订单是按照最后一次更新的执行状态的`time`过滤的。
 
-* 如果指定了 `orderId`，返回的订单将是订单ID >= `orderId`
+* 如果指定了 `order_id`，返回的订单将是订单ID >= `order_id`
 
 * 如果不指定条件，则返回最近的订单。
 
@@ -5439,9 +5439,9 @@ NONE
   "result": [
     {
       "symbol": "BTCUSDT",
-      "orderId": 12569099453,
-      "orderListId": -1,
-      "clientOrderId": "4d96324ff9d44481926157",
+      "order_id": 12569099453,
+      "order_list_id": -1,
+      "client_order_id": "4d96324ff9d44481926157",
       "price": "23416.10000000",
       "origQty": "0.00847000",
       "executedQty": "0.00847000",
@@ -5531,7 +5531,7 @@ OCO 的状态报告与 [`orderList.status`](#查询-OCO-user_data) 相同。
   "status": 200,
   "result": [
     {
-      "orderListId": 1274512,
+      "order_list_id": 1274512,
       "contingencyType": "OCO",
       "listStatusType": "EXEC_STARTED",
       "listOrderStatus": "EXECUTING",
@@ -5541,13 +5541,13 @@ OCO 的状态报告与 [`orderList.status`](#查询-OCO-user_data) 相同。
       "orders": [
         {
           "symbol": "BTCUSDT",
-          "orderId": 12569138901,
-          "clientOrderId": "BqtFCj5odMoWtSqGk2X9tU"
+          "order_id": 12569138901,
+          "client_order_id": "BqtFCj5odMoWtSqGk2X9tU"
         },
         {
           "symbol": "BTCUSDT",
-          "orderId": 12569138902,
-          "clientOrderId": "jLnZpj5enfMXTuhKB1d0us"
+          "order_id": 12569138902,
+          "client_order_id": "jLnZpj5enfMXTuhKB1d0us"
         }
       ]
     }
@@ -5591,7 +5591,7 @@ OCO 的状态报告与 [`orderList.status`](#查询-OCO-user_data) 相同。
 名称                | 类型    | 是否必需 | 描述
 ------------------- | ------- | --------- | ------------
 `symbol`            | STRING  | YES       |
-`orderId`           | INT     | NO        |
+`order_id`           | INT     | NO        |
 `startTime`         | INT     | NO        |
 `endTime`           | INT     | NO        |
 `fromId`            | INT     | NO        | 起始交易 ID
@@ -5609,9 +5609,9 @@ OCO 的状态报告与 [`orderList.status`](#查询-OCO-user_data) 相同。
 
   `fromId` 不能与 `startTime` 和 `endTime` 一起使用。
 
-* 如果指定了 `orderId`，则只返回与该订单相关的交易。
+* 如果指定了 `order_id`，则只返回与该订单相关的交易。
 
-  `startTime` 和 `endTime` 不能与 `orderId` 一起使用。
+  `startTime` 和 `endTime` 不能与 `order_id` 一起使用。
 
 * 如果不指定条件，则返回最近的交易。
 
@@ -5628,8 +5628,8 @@ OCO 的状态报告与 [`orderList.status`](#查询-OCO-user_data) 相同。
     {
       "symbol": "BTCUSDT",
       "id": 1650422481,
-      "orderId": 12569099453,
-      "orderListId": -1,
+      "order_id": 12569099453,
+      "order_list_id": -1,
       "price": "23416.10000000",
       "qty": "0.00635000",
       "quoteQty": "148.69223500",
@@ -5643,8 +5643,8 @@ OCO 的状态报告与 [`orderList.status`](#查询-OCO-user_data) 相同。
     {
       "symbol": "BTCUSDT",
       "id": 1650422482,
-      "orderId": 12569099453,
-      "orderListId": -1,
+      "order_id": 12569099453,
+      "order_list_id": -1,
       "price": "23416.50000000",
       "qty": "0.00212000",
       "quoteQty": "49.64298000",
@@ -5676,7 +5676,7 @@ OCO 的状态报告与 [`orderList.status`](#查询-OCO-user_data) 相同。
   "method": "myPreventedMatches",
   "params": {
     "symbol": "BTCUSDT",
-    "orderId": 35,
+    "order_id": 35,
     "apiKey": "vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A",
     "signature": "c5a5ffb79fd4f2e10a92f895d488943a57954edf5933bde3338dfb6ea6d6eefc",
     "timestamp": 1673923281052
@@ -5689,9 +5689,9 @@ OCO 的状态报告与 [`orderList.status`](#查询-OCO-user_data) 相同。
 这些是支持的组合：
 
 * `symbol` + `preventedMatchId`
-* `symbol` + `orderId`
-* `symbol` + `orderId` + `fromPreventedMatchId` (`limit`  默认为 500)
-* `symbol` + `orderId` + `fromPreventedMatchId` + `limit` 
+* `symbol` + `order_id`
+* `symbol` + `order_id` + `fromPreventedMatchId` (`limit`  默认为 500)
+* `symbol` + `order_id` + `fromPreventedMatchId` + `limit` 
 
 **参数:**
 
@@ -5699,7 +5699,7 @@ OCO 的状态报告与 [`orderList.status`](#查询-OCO-user_data) 相同。
 ------------        | ----   | ------------ | ------------
 symbol              | STRING | YES          |
 preventedMatchId    |LONG    | NO           | 
-orderId             |LONG    | NO           |
+order_id             |LONG    | NO           |
 fromPreventedMatchId|LONG    | NO           |
 limit               |INT     | NO           | 默认：`500`；最大：`1000`
 recv_window          | LONG   | NO           | 赋值不得大于 `60000`
@@ -5711,7 +5711,7 @@ timestamp           | LONG   | YES          |
 --------------------------------| -----
 如果 `symbol` 不合法          | 2
 用 `preventedMatchId` 查询 | 2
-用 `orderId` 查询         | 20 
+用 `order_id` 查询         | 20 
 
 **数据源:**
 
@@ -5757,7 +5757,7 @@ timestamp           | LONG   | YES          |
   "method": "myAllocations",
   "params": {
     "symbol": "BTCUSDT",
-    "orderId": 500,
+    "order_id": 500,
     "apiKey": "vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A",
     "signature": "c5a5ffb79fd4f2e10a92f895d488943a57954edf5933bde3338dfb6ea6d6eefc",
     "timestamp": 1673923281052
@@ -5779,7 +5779,7 @@ timestamp           | LONG   | YES          |
 `endTime`                  |LONG   |No        |
 `fromAllocationId`         |INT    |No        |
 `limit`                    |INT    |No        |默认值 500； 最大值 1000
-`orderId`                  |LONG   |No        |
+`order_id`                  |LONG   |No        |
 `recv_window`               |LONG   |No        |不能大于 `60000`
 `timestamp`                |LONG   |No        |
 
@@ -5792,8 +5792,8 @@ timestamp           | LONG   | YES          |
 `symbol` + `endTime`                        | 到 `endTime` 为止的最新的分配 |
 `symbol` + `startTime` + `endTime`          | 在指定时间范围内的分配  |
 `symbol` + `fromAllocationId`               | 从指定 `AllocationId` 开始的分配  |
-`symbol` + `orderId`                        | 按从最旧到最新排序并和特定订单关联的分配 |
-`symbol` + `orderId` + `fromAllocationId`   | 从指定 `AllocationId` 开始并和特定订单关联的分配 |
+`symbol` + `order_id`                        | 按从最旧到最新排序并和特定订单关联的分配 |
+`symbol` + `order_id` + `fromAllocationId`   | 从指定 `AllocationId` 开始并和特定订单关联的分配 |
 
 **注意:** `startTime` 和 `endTime` 之间的时间不能超过 24 小时。
 
@@ -5811,8 +5811,8 @@ timestamp           | LONG   | YES          |
       "symbol": "BTCUSDT",
       "allocationId": 0,
       "allocationType": "SOR",
-      "orderId": 500,
-      "orderListId": -1,
+      "order_id": 500,
+      "order_list_id": -1,
       "price": "1.00000000",
       "qty": "0.10000000",
       "quoteQty": "0.10000000",

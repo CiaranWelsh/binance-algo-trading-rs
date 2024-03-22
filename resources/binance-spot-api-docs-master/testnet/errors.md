@@ -187,7 +187,7 @@ The following messages which will indicate the specific error:
 
 Error message                                                   | Description
 ------------                                                    | ------------
-"Unknown order sent."                                           | The order (by either `orderId`, `clOrdId`, `origClOrdId`) could not be found.
+"Unknown order sent."                                           | The order (by either `order_id`, `clOrdId`, `origClOrdId`) could not be found.
 "Duplicate order sent."                                         | The `clOrdId` is already in use.
 "Market is closed."                                             | The symbol is not trading.
 "Account has insufficient balance for requested action."        | Not enough funds to complete the action.
@@ -203,7 +203,7 @@ Error message                                                   | Description
 "This account may not place or cancel orders."                  | Contact customer support; the account has trading ability disabled.
 "Unsupported order combination"                                 | The `orderType`, `timeInForce`, `stopPrice`, and/or `icebergQty` combination isn't allowed.
 "Order would trigger immediately."                              | The order's stop price is not valid when compared to the last traded price.
-"Cancel order is invalid. Check origClOrdId and orderId."       | No `origClOrdId` or `orderId` was sent in.
+"Cancel order is invalid. Check origClOrdId and order_id."       | No `origClOrdId` or `order_id` was sent in.
 "Order would immediately match and take."                       | `LIMIT_MAKER` order type would immediately match and trade, and not be a pure maker order.
 "The relationship of the prices for the orders is not correct." | The prices set in the `OCO` is breaking the Price rules. <br/> The rules are: <br/> `SELL Orders`: Limit Price > Last Price > Stop Price <br/>`BUY Orders`: Limit Price < Last Price < Stop Price
 "OCO orders are not supported for this symbol"                  | `OCO` is not enabled on the symbol.

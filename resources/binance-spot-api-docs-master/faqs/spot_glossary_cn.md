@@ -5,7 +5,7 @@
 ## A
 
 `ACK`
-* `newOrderRespType`的枚举值, 设置时下单的返回值只包括下面的字段: `symbol`, `orderId`, `orderListId`, `clientOrderId`, 和 `transactTime`。
+* `newOrderRespType`的枚举值, 设置时下单的返回值只包括下面的字段: `symbol`, `order_id`, `order_list_id`, `client_order_id`, 和 `transactTime`。
 
 `aggTrade`
 * 归集交易信息; 此交易信息归集了在同一个时间同一个 `taker` 的订单生成的相同价格的交易信息。
@@ -66,7 +66,7 @@ allocation
 `CANCELED`
 * 订单的一个状态, 用来表示订单被用户取消。
 
-`clientOrderId`
+`client_order_id`
 * 用于下单的接口 `POST /api/v3/order`, 用户可以用此字段来设置自定义值, 便于用来跟踪订单。
 
 `commission`
@@ -210,7 +210,7 @@ Memory
 * 一个订单的状态, 表示订单成功被发送到了交易引擎。
 
 `newClientOrderId`
-* 一个订单相关(下单，撤销订单, 等)请求中的参数; 在请求的返回的时候, 此值会被设置为`clientOrderId`;
+* 一个订单相关(下单，撤销订单, 等)请求中的参数; 在请求的返回的时候, 此值会被设置为`client_order_id`;
 
 Notional value
 * 订单的名义价值, 值为`price` * `qty`。
@@ -225,14 +225,14 @@ Notional value
 Order Book
 * 订单薄; 包括了当前市场上买卖挂单。
 
-`orderId`
+`order_id`
 * 订单数据里用来唯一标识的ID。
 
 `origQty`
 * 发送订单请求中的原始数量。
 
-`origClientOrderId`
-* 在查询或者取消订单请求中, 用户设置在 `clientOrderId` 的值。
+`orig_client_order_id`
+* 在查询或者取消订单请求中, 用户设置在 `client_order_id` 的值。
 
 ---
 

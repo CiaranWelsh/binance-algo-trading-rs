@@ -150,9 +150,9 @@ Maker 订单的状态
 ```json
 {
   "symbol": "BTCUSDT",
-  "orderId": 2,
-  "orderListId": -1,
-  "clientOrderId": "FaDk4LPRxastaICEFE9YTf",
+  "order_id": 2,
+  "order_list_id": -1,
+  "client_order_id": "FaDk4LPRxastaICEFE9YTf",
   "price": "1.000000",
   "origQty": "1.000000",
   "executedQty": "1.000000",
@@ -177,9 +177,9 @@ Taker 订单的状态
 ```json
 {
   "symbol": "BTCUSDT",
-  "orderId": 3,
-  "orderListId": -1,
-  "clientOrderId": "Ay48Vtpghnsvy6w8RPQEde",
+  "order_id": 3,
+  "order_list_id": -1,
+  "client_order_id": "Ay48Vtpghnsvy6w8RPQEde",
   "transactTime": 1670207731263,
   "price": "1.000000",
   "origQty": "1.000000",
@@ -219,9 +219,9 @@ Maker 订单 1
 ```json
 {
   "symbol": "BTCUSDT",
-  "orderId": 2,
-  "orderListId": -1,
-  "clientOrderId": "wpNzhSclc16pV8g5THIOR3",
+  "order_id": 2,
+  "order_list_id": -1,
+  "client_order_id": "wpNzhSclc16pV8g5THIOR3",
   "price": "1.200000",
   "origQty": "1.200000",
   "executedQty": "0.000000",
@@ -248,9 +248,9 @@ Maker 订单 2
 ```json
 {
   "symbol": "BTCUSDT",
-  "orderId": 3,
-  "orderListId": -1,
-  "clientOrderId": "ZT9emqia99V7x8B6FW0pFF",
+  "order_id": 3,
+  "order_list_id": -1,
+  "client_order_id": "ZT9emqia99V7x8B6FW0pFF",
   "price": "1.100000",
   "origQty": "1.300000",
   "executedQty": "0.000000",
@@ -276,9 +276,9 @@ Maker 订单 3
 ```json
 {
   "symbol": "BTCUSDT",
-  "orderId": 4,
-  "orderListId": -1,
-  "clientOrderId": "8QZ3taGcU4gND59TxHAcR0",
+  "order_id": 4,
+  "order_list_id": -1,
+  "client_order_id": "8QZ3taGcU4gND59TxHAcR0",
   "price": "1.000000",
   "origQty": "8.100000",
   "executedQty": "0.000000",
@@ -305,9 +305,9 @@ Taker 订单的响应
 ```json
 {
   "symbol": "BTCUSDT",
-  "orderId": 5,
-  "orderListId": -1,
-  "clientOrderId": "WRzbhp257NhZsIJW4y2Nri",
+  "order_id": 5,
+  "order_list_id": -1,
+  "client_order_id": "WRzbhp257NhZsIJW4y2Nri",
   "transactTime": 1670217957498,
   "price": "1.000000",
   "origQty": "3.000000",
@@ -358,9 +358,9 @@ Maker 订单 1
 ```json
 {
   "symbol": "BTCUSDT",
-  "orderId": 2,
-  "orderListId": -1,
-  "clientOrderId": "NpwW2t0L4AGQnCDeNjHIga",
+  "order_id": 2,
+  "order_list_id": -1,
+  "client_order_id": "NpwW2t0L4AGQnCDeNjHIga",
   "price": "1.200000",
   "origQty": "1.200000",
   "executedQty": "0.000000",
@@ -385,9 +385,9 @@ Maker 订单 2
 ```json
 {
   "symbol": "BTCUSDT",
-  "orderId": 3,
-  "orderListId": -1,
-  "clientOrderId": "TSAmJqGWk4YTB2yA9p04UO",
+  "order_id": 3,
+  "order_list_id": -1,
+  "client_order_id": "TSAmJqGWk4YTB2yA9p04UO",
   "price": "1.100000",
   "origQty": "1.300000",
   "executedQty": "0.000000",
@@ -411,9 +411,9 @@ Maker 订单 3
 ```json
 {
   "symbol": "BTCUSDT",
-  "orderId": 4,
-  "orderListId": -1,
-  "clientOrderId": "L6FmpCJJP6q4hCNv4MuZDG",
+  "order_id": 4,
+  "order_list_id": -1,
+  "client_order_id": "L6FmpCJJP6q4hCNv4MuZDG",
   "price": "1.000000",
   "origQty": "8.100000",
   "executedQty": "0.000000",
@@ -438,9 +438,9 @@ Taker 订单的状态
 ```json
 {
   "symbol": "BTCUSDT",
-  "orderId": 5,
-  "orderListId": -1,
-  "clientOrderId": "kocvDAi4GNN2y1l1Ojg1Ri",
+  "order_id": 5,
+  "order_list_id": -1,
+  "client_order_id": "kocvDAi4GNN2y1l1Ojg1Ri",
   "price": "1.000000",
   "origQty": "3.000000",
   "executedQty": "0.000000",
@@ -477,9 +477,9 @@ Maker 订单
 ```json
 {
   "symbol": "ABCDEF",
-  "orderId": 2,
-  "orderListId": -1,
-  "clientOrderId": "2JPC8xjpLq6Q0665uYWAcs",
+  "order_id": 2,
+  "order_list_id": -1,
+  "client_order_id": "2JPC8xjpLq6Q0665uYWAcs",
   "price": "1.000000",
   "origQty": "1.000000",
   "executedQty": "0.000000",
@@ -506,9 +506,9 @@ Taker 订单
 ```json
 {
   "symbol": "ABCDEF",
-  "orderId": 5,
-  "orderListId": -1,
-  "clientOrderId": "qMaz8yrOXk2iUIz74cFkiZ",
+  "order_id": 5,
+  "order_list_id": -1,
+  "client_order_id": "qMaz8yrOXk2iUIz74cFkiZ",
   "transactTime": 1673842413170,
   "price": "1.000000",
   "origQty": "3.000000",
@@ -549,9 +549,9 @@ Maker 订单
 ```json
 {
     "symbol": "ABCDEF",
-    "orderId": 0,
-    "orderListId": -1,
-    "clientOrderId": "jFUap8iFwwgqIpOfAL60GS",
+    "order_id": 0,
+    "order_list_id": -1,
+    "client_order_id": "jFUap8iFwwgqIpOfAL60GS",
     "price": "1.000000",
     "origQty": "1.000000",
     "executedQty": "0.000000",
@@ -575,9 +575,9 @@ Taker 订单
 ```json
 {
     "symbol": "ABCDEF",
-    "orderId": 1,
-    "orderListId": -1,
-    "clientOrderId": "zxrvnNNm1RXC3rkPLUPrc1",
+    "order_id": 1,
+    "order_list_id": -1,
+    "client_order_id": "zxrvnNNm1RXC3rkPLUPrc1",
     "transactTime": 1670220800315,
     "price": "1.000000",
     "origQty": "1.000000",
@@ -619,9 +619,9 @@ Maker 订单
 ```json
 {
   "symbol": "ABCDEF",
-  "orderId": 2,
-  "orderListId": -1,
-  "clientOrderId": "7sgrQQInL69XDMQpiqMaG2",
+  "order_id": 2,
+  "order_list_id": -1,
+  "client_order_id": "7sgrQQInL69XDMQpiqMaG2",
   "price": "1.000000",
   "origQty": "1.000000",
   "executedQty": "0.000000",
@@ -647,9 +647,9 @@ Taker 订单
 ```json
 {
   "symbol": "ABCDEF",
-  "orderId": 3,
-  "orderListId": -1,
-  "clientOrderId": "zqhsgGDEcdhxy2oza2Ljxd",
+  "order_id": 3,
+  "order_list_id": -1,
+  "client_order_id": "zqhsgGDEcdhxy2oza2Ljxd",
   "transactTime": 1670222557478,
   "price": "0.000000",
   "origQty": "1.000000",

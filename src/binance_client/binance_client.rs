@@ -217,6 +217,24 @@ impl BinanceClient {
     }
 
     pub async fn cancel_all_open_orders(&self, symbol: &str) -> Result<Vec<Value>, IOError> {
+        /*
+        
+        // let orders: Vec<Order> = binance_client.fetch_all_orders(symbol).await
+        //     .expect("Failed to fetch orders");
+        // 
+        // for order in orders {
+        //     trace!("Order: {:?}", order);
+        //     if order.status != OrderStatus::Filled {
+        //         // tokio::time::sleep(tokio::time::Duration::from_secs(1)).await; // Wait a bit before attempting to cancel
+        //         match spot_orders.cancel_order(symbol, order.order_id).await {
+        //             Ok(_) => trace!("Order cancelled successfully."),
+        //             Err(e) => eprintln!("Failed to cancel order: {:?}", e),
+        //         }
+        //     } else {
+        //         trace!("Order already filled, cannot cancel.");
+        //     }
+        // }
+         */
         let endpoint = "/v3/openOrders";
         let timestamp = Self::generate_timestamp()?;
         let params = format!("symbol={}&timestamp={}", symbol, timestamp);
@@ -255,6 +273,8 @@ impl BinanceClient {
         }
     }
 
+    
+    
     // Function to get the current price of a symbol
     pub async fn get_current_price(&self, symbol: &str) -> Result<TickerPrice, IOError> {
         let request_url = format!("{}/v3/ticker/price?symbol={}", self.api_url, symbol);

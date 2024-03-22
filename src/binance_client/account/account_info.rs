@@ -11,34 +11,34 @@ use crate::binance_client::binance_client::BinanceClient;
 
 
 #[derive(Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct AccountInfoClient {
-    #[serde(rename = "accountType")]
     pub account_type: String,
     pub balances: Vec<AssetBalance>,
     pub brokered: bool,
-    #[serde(rename = "buyerCommission")]
+    
     pub buyer_commission: u32,
-    #[serde(rename = "canDeposit")]
+    
     pub can_deposit: bool,
-    #[serde(rename = "canTrade")]
+    
     pub can_trade: bool,
-    #[serde(rename = "canWithdraw")]
+    
     pub can_withdraw: bool,
-    #[serde(rename = "commissionRates")]
+    
     pub commission_rates: CommissionRates,
-    #[serde(rename = "makerCommission")]
+    
     pub maker_commission: u32,
     pub permissions: Vec<String>,
-    #[serde(rename = "preventSor")]
+    
     pub prevent_sor: bool,
-    #[serde(rename = "requireSelfTradePrevention")]
+    
     pub require_self_trade_prevention: bool,
-    #[serde(rename = "sellerCommission")]
+    
     pub seller_commission: u32,
-    #[serde(rename = "takerCommission")]
+    
     pub taker_commission: u32,
     pub uid: u64,
-    #[serde(rename = "updateTime")]
+    
     pub update_time: u64,
 }
 

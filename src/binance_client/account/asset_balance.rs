@@ -6,6 +6,7 @@ use crate::binance_client::deserialization::deserialize_string_to_f64;
 
 
 #[derive(Debug, Serialize, Deserialize, PartialEq)]
+#[serde(rename_all = "camelCase")]
 pub struct AssetBalance {
     pub asset: String,
     #[serde(deserialize_with = "deserialize_string_to_f64")]

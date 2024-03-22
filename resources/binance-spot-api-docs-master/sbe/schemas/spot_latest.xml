@@ -91,8 +91,8 @@
 
         <type name="aggTradeId" primitiveType="int64"/>
         <type name="allocId" primitiveType="int64"/>
-        <type name="orderId" primitiveType="int64"/>
-        <type name="orderListId" primitiveType="int64"/>
+        <type name="order_id" primitiveType="int64"/>
+        <type name="order_list_id" primitiveType="int64"/>
         <type name="preventedMatchId" primitiveType="int64"/>
         <type name="tradeGroupId" primitiveType="int64"/>
         <type name="tradeId" primitiveType="int64"/>
@@ -847,11 +847,11 @@
         - WebSocket "method":"order.place","params":{"newOrderRespType":"ACK"}
         - WebSocket "method":"sor.order.place","params":{"newOrderRespType":"ACK"} -->
     <sbe:message name="NewOrderAckResponse" id="300">
-        <field id="1" name="orderId" type="orderId"/>
-        <field id="2" name="orderListId" type="orderId" presence="optional"/>
+        <field id="1" name="order_id" type="order_id"/>
+        <field id="2" name="order_list_id" type="order_id" presence="optional"/>
         <field id="3" name="transactTime" type="utcTimestampUs"/>
         <data id="200" name="symbol" type="varString8"/>
-        <data id="201" name="clientOrderId" type="varString8"/>
+        <data id="201" name="client_order_id" type="varString8"/>
     </sbe:message>
 
     <!-- Response for
@@ -862,8 +862,8 @@
     <sbe:message name="NewOrderResultResponse" id="301">
         <field id="1" name="priceExponent" type="exponent8"/>
         <field id="2" name="qtyExponent" type="exponent8"/>
-        <field id="3" name="orderId" type="orderId"/>
-        <field id="4" name="orderListId" type="orderId" presence="optional"/>
+        <field id="3" name="order_id" type="order_id"/>
+        <field id="4" name="order_list_id" type="order_id" presence="optional"/>
         <field id="5" name="transactTime" type="utcTimestampUs"/>
         <field id="6" name="price" type="mantissa64" mbx:exponent="priceExponent"/>
         <field id="7" name="origQty" type="mantissa64" mbx:exponent="qtyExponent"/>
@@ -887,7 +887,7 @@
         <field id="25" name="preventedQuantity" type="mantissa64" mbx:exponent="qtyExponent" presence="optional"/>
         <field id="26" name="usedSor" type="boolEnum" presence="optional"/>
         <data id="200" name="symbol" type="varString8"/>
-        <data id="201" name="clientOrderId" type="varString8"/>
+        <data id="201" name="client_order_id" type="varString8"/>
     </sbe:message>
 
     <!-- Response for
@@ -898,8 +898,8 @@
     <sbe:message name="NewOrderFullResponse" id="302">
         <field id="1" name="priceExponent" type="exponent8"/>
         <field id="2" name="qtyExponent" type="exponent8"/>
-        <field id="3" name="orderId" type="orderId"/>
-        <field id="4" name="orderListId" type="orderId" presence="optional"/>
+        <field id="3" name="order_id" type="order_id"/>
+        <field id="4" name="order_list_id" type="order_id" presence="optional"/>
         <field id="5" name="transactTime" type="utcTimestampUs"/>
         <field id="6" name="price" type="mantissa64" mbx:exponent="priceExponent"/>
         <field id="7" name="origQty" type="mantissa64" mbx:exponent="qtyExponent"/>
@@ -936,7 +936,7 @@
 
         <group id="101" name="preventedMatches">
             <field id="1" name="preventedMatchId" type="int64"/>
-            <field id="2" name="makerOrderId" type="orderId" presence="optional"/>
+            <field id="2" name="makerOrderId" type="order_id" presence="optional"/>
             <field id="3" name="price" type="mantissa64" mbx:exponent="priceExponent" presence="optional"/>
             <field id="4" name="takerPreventedQuantity" type="mantissa64" mbx:exponent="qtyExponent" presence="optional"/>
             <field id="5" name="makerPreventedQuantity" type="mantissa64" mbx:exponent="qtyExponent" presence="optional"/>
@@ -944,7 +944,7 @@
         </group>
 
         <data id="200" name="symbol" type="varString8"/>
-        <data id="201" name="clientOrderId" type="varString8"/>
+        <data id="201" name="client_order_id" type="varString8"/>
     </sbe:message>
 
     <!-- Response for
@@ -961,8 +961,8 @@
     <sbe:message name="OrderResponse" id="304">
         <field id="1" name="priceExponent" type="exponent8"/>
         <field id="2" name="qtyExponent" type="exponent8"/>
-        <field id="3" name="orderId" type="orderId"/>
-        <field id="4" name="orderListId" type="orderId" presence="optional"/>
+        <field id="3" name="order_id" type="order_id"/>
+        <field id="4" name="order_list_id" type="order_id" presence="optional"/>
         <field id="5" name="price" type="mantissa64" mbx:exponent="priceExponent"/>
         <field id="6" name="origQty" type="mantissa64" mbx:exponent="qtyExponent"/>
         <field id="7" name="executedQty" type="mantissa64" mbx:exponent="qtyExponent"/>
@@ -989,7 +989,7 @@
         <field id="28" name="preventedQuantity" type="mantissa64" mbx:exponent="qtyExponent" presence="optional"/>
         <field id="29" name="usedSor" type="boolEnum" presence="optional"/>
         <data id="200" name="symbol" type="varString8"/>
-        <data id="201" name="clientOrderId" type="varString8"/>
+        <data id="201" name="client_order_id" type="varString8"/>
     </sbe:message>
 
     <!-- Response for
@@ -998,8 +998,8 @@
     <sbe:message name="CancelOrderResponse" id="305">
         <field id="1" name="priceExponent" type="exponent8"/>
         <field id="2" name="qtyExponent" type="exponent8"/>
-        <field id="3" name="orderId" type="orderId"/>
-        <field id="4" name="orderListId" type="orderId" presence="optional"/>
+        <field id="3" name="order_id" type="order_id"/>
+        <field id="4" name="order_list_id" type="order_id" presence="optional"/>
         <field id="5" name="transactTime" type="utcTimestampUs"/>
         <field id="6" name="price" type="mantissa64" mbx:exponent="priceExponent"/>
         <field id="7" name="origQty" type="mantissa64" mbx:exponent="qtyExponent"/>
@@ -1021,8 +1021,8 @@
         <field id="23" name="preventedQuantity" type="mantissa64" mbx:exponent="qtyExponent" presence="optional"/>
         <field id="24" name="usedSor" type="boolEnum" presence="optional"/>
         <data id="200" name="symbol" type="varString8"/>
-        <data id="201" name="origClientOrderId" type="varString8"/>
-        <data id="202" name="clientOrderId" type="varString8"/>
+        <data id="201" name="orig_client_order_id" type="varString8"/>
+        <data id="202" name="client_order_id" type="varString8"/>
     </sbe:message>
 
     <!-- Response for
@@ -1068,8 +1068,8 @@
         <group id="100" name="orders" mbx:jsonPath="..">
             <field id="1" name="priceExponent" type="exponent8"/>
             <field id="2" name="qtyExponent" type="exponent8"/>
-            <field id="3" name="orderId" type="orderId"/>
-            <field id="4" name="orderListId" type="orderId" presence="optional"/>
+            <field id="3" name="order_id" type="order_id"/>
+            <field id="4" name="order_list_id" type="order_id" presence="optional"/>
             <field id="5" name="price" type="mantissa64" mbx:exponent="priceExponent"/>
             <field id="6" name="origQty" type="mantissa64" mbx:exponent="qtyExponent"/>
             <field id="7" name="executedQty" type="mantissa64" mbx:exponent="qtyExponent"/>
@@ -1096,7 +1096,7 @@
             <field id="28" name="preventedQuantity" type="mantissa64" mbx:exponent="priceExponent" presence="optional"/>
             <field id="29" name="usedSor" type="boolEnum" presence="optional"/>
             <data id="200" name="symbol" type="varString8"/>
-            <data id="201" name="clientOrderId" type="varString8"/>
+            <data id="201" name="client_order_id" type="varString8"/>
         </group>
     </sbe:message>
 
@@ -1104,24 +1104,24 @@
         - REST POST /api/v3/order/oco?newOrderRespType=ACK
         - WebSocket "method":"orderList.place","params":{"newOrderRespType":"ACK"} -->
     <sbe:message name="NewOrderListAckResponse" id="309">
-        <field id="1" name="orderListId" type="orderListId"/>
+        <field id="1" name="order_list_id" type="order_list_id"/>
         <field id="2" name="contingencyType" type="contingencyType"/>
         <field id="3" name="listStatusType" type="listStatusType"/>
         <field id="4" name="listOrderStatus" type="listOrderStatus"/>
         <field id="5" name="transactionTime" type="utcTimestampUs"/>
 
         <group id="100" name="orders" dimensionType="groupSize16Encoding">
-            <field id="1" name="orderId" type="orderId"/>
+            <field id="1" name="order_id" type="order_id"/>
             <data id="200" name="symbol" type="varString8"/>
-            <data id="201" name="clientOrderId" type="varString8"/>
+            <data id="201" name="client_order_id" type="varString8"/>
         </group>
 
         <group id="101" name="orderReports" dimensionType="groupSize16Encoding">
-            <field id="1" name="orderId" type="orderId"/>
-            <field id="2" name="orderListId" type="orderId" presence="optional"/>
+            <field id="1" name="order_id" type="order_id"/>
+            <field id="2" name="order_list_id" type="order_id" presence="optional"/>
             <field id="3" name="transactTime" type="utcTimestampUs"/>
             <data id="200" name="symbol" type="varString8"/>
-            <data id="201" name="clientOrderId" type="varString8"/>
+            <data id="201" name="client_order_id" type="varString8"/>
         </group>
 
         <data id="200" name="listClientOrderId" type="varString8"/>
@@ -1132,7 +1132,7 @@
         - REST POST /api/v3/order/oco?newOrderRespType=RESULT
         - WebSocket "method":"orderList.place","params":{"newOrderRespType":"RESULT"} -->
     <sbe:message name="NewOrderListResultResponse" id="310">
-        <field id="1" name="orderListId" type="orderListId"/>
+        <field id="1" name="order_list_id" type="order_list_id"/>
         <field id="2" name="contingencyType" type="contingencyType"/>
         <field id="3" name="listStatusType" type="listStatusType"/>
         <field id="4" name="listOrderStatus" type="listOrderStatus"/>
@@ -1141,14 +1141,14 @@
         <field id="7" name="qtyExponent" type="exponent8"/>
 
         <group id="100" name="orders" dimensionType="groupSize16Encoding">
-            <field id="1" name="orderId" type="orderId"/>
+            <field id="1" name="order_id" type="order_id"/>
             <data id="200" name="symbol" type="varString8"/>
-            <data id="201" name="clientOrderId" type="varString8"/>
+            <data id="201" name="client_order_id" type="varString8"/>
         </group>
 
         <group id="101" name="orderReports" dimensionType="groupSize16Encoding">
-            <field id="1" name="orderId" type="orderId"/>
-            <field id="2" name="orderListId" type="orderId" presence="optional"/>
+            <field id="1" name="order_id" type="order_id"/>
+            <field id="2" name="order_list_id" type="order_id" presence="optional"/>
             <field id="3" name="transactTime" type="utcTimestampUs"/>
             <field id="4" name="price" type="mantissa64" mbx:exponent="priceExponent"/>
             <field id="5" name="origQty" type="mantissa64" mbx:exponent="qtyExponent"/>
@@ -1172,7 +1172,7 @@
             <field id="23" name="preventedQuantity" type="mantissa64" mbx:exponent="qtyExponent" presence="optional"/>
             <field id="24" name="usedSor" type="boolEnum" presence="optional"/>
             <data id="200" name="symbol" type="varString8"/>
-            <data id="201" name="clientOrderId" type="varString8"/>
+            <data id="201" name="client_order_id" type="varString8"/>
         </group>
 
         <data id="200" name="listClientOrderId" type="varString8"/>
@@ -1183,7 +1183,7 @@
         - REST POST /api/v3/order/oco?newOrderRespType=FULL
         - WebSocket "method":"orderList.place","params":{"newOrderRespType":"FULL"} -->
     <sbe:message name="NewOrderListFullResponse" id="311">
-        <field id="1" name="orderListId" type="orderListId"/>
+        <field id="1" name="order_list_id" type="order_list_id"/>
         <field id="2" name="contingencyType" type="contingencyType"/>
         <field id="3" name="listStatusType" type="listStatusType"/>
         <field id="4" name="listOrderStatus" type="listOrderStatus"/>
@@ -1192,14 +1192,14 @@
         <field id="7" name="qtyExponent" type="exponent8"/>
 
         <group id="100" name="orders" dimensionType="groupSize16Encoding">
-            <field id="1" name="orderId" type="orderId"/>
+            <field id="1" name="order_id" type="order_id"/>
             <data id="200" name="symbol" type="varString8"/>
-            <data id="201" name="clientOrderId" type="varString8"/>
+            <data id="201" name="client_order_id" type="varString8"/>
         </group>
 
         <group id="101" name="orderReports" dimensionType="groupSize16Encoding">
-            <field id="1" name="orderId" type="orderId"/>
-            <field id="2" name="orderListId" type="orderId" presence="optional"/>
+            <field id="1" name="order_id" type="order_id"/>
+            <field id="2" name="order_list_id" type="order_id" presence="optional"/>
             <field id="3" name="transactTime" type="utcTimestampUs"/>
             <field id="4" name="price" type="mantissa64" mbx:exponent="priceExponent"/>
             <field id="5" name="origQty" type="mantissa64" mbx:exponent="qtyExponent"/>
@@ -1236,7 +1236,7 @@
 
             <group id="101" name="preventedMatches">
                 <field id="1" name="preventedMatchId" type="int64"/>
-                <field id="2" name="makerOrderId" type="orderId" presence="optional"/>
+                <field id="2" name="makerOrderId" type="order_id" presence="optional"/>
                 <field id="3" name="price" type="mantissa64" mbx:exponent="priceExponent" presence="optional"/>
                 <field id="4" name="takerPreventedQuantity" type="mantissa64" mbx:exponent="qtyExponent" presence="optional"/>
                 <field id="5" name="makerPreventedQuantity" type="mantissa64" mbx:exponent="qtyExponent" presence="optional"/>
@@ -1244,7 +1244,7 @@
             </group>
 
             <data id="200" name="symbol" type="varString8"/>
-            <data id="201" name="clientOrderId" type="varString8"/>
+            <data id="201" name="client_order_id" type="varString8"/>
         </group>
 
         <data id="200" name="listClientOrderId" type="varString8"/>
@@ -1257,7 +1257,7 @@
         - WebSocket "method":"order.cancel"
         - WebSocket "method":"orderList.cancel" -->
     <sbe:message name="CancelOrderListResponse" id="312">
-        <field id="1" name="orderListId" type="orderListId"/>
+        <field id="1" name="order_list_id" type="order_list_id"/>
         <field id="2" name="contingencyType" type="contingencyType"/>
         <field id="3" name="listStatusType" type="listStatusType"/>
         <field id="4" name="listOrderStatus" type="listOrderStatus"/>
@@ -1266,14 +1266,14 @@
         <field id="7" name="qtyExponent" type="exponent8"/>
 
         <group id="100" name="orders" dimensionType="groupSize16Encoding">
-            <field id="1" name="orderId" type="orderId"/>
+            <field id="1" name="order_id" type="order_id"/>
             <data id="200" name="symbol" type="varString8"/>
-            <data id="201" name="clientOrderId" type="varString8"/>
+            <data id="201" name="client_order_id" type="varString8"/>
         </group>
 
         <group id="101" name="orderReports" dimensionType="groupSize16Encoding">
-            <field id="1" name="orderId" type="orderId"/>
-            <field id="2" name="orderListId" type="orderId" presence="optional"/>
+            <field id="1" name="order_id" type="order_id"/>
+            <field id="2" name="order_list_id" type="order_id" presence="optional"/>
             <field id="3" name="transactTime" type="utcTimestampUs"/>
             <field id="4" name="price" type="mantissa64" mbx:exponent="priceExponent"/>
             <field id="5" name="origQty" type="mantissa64" mbx:exponent="qtyExponent"/>
@@ -1295,8 +1295,8 @@
             <field id="21" name="preventedQuantity" type="mantissa64" mbx:exponent="qtyExponent" presence="optional"/>
             <field id="22" name="usedSor" type="boolEnum" presence="optional"/>
             <data id="200" name="symbol" type="varString8"/>
-            <data id="201" name="origClientOrderId" type="varString8"/>
-            <data id="202" name="clientOrderId" type="varString8"/>
+            <data id="201" name="orig_client_order_id" type="varString8"/>
+            <data id="202" name="client_order_id" type="varString8"/>
         </group>
 
         <data id="200" name="listClientOrderId" type="varString8"/>
@@ -1307,16 +1307,16 @@
         - REST GET /api/v3/orderList
         - WebSocket "method":"orderList.status" -->
     <sbe:message name="OrderListResponse" id="313">
-        <field id="1" name="orderListId" type="orderListId"/>
+        <field id="1" name="order_list_id" type="order_list_id"/>
         <field id="2" name="contingencyType" type="contingencyType"/>
         <field id="3" name="listStatusType" type="listStatusType"/>
         <field id="4" name="listOrderStatus" type="listOrderStatus"/>
         <field id="5" name="transactionTime" type="utcTimestampUs"/>
 
         <group id="100" name="orders" dimensionType="groupSize16Encoding">
-            <field id="1" name="orderId" type="orderId"/>
+            <field id="1" name="order_id" type="order_id"/>
             <data id="200" name="symbol" type="varString8"/>
-            <data id="201" name="clientOrderId" type="varString8"/>
+            <data id="201" name="client_order_id" type="varString8"/>
         </group>
 
         <data id="200" name="listClientOrderId" type="varString8"/>
@@ -1330,16 +1330,16 @@
         - WebSocket "method":"allOrderLists" -->
     <sbe:message name="OrderListsResponse" id="314">
         <group id="100" name="orderLists" mbx:jsonPath="..">
-            <field id="1" name="orderListId" type="orderListId"/>
+            <field id="1" name="order_list_id" type="order_list_id"/>
             <field id="2" name="contingencyType" type="contingencyType"/>
             <field id="3" name="listStatusType" type="listStatusType"/>
             <field id="4" name="listOrderStatus" type="listOrderStatus"/>
             <field id="5" name="transactionTime" type="utcTimestampUs"/>
 
             <group id="100" name="orders">
-                <field id="1" name="orderId" type="orderId"/>
+                <field id="1" name="order_id" type="order_id"/>
                 <data id="200" name="symbol" type="varString8"/>
-                <data id="201" name="clientOrderId" type="varString8"/>
+                <data id="201" name="client_order_id" type="varString8"/>
             </group>
 
             <data id="200" name="listClientOrderId" type="varString8"/>
@@ -1420,8 +1420,8 @@
             <field id="2" name="qtyExponent" type="exponent8"/>
             <field id="3" name="commissionExponent" type="exponent8"/>
             <field id="4" name="id" type="tradeId"/>
-            <field id="5" name="orderId" type="orderId"/>
-            <field id="6" name="orderListId" type="orderListId" presence="optional"/>
+            <field id="5" name="order_id" type="order_id"/>
+            <field id="6" name="order_list_id" type="order_list_id" presence="optional"/>
             <field id="7" name="price" type="mantissa64" mbx:exponent="priceExponent"/>
             <field id="8" name="qty" type="mantissa64" mbx:exponent="qtyExponent"/>
             <field id="9" name="quoteQty" type="mantissa64" mbx:exponent="priceExponent"/>
@@ -1456,8 +1456,8 @@
             <field id="1" name="priceExponent" type="exponent8"/>
             <field id="2" name="qtyExponent" type="exponent8"/>
             <field id="3" name="preventedMatchId" type="preventedMatchId"/>
-            <field id="4" name="takerOrderId" type="orderId"/>
-            <field id="5" name="makerOrderId" type="orderId"/>
+            <field id="4" name="takerOrderId" type="order_id"/>
+            <field id="5" name="makerOrderId" type="order_id"/>
             <field id="6" name="tradeGroupId" type="tradeGroupId"/>
             <field id="7" name="selfTradePreventionMode" type="selfTradePreventionMode"/>
             <field id="8" name="price" type="mantissa64" mbx:exponent="priceExponent"/>
@@ -1480,9 +1480,9 @@
             <field id="4" name="allocationId" type="allocId"/>
             <field id="5" name="allocationType" type="allocationType"/>
             <!-- "sourceOrderId" when "isAllocator" is "TRUE" -->
-            <field id="6" name="orderId" type="orderId"/>
+            <field id="6" name="order_id" type="order_id"/>
             <!-- "sourceOrderListId" when "isAllocator" is "TRUE" -->
-            <field id="7" name="orderListId" type="orderListId" presence="optional"/>
+            <field id="7" name="order_list_id" type="order_list_id" presence="optional"/>
             <field id="8" name="sourceTradeId" type="tradeId" presence="optional"/>
             <field id="9" name="sourceAllocationId" type="allocId" presence="optional"/>
             <field id="10" name="price" type="mantissa64" mbx:exponent="priceExponent"/>

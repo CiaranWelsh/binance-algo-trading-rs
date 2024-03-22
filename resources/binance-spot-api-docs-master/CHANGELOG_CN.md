@@ -181,7 +181,7 @@ User Data Streams
 |`GET /api/v3/myTrades`  <br> `myTrades`|10|20|
 |`GET /api/v3/myAllocations`  <br> `myAllocations` |10|20|
 |`GET /api/v3/myPreventedMatches`  <br> `myPreventedMatches`  - **使用 `preventedMatchId`** | 1 | 2
-|`GET /api/v3/myPreventedMatches`  <br> `myPreventedMatches`  - **使用 `orderId`**|10|20|
+|`GET /api/v3/myPreventedMatches`  <br> `myPreventedMatches`  - **使用 `order_id`**|10|20|
 |`GET /api/v3/account` <br> `account.status` |10 |20|
 |`GET /api/v3/rateLimit/order` <br> `account.rate_limits.orders`|20|40|
 |`GET /api/v3/exchangeInfo` <br> `exchangeInfo`|10|20|
@@ -606,7 +606,7 @@ REST API
         * 仅使用 endTime 时，如果limit的值为N, 将返回到此时间的N条交易.
         * 如果不提供 `limit`，无论是组合使用还是单独发送，服务器端都将使用默认的 `limit`。
 * `GET /api/v3/myTrades` 更新
-    * 修复了 `symbol` + `orderId` 组合会返回所有交易，可能会超过`LIMIT`的默认值`500`。
+    * 修复了 `symbol` + `order_id` 组合会返回所有交易，可能会超过`LIMIT`的默认值`500`。
     * 之前的行为： API 将根据发送的参数组合发送特定的错误消息。 例如：
 
         ```json
@@ -624,19 +624,19 @@ REST API
                 "msg": "Combination of optional parameters invalid."
             }
         ```
-    * 添加一个新的参数组合: `symbol` + `orderId` + `fromId`.
+    * 添加一个新的参数组合: `symbol` + `order_id` + `fromId`.
     * 下面的参数组合不再支持:
         * `symbol` + `fromId` + `startTime`
         * `symbol` + `fromId` + `endTime`
         * `symbol` + `fromId` + `startTime` + `endTime`
     * 当前支持的所有参数组合：
         * `symbol`
-        * `symbol` + `orderId`
+        * `symbol` + `order_id`
         * `symbol` + `startTime`
         * `symbol` + `endTime`
         * `symbol` + `fromId`
         * `symbol` + `startTime` + `endTime`
-        * `symbol`+ `orderId` + `fromId`
+        * `symbol`+ `order_id` + `fromId`
 
 **备注：** 这些新字段将在发布日期后大约一周出现。
 
@@ -951,7 +951,7 @@ USER DATA STREAM
 * 添加一个基于OpenAPI规范的RESTful API接口定义的[YAML文件](https://github.com/binance/binance-api-swagger)
 
 ## 2021-08-12
-* GET `api/v3/myTrades` 添加新的参数 `orderId`
+* GET `api/v3/myTrades` 添加新的参数 `order_id`
 
 
 ## 2021-05-12

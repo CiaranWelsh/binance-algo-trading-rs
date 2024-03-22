@@ -7,6 +7,7 @@ use crate::binance_client::deserialization::{
 };
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
+#[serde(rename_all = "camelCase")]
 pub struct ExchangeInfo {
     timezone: String,
     #[serde(rename = "serverTime")]
@@ -17,6 +18,7 @@ pub struct ExchangeInfo {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct RateLimit {
     #[serde(rename = "rateLimitType")]
     rate_limit_type: String,
@@ -28,6 +30,7 @@ pub struct RateLimit {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct SymbolInfo {
     #[serde(rename = "symbol")]
     symbol: String,
@@ -44,9 +47,11 @@ pub struct SymbolInfo {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 #[serde(tag = "filterType")]
 pub enum Filter {
     #[serde(rename = "PRICE_FILTER")]
+    #[serde(rename_all = "camelCase")]
     PriceFilter {
         #[serde(rename = "minPrice", deserialize_with = "deserialize_string_to_f64")]
         min_price: f64,
@@ -56,6 +61,7 @@ pub enum Filter {
         tick_size: f64,
     },
     #[serde(rename = "LOT_SIZE")]
+    #[serde(rename_all = "camelCase")]
     LotSize {
         #[serde(rename = "minQty", deserialize_with = "deserialize_string_to_f64")]
         min_qty: f64,
@@ -65,6 +71,7 @@ pub enum Filter {
         step_size: f64,
     },
     #[serde(rename = "NOTIONAL")]
+    #[serde(rename_all = "camelCase")]
     Notional {
         #[serde(rename = "minNotional", deserialize_with = "deserialize_string_to_f64")]
         min_notional: f64,
@@ -78,6 +85,7 @@ pub enum Filter {
         avg_price_mins: Option<i64>,
     },
     #[serde(rename = "MIN_NOTIONAL")]
+    #[serde(rename_all = "camelCase")]
     MinNotional {
         #[serde(rename = "minNotional", deserialize_with = "deserialize_string_to_f64")]
         min_notional: f64,
@@ -87,11 +95,13 @@ pub enum Filter {
         avg_price_mins: Option<i64>,
     },
     #[serde(rename = "ICEBERG_PARTS")]
+    #[serde(rename_all = "camelCase")]
     IcebergParts {
         #[serde(rename = "limit")]
         limit: i64,
     },
     #[serde(rename = "MARKET_LOT_SIZE")]
+    #[serde(rename_all = "camelCase")]
     MarketLotSize {
         #[serde(rename = "minQty", deserialize_with = "deserialize_string_to_f64")]
         min_qty: f64,
@@ -101,26 +111,31 @@ pub enum Filter {
         step_size: f64,
     },
     #[serde(rename = "MAX_NUM_ORDERS")]
+    #[serde(rename_all = "camelCase")]
     MaxNumOrders {
         #[serde(rename = "maxNumOrders")]
         max_num_orders: i64,
     },
     #[serde(rename = "MAX_NUM_ALGO_ORDERS")]
+    #[serde(rename_all = "camelCase")]
     MaxNumAlgoOrders {
         #[serde(rename = "maxNumAlgoOrders")]
         max_num_algo_orders: i64,
     },
     #[serde(rename = "MAX_NUM_ICEBERG_ORDERS")]
+    #[serde(rename_all = "camelCase")]
     MaxNumIcebergOrders {
         #[serde(rename = "maxnNumIcebergOrders")]
         max_num_iceberg_orders: i64,
     },
     #[serde(rename = "MAX_POSITION")]
+    #[serde(rename_all = "camelCase")]
     MaxPosition {
         #[serde(rename = "maxPosition", deserialize_with = "deserialize_string_to_f64")]
         max_position: f64,
     },
     #[serde(rename = "PERCENT_PRICE")]
+    #[serde(rename_all = "camelCase")]
     PercentPrice {
         #[serde(rename = "multiplierUp", deserialize_with = "deserialize_string_to_f64")]
         multiplier_up: f64,
@@ -130,6 +145,7 @@ pub enum Filter {
         avg_price_mins: i64,
     },
     #[serde(rename = "TRAILING_DELTA")]
+    #[serde(rename_all = "camelCase")]
     TrailingDelta {
         #[serde(rename = "minTrailingAboveDelta")]
         min_trailing_above_delta: i64,
@@ -142,6 +158,7 @@ pub enum Filter {
     },
 
     #[serde(rename = "LEVERAGE_FILTER")]
+    #[serde(rename_all = "camelCase")]
     LeverageFilter {
         #[serde(rename = "minLeverage", deserialize_with = "deserialize_string_to_f64")]
         min_leverage: f64,
@@ -151,6 +168,7 @@ pub enum Filter {
         leverage_step: f64,
     },
     #[serde(rename = "MARGIN_FILTER")]
+    #[serde(rename_all = "camelCase")]
     MarginFilter {
         #[serde(rename = "minMargin", deserialize_with = "deserialize_string_to_f64")]
         min_margin: f64,
@@ -161,6 +179,7 @@ pub enum Filter {
     },
 
     #[serde(rename = "PERCENT_PRICE_BY_SIDE")]
+    #[serde(rename_all = "camelCase")]
     PercentPriceBySide {
         #[serde(rename = "bidMultiplierUp", deserialize_with = "deserialize_string_to_f64")]
         bid_multiplier_up: f64,

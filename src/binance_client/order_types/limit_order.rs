@@ -4,12 +4,13 @@ use crate::binance_client::order_types::side::Side;
 use crate::binance_client::order_types::time_in_force::TimeInForce;
 
 #[derive(Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct LimitOrder {
     symbol: String,
     side: Side,
-    #[serde(rename = "type")]
+    
     r#type: OrderType,
-    #[serde(rename = "timeInForce")]
+    
     time_in_force: String,
     quantity: f64,
     price: f64,

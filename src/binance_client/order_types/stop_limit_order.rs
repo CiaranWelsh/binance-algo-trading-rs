@@ -5,24 +5,25 @@ use crate::binance_client::order_types::side::Side;
 use crate::binance_client::order_types::time_in_force::TimeInForce;
 
 #[derive(Debug, Serialize, Deserialize)]
+#[serde(rename_all = "camelCase")]
 pub struct StopLimitOrder {
     symbol: String,
     side: Side,
-    #[serde(rename = "type")]
+    
     r#type: OrderType,
     quantity: f64,
     price: f64,
-    #[serde(rename = "stopPrice")]
+    
     stop_price: f64,
     timestamp: u64,
-    #[serde(rename = "timeInForce")]
+    
     time_in_force: TimeInForce,
 }
 
 impl StopLimitOrder {
-    pub fn new(symbol: String, side: Side, quantity: f64, price: f64, stop_price: f64, time_in_force: TimeInForce) -> Self {
+    pub fn new(symbol: &str, side: Side, quantity: f64, price: f64, stop_price: f64, time_in_force: TimeInForce) -> Self {
         StopLimitOrder {
-            symbol,
+            symbol: symbol.to_string(),
             side,
             r#type: OrderType::StopLossLimit, // Or "TakeProfitLimit" depending on the use case
             quantity,

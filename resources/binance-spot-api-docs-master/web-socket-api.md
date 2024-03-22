@@ -150,9 +150,9 @@ Example of successful response:
   "status": 200,
   "result": {
     "symbol": "BTCUSDT",
-    "orderId": 12510053279,
-    "orderListId": -1,
-    "clientOrderId": "a097fe6304b20a7e4fc436",
+    "order_id": 12510053279,
+    "order_list_id": -1,
+    "client_order_id": "a097fe6304b20a7e4fc436",
     "transactTime": 1655716096505,
     "price": "0.10000000",
     "origQty": "10.00000000",
@@ -485,9 +485,9 @@ Successful response indicating that you have placed 12 orders in 10 seconds, and
   "status": 200,
   "result": {
     "symbol": "BTCUSDT",
-    "orderId": 12510053279,
-    "orderListId": -1,
-    "clientOrderId": "a097fe6304b20a7e4fc436",
+    "order_id": 12510053279,
+    "order_list_id": -1,
+    "client_order_id": "a097fe6304b20a7e4fc436",
     "transactTime": 1655716096505,
     "price": "0.10000000",
     "origQty": "10.00000000",
@@ -3137,9 +3137,9 @@ setting how long the order should be active before expiration:
 
 Notes:
 
-* `newClientOrderId` specifies `clientOrderId` value for the order.
+* `newClientOrderId` specifies `client_order_id` value for the order.
 
-  A new order with the same `clientOrderId` is accepted only when the previous one is filled or expired.
+  A new order with the same `client_order_id` is accepted only when the previous one is filled or expired.
 
 * Any `LIMIT` or `LIMIT_MAKER` order can be made into an iceberg order by specifying the `icebergQty`.
 
@@ -3169,9 +3169,9 @@ Response format is selected by using the `newOrderRespType` parameter.
   "status": 200,
   "result": {
     "symbol": "BTCUSDT",
-    "orderId": 12569099453,
-    "orderListId": -1, // always -1 for singular orders
-    "clientOrderId": "4d96324ff9d44481926157ec08158a40",
+    "order_id": 12569099453,
+    "order_list_id": -1, // always -1 for singular orders
+    "client_order_id": "4d96324ff9d44481926157ec08158a40",
     "transactTime": 1660801715639
   },
   "rate_limits": [
@@ -3208,9 +3208,9 @@ Response format is selected by using the `newOrderRespType` parameter.
   "status": 200,
   "result": {
     "symbol": "BTCUSDT",
-    "orderId": 12569099453,
-    "orderListId": -1, // always -1 for singular orders
-    "clientOrderId": "4d96324ff9d44481926157ec08158a40",
+    "order_id": 12569099453,
+    "order_list_id": -1, // always -1 for singular orders
+    "client_order_id": "4d96324ff9d44481926157ec08158a40",
     "transactTime": 1660801715639,
     "price": "23416.10000000",
     "origQty": "0.00847000",
@@ -3258,9 +3258,9 @@ Response format is selected by using the `newOrderRespType` parameter.
   "status": 200,
   "result": {
     "symbol": "BTCUSDT",
-    "orderId": 12569099453,
-    "orderListId": -1,
-    "clientOrderId": "4d96324ff9d44481926157ec08158a40",
+    "order_id": 12569099453,
+    "order_list_id": -1,
+    "client_order_id": "4d96324ff9d44481926157ec08158a40",
     "transactTime": 1660801715793,
     "price": "23416.10000000",
     "origQty": "0.00847000",
@@ -3445,7 +3445,7 @@ With `computeCommissionRates`:
   "method": "order.status",
   "params": {
     "symbol": "BTCUSDT",
-    "orderId": 12569099453,
+    "order_id": 12569099453,
     "apiKey": "vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A",
     "signature": "2c3aab5a078ee4ea465ecd95523b77289f61476c2f238ec10c55ea6cb11a6f35",
     "timestamp": 1660801720951
@@ -3477,15 +3477,15 @@ Check execution status of an order.
         <td></td>
     </tr>
     <tr>
-        <td><code>orderId</code></td>
+        <td><code>order_id</code></td>
         <td>INT</td>
         <td rowspan="2">YES</td>
-        <td>Lookup order by <code>orderId</code></td>
+        <td>Lookup order by <code>order_id</code></td>
     </tr>
     <tr>
-        <td><code>origClientOrderId</code></td>
+        <td><code>orig_client_order_id</code></td>
         <td>STRING</td>
-        <td>Lookup order by <code>clientOrderId</code></td>
+        <td>Lookup order by <code>client_order_id</code></td>
     </tr>
     <tr>
         <td><code>apiKey</code></td>
@@ -3516,8 +3516,8 @@ Check execution status of an order.
 
 Notes:
 
-* If both `orderId` and `origClientOrderId` parameters are specified,
-  only `orderId` is used and `origClientOrderId` is ignored.
+* If both `order_id` and `orig_client_order_id` parameters are specified,
+  only `order_id` is used and `orig_client_order_id` is ignored.
 
 * For some historical orders the `cummulativeQuoteQty` response field may be negative,
   meaning the data is not available at this time.
@@ -3532,9 +3532,9 @@ Memory => Database
   "status": 200,
   "result": {
     "symbol": "BTCUSDT",
-    "orderId": 12569099453,
-    "orderListId": -1,                  // set only for legs of an OCO
-    "clientOrderId": "4d96324ff9d44481926157",
+    "order_id": 12569099453,
+    "order_list_id": -1,                  // set only for legs of an OCO
+    "client_order_id": "4d96324ff9d44481926157",
     "price": "23416.10000000",
     "origQty": "0.00847000",
     "executedQty": "0.00847000",
@@ -3580,7 +3580,7 @@ Memory => Database
   "method": "order.cancel",
   "params": {
     "symbol": "BTCUSDT",
-    "origClientOrderId": "4d96324ff9d44481926157",
+    "orig_client_order_id": "4d96324ff9d44481926157",
     "apiKey": "vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A",
     "signature": "33d5b721f278ae17a52f004a82a6f68a70c68e7dd6776ed0be77a455ab855282",
     "timestamp": 1660801715830
@@ -3612,15 +3612,15 @@ Cancel an active order.
         <td></td>
     </tr>
     <tr>
-        <td><code>orderId</code></td>
+        <td><code>order_id</code></td>
         <td>INT</td>
         <td rowspan="2">YES</td>
-        <td>Cancel order by <code>orderId</code></td>
+        <td>Cancel order by <code>order_id</code></td>
     </tr>
     <tr>
-        <td><code>origClientOrderId</code></td>
+        <td><code>orig_client_order_id</code></td>
         <td>STRING</td>
-        <td>Cancel order by <code>clientOrderId</code></td>
+        <td>Cancel order by <code>client_order_id</code></td>
     </tr>
     <tr>
         <td><code>newClientOrderId</code></td>
@@ -3663,10 +3663,10 @@ Cancel an active order.
 
 Notes:
 
-* If both `orderId` and `origClientOrderId` parameters are specified,
-  only `orderId` is used and `origClientOrderId` is ignored.
+* If both `order_id` and `orig_client_order_id` parameters are specified,
+  only `order_id` is used and `orig_client_order_id` is ignored.
 
-* `newClientOrderId` will replace `clientOrderId` of the canceled order, freeing it up for new orders.
+* `newClientOrderId` will replace `client_order_id` of the canceled order, freeing it up for new orders.
 
 * If you cancel an order that is a part of an OCO pair, the entire OCO is canceled.
 
@@ -3683,10 +3683,10 @@ When an individual order is canceled:
   "status": 200,
   "result": {
     "symbol": "BTCUSDT",
-    "origClientOrderId": "4d96324ff9d44481926157",  // clientOrderId that was canceled
-    "orderId": 12569099453,
-    "orderListId": -1,                              // set only for legs of an OCO
-    "clientOrderId": "91fe37ce9e69c90d6358c0",      // newClientOrderId from request
+    "orig_client_order_id": "4d96324ff9d44481926157",  // client_order_id that was canceled
+    "order_id": 12569099453,
+    "order_list_id": -1,                              // set only for legs of an OCO
+    "client_order_id": "91fe37ce9e69c90d6358c0",      // newClientOrderId from request
     "transactTime": 1684804350068,
     "price": "23416.10000000",
     "origQty": "0.00847000",
@@ -3722,7 +3722,7 @@ When an OCO is canceled:
   "id": "16eaf097-bbec-44b9-96ff-e97e6e875870",
   "status": 200,
   "result": {
-    "orderListId": 19431,
+    "order_list_id": 19431,
     "contingencyType": "OCO",
     "listStatusType": "ALL_DONE",
     "listOrderStatus": "ALL_DONE",
@@ -3732,23 +3732,23 @@ When an OCO is canceled:
     "orders": [
       {
         "symbol": "BTCUSDT",
-        "orderId": 12569099453,
-        "clientOrderId": "bX5wROblo6YeDwa9iTLeyY"
+        "order_id": 12569099453,
+        "client_order_id": "bX5wROblo6YeDwa9iTLeyY"
       },
       {
         "symbol": "BTCUSDT",
-        "orderId": 12569099454,
-        "clientOrderId": "Tnu2IP0J5Y4mxw3IATBfmW"
+        "order_id": 12569099454,
+        "client_order_id": "Tnu2IP0J5Y4mxw3IATBfmW"
       }
     ],
     // OCO leg status format is the same as for individual orders.
     "orderReports": [
       {
         "symbol": "BTCUSDT",
-        "origClientOrderId": "bX5wROblo6YeDwa9iTLeyY",
-        "orderId": 12569099453,
-        "orderListId": 19431,
-        "clientOrderId": "OFFXQtxVFZ6Nbcg4PgE2DA",
+        "orig_client_order_id": "bX5wROblo6YeDwa9iTLeyY",
+        "order_id": 12569099453,
+        "order_list_id": 19431,
+        "client_order_id": "OFFXQtxVFZ6Nbcg4PgE2DA",
         "transactTime": 1684804350068,
         "price": "23450.50000000",
         "origQty": "0.00850000"
@@ -3763,10 +3763,10 @@ When an OCO is canceled:
       },
       {
         "symbol": "BTCUSDT",
-        "origClientOrderId": "Tnu2IP0J5Y4mxw3IATBfmW",
-        "orderId": 12569099454,
-        "orderListId": 19431,
-        "clientOrderId": "OFFXQtxVFZ6Nbcg4PgE2DA",
+        "orig_client_order_id": "Tnu2IP0J5Y4mxw3IATBfmW",
+        "order_id": 12569099454,
+        "order_list_id": 19431,
+        "client_order_id": "OFFXQtxVFZ6Nbcg4PgE2DA",
         "transactTime": 1684804350068,
         "price": "23400.00000000",
         "origQty": "0.00850000"
@@ -3866,12 +3866,12 @@ Cancel an existing order and immediately place a new order instead of the cancel
         <td><code>cancelOrderId</code></td>
         <td>INT</td>
         <td rowspan="2">YES</td>
-        <td>Cancel order by <code>orderId</code></td>
+        <td>Cancel order by <code>order_id</code></td>
     </tr>
     <tr>
         <td><code>cancelOrigClientOrderId</code></td>
         <td>STRING</td>
-        <td>Cancel order by <code>clientOrderId</code></td>
+        <td>Cancel order by <code>client_order_id</code></td>
     </tr>
     <tr>
         <td><code>cancelNewClientOrderId</code></td>
@@ -4075,13 +4075,13 @@ Notes:
 * If both `cancelOrderId` and `cancelOrigClientOrderId` parameters are specified,
   only `cancelOrderId` is used and `cancelOrigClientOrderId` is ignored.
 
-* `cancelNewClientOrderId` will replace `clientOrderId` of the canceled order, freeing it up for new orders.
+* `cancelNewClientOrderId` will replace `client_order_id` of the canceled order, freeing it up for new orders.
 
-* `newClientOrderId` specifies `clientOrderId` value for the placed order.
+* `newClientOrderId` specifies `client_order_id` value for the placed order.
 
-  A new order with the same `clientOrderId` is accepted only when the previous one is filled or expired.
+  A new order with the same `client_order_id` is accepted only when the previous one is filled or expired.
 
-  The new order can reuse old `clientOrderId` of the canceled order.
+  The new order can reuse old `client_order_id` of the canceled order.
 
 * This cancel-replace operation is **not transactional**.
 
@@ -4113,10 +4113,10 @@ If both cancel and placement succeed, you get the following response with `"stat
     // Some fields are optional and are included only for orders that set them.
     "cancelResponse": {
       "symbol": "BTCUSDT",
-      "origClientOrderId": "4d96324ff9d44481926157",  // cancelOrigClientOrderId from request
-      "orderId": 125690984230,
-      "orderListId": -1,
-      "clientOrderId": "91fe37ce9e69c90d6358c0",      // cancelNewClientOrderId from request
+      "orig_client_order_id": "4d96324ff9d44481926157",  // cancelOrigClientOrderId from request
+      "order_id": 125690984230,
+      "order_list_id": -1,
+      "client_order_id": "91fe37ce9e69c90d6358c0",      // cancelNewClientOrderId from request
       "transactTime": 1684804350068,
       "price": "23450.00000000",
       "origQty": "0.00847000",
@@ -4132,9 +4132,9 @@ If both cancel and placement succeed, you get the following response with `"stat
     // Some fields are optional and are included only for orders that set them.
     "newOrderResponse": {
       "symbol": "BTCUSDT",
-      "orderId": 12569099453,
-      "orderListId": -1,
-      "clientOrderId": "bX5wROblo6YeDwa9iTLeyY",      // newClientOrderId from request
+      "order_id": 12569099453,
+      "order_list_id": -1,
+      "client_order_id": "bX5wROblo6YeDwa9iTLeyY",      // newClientOrderId from request
       "transactTime": 1660813156959,
       "price": "23416.10000000",
       "origQty": "0.00847000",
@@ -4235,10 +4235,10 @@ and the `"data"` field detailing which operation succeeded, which failed, and wh
       "newOrderResult": "FAILURE",
       "cancelResponse": {
         "symbol": "BTCUSDT",
-        "origClientOrderId": "4d96324ff9d44481926157",
-        "orderId": 125690984230,
-        "orderListId": -1,
-        "clientOrderId": "91fe37ce9e69c90d6358c0",
+        "orig_client_order_id": "4d96324ff9d44481926157",
+        "order_id": 125690984230,
+        "order_list_id": -1,
+        "client_order_id": "91fe37ce9e69c90d6358c0",
         "price": "23450.00000000",
         "origQty": "0.00847000",
         "executedQty": "0.00001000",
@@ -4297,9 +4297,9 @@ and the `"data"` field detailing which operation succeeded, which failed, and wh
       },
       "newOrderResponse": {
         "symbol": "BTCUSDT",
-        "orderId": 12569099453,
-        "orderListId": -1,
-        "clientOrderId": "bX5wROblo6YeDwa9iTLeyY",
+        "order_id": 12569099453,
+        "order_list_id": -1,
+        "client_order_id": "bX5wROblo6YeDwa9iTLeyY",
         "transactTime": 1660813156959,
         "price": "23416.10000000",
         "origQty": "0.00847000",
@@ -4450,9 +4450,9 @@ If all symbols are requested, use the `symbol` field to tell which symbol the or
   "result": [
     {
       "symbol": "BTCUSDT",
-      "orderId": 12569099453,
-      "orderListId": -1,
-      "clientOrderId": "4d96324ff9d44481926157",
+      "order_id": 12569099453,
+      "order_list_id": -1,
+      "client_order_id": "4d96324ff9d44481926157",
       "price": "23416.10000000",
       "origQty": "0.00847000",
       "executedQty": "0.00720000",
@@ -4530,10 +4530,10 @@ Cancellation reports for orders and OCOs have the same format as in [`order.canc
   "result": [
     {
       "symbol": "BTCUSDT",
-      "origClientOrderId": "4d96324ff9d44481926157",
-      "orderId": 12569099453,
-      "orderListId": -1,
-      "clientOrderId": "91fe37ce9e69c90d6358c0",
+      "orig_client_order_id": "4d96324ff9d44481926157",
+      "order_id": 12569099453,
+      "order_list_id": -1,
+      "client_order_id": "91fe37ce9e69c90d6358c0",
       "transactTime": 1684804350068,
       "price": "23416.10000000",
       "origQty": "0.00847000",
@@ -4552,7 +4552,7 @@ Cancellation reports for orders and OCOs have the same format as in [`order.canc
       "selfTradePreventionMode": "NONE"
     },
     {
-      "orderListId": 19431,
+      "order_list_id": 19431,
       "contingencyType": "OCO",
       "listStatusType": "ALL_DONE",
       "listOrderStatus": "ALL_DONE",
@@ -4562,22 +4562,22 @@ Cancellation reports for orders and OCOs have the same format as in [`order.canc
       "orders": [
         {
           "symbol": "BTCUSDT",
-          "orderId": 12569099453,
-          "clientOrderId": "bX5wROblo6YeDwa9iTLeyY"
+          "order_id": 12569099453,
+          "client_order_id": "bX5wROblo6YeDwa9iTLeyY"
         },
         {
           "symbol": "BTCUSDT",
-          "orderId": 12569099454,
-          "clientOrderId": "Tnu2IP0J5Y4mxw3IATBfmW"
+          "order_id": 12569099454,
+          "client_order_id": "Tnu2IP0J5Y4mxw3IATBfmW"
         }
       ],
       "orderReports": [
         {
           "symbol": "BTCUSDT",
-          "origClientOrderId": "bX5wROblo6YeDwa9iTLeyY",
-          "orderId": 12569099453,
-          "orderListId": 19431,
-          "clientOrderId": "OFFXQtxVFZ6Nbcg4PgE2DA",
+          "orig_client_order_id": "bX5wROblo6YeDwa9iTLeyY",
+          "order_id": 12569099453,
+          "order_list_id": 19431,
+          "client_order_id": "OFFXQtxVFZ6Nbcg4PgE2DA",
           "transactTime": 1684804350068,
           "price": "23450.50000000",
           "origQty": "0.00850000",
@@ -4592,10 +4592,10 @@ Cancellation reports for orders and OCOs have the same format as in [`order.canc
         },
         {
           "symbol": "BTCUSDT",
-          "origClientOrderId": "Tnu2IP0J5Y4mxw3IATBfmW",
-          "orderId": 12569099454,
-          "orderListId": 19431,
-          "clientOrderId": "OFFXQtxVFZ6Nbcg4PgE2DA",
+          "orig_client_order_id": "Tnu2IP0J5Y4mxw3IATBfmW",
+          "order_id": 12569099454,
+          "order_list_id": 19431,
+          "client_order_id": "OFFXQtxVFZ6Nbcg4PgE2DA",
           "transactTime": 1684804350068,
           "price": "23400.00000000",
           "origQty": "0.00850000",
@@ -4687,11 +4687,11 @@ Notes:
 
   A new OCO with the same `listClientOrderId` is accepted only when the previous one is filled or completely expired.
 
-  `listClientOrderId` is distinct from `clientOrderId` of individual orders.
+  `listClientOrderId` is distinct from `client_order_id` of individual orders.
 
-* `limitClientOrderId` and `stopClientOrderId` specify `clientOrderId` values for both legs of the OCO.
+* `limitClientOrderId` and `stopClientOrderId` specify `client_order_id` values for both legs of the OCO.
 
-  A new order with the same `clientOrderId` is accepted only when the previous one is filled or expired.
+  A new order with the same `client_order_id` is accepted only when the previous one is filled or expired.
 
 * Price restrictions on the legs:
 
@@ -4724,7 +4724,7 @@ See [`order.place`](#place-new-order-trade) for more examples.
   "id": "57833dc0-e3f2-43fb-ba20-46480973b0aa",
   "status": 200,
   "result": {
-    "orderListId": 1274512,
+    "order_list_id": 1274512,
     "contingencyType": "OCO",
     "listStatusType": "EXEC_STARTED",
     "listOrderStatus": "EXECUTING",
@@ -4734,21 +4734,21 @@ See [`order.place`](#place-new-order-trade) for more examples.
     "orders": [
       {
         "symbol": "BTCUSDT",
-        "orderId": 12569138901,
-        "clientOrderId": "BqtFCj5odMoWtSqGk2X9tU"
+        "order_id": 12569138901,
+        "client_order_id": "BqtFCj5odMoWtSqGk2X9tU"
       },
       {
         "symbol": "BTCUSDT",
-        "orderId": 12569138902,
-        "clientOrderId": "jLnZpj5enfMXTuhKB1d0us"
+        "order_id": 12569138902,
+        "client_order_id": "jLnZpj5enfMXTuhKB1d0us"
       }
     ],
     "orderReports": [
       {
         "symbol": "BTCUSDT",
-        "orderId": 12569138901,
-        "orderListId": 1274512,
-        "clientOrderId": "BqtFCj5odMoWtSqGk2X9tU",
+        "order_id": 12569138901,
+        "order_list_id": 1274512,
+        "client_order_id": "BqtFCj5odMoWtSqGk2X9tU",
         "transactTime": 1660801713793,
         "price": "23410.00000000",
         "origQty": "0.00650000",
@@ -4764,9 +4764,9 @@ See [`order.place`](#place-new-order-trade) for more examples.
       },
       {
         "symbol": "BTCUSDT",
-        "orderId": 12569138902,
-        "orderListId": 1274512,
-        "clientOrderId": "jLnZpj5enfMXTuhKB1d0us",
+        "order_id": 12569138902,
+        "order_list_id": 1274512,
+        "client_order_id": "jLnZpj5enfMXTuhKB1d0us",
         "transactTime": 1660801713793,
         "price": "23420.00000000",
         "origQty": "0.00650000",
@@ -4814,7 +4814,7 @@ See [`order.place`](#place-new-order-trade) for more examples.
   "id": "b53fd5ff-82c7-4a04-bd64-5f9dc42c2100",
   "method": "orderList.status",
   "params": {
-    "origClientOrderId": "08985fedd9ea2cf6b28996"
+    "orig_client_order_id": "08985fedd9ea2cf6b28996"
     "apiKey": "vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A",
     "signature": "d12f4e8892d46c0ddfbd43d556ff6d818581b3be22a02810c2c20cb719aed6a4",
     "timestamp": 1660801713965
@@ -4842,15 +4842,15 @@ For execution status of individual orders, use [`order.status`](#query-order-use
 </thead>
 <tbody>
     <tr>
-        <td><code>origClientOrderId</code></td>
+        <td><code>orig_client_order_id</code></td>
         <td>STRING</td>
         <td rowspan="2">YES</td>
         <td>Query OCO by <code>listClientOrderId</code></td>
     </tr>
     <tr>
-        <td><code>orderListId</code></td>
+        <td><code>order_list_id</code></td>
         <td>INT</td>
-        <td>Query OCO by <code>orderListId</code></td>
+        <td>Query OCO by <code>order_list_id</code></td>
     </tr>
     <tr>
         <td><code>apiKey</code></td>
@@ -4881,10 +4881,10 @@ For execution status of individual orders, use [`order.status`](#query-order-use
 
 Notes:
 
-* `origClientOrderId` refers to `listClientOrderId` of the OCO itself.
+* `orig_client_order_id` refers to `listClientOrderId` of the OCO itself.
 
-* If both `origClientOrderId` and `orderListId` parameters are specified,
-  only `origClientOrderId` is used and `orderListId` is ignored.
+* If both `orig_client_order_id` and `order_list_id` parameters are specified,
+  only `orig_client_order_id` is used and `order_list_id` is ignored.
 
 **Data Source:**
 Database
@@ -4896,7 +4896,7 @@ Database
   "id": "b53fd5ff-82c7-4a04-bd64-5f9dc42c2100",
   "status": 200,
   "result": {
-    "orderListId": 1274512,
+    "order_list_id": 1274512,
     "contingencyType": "OCO",
     "listStatusType": "EXEC_STARTED",
     "listOrderStatus": "EXECUTING",
@@ -4906,13 +4906,13 @@ Database
     "orders": [
       {
         "symbol": "BTCUSDT",
-        "orderId": 12569138901,
-        "clientOrderId": "BqtFCj5odMoWtSqGk2X9tU"
+        "order_id": 12569138901,
+        "client_order_id": "BqtFCj5odMoWtSqGk2X9tU"
       },
       {
         "symbol": "BTCUSDT",
-        "orderId": 12569138902,
-        "clientOrderId": "jLnZpj5enfMXTuhKB1d0us"
+        "order_id": 12569138902,
+        "client_order_id": "jLnZpj5enfMXTuhKB1d0us"
       }
     ]
   },
@@ -4936,7 +4936,7 @@ Database
   "method": "orderList.cancel",
   "params": {
     "symbol": "BTCUSDT",
-    "orderListId": 1274512,
+    "order_list_id": 1274512,
     "apiKey": "vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A",
     "signature": "4973f4b2fee30bf6d45e4a973e941cc60fdd53c8dd5a25edeac96f5733c0ccee",
     "timestamp": 1660801720210
@@ -4968,10 +4968,10 @@ Cancel an active OCO.
         <td></td>
     </tr>
     <tr>
-        <td><code>orderListId</code></td>
+        <td><code>order_list_id</code></td>
         <td>INT</td>
         <td rowspan="2">YES</td>
-        <td>Cancel OCO by <code>orderListId</code></td>
+        <td>Cancel OCO by <code>order_list_id</code></td>
     </tr>
     <tr>
         <td><code>listClientOrderId</code></td>
@@ -5013,8 +5013,8 @@ Cancel an active OCO.
 
 Notes:
 
-* If both `orderListId` and `listClientOrderId` parameters are specified,
-  only `orderListId` is used and `listClientOrderId` is ignored.
+* If both `order_list_id` and `listClientOrderId` parameters are specified,
+  only `order_list_id` is used and `listClientOrderId` is ignored.
 
 * Canceling an individual leg with [`order.cancel`](#cancel-order-trade) will cancel the entire OCO as well.
 
@@ -5028,7 +5028,7 @@ Matching Engine
   "id": "c5899911-d3f4-47ae-8835-97da553d27d0",
   "status": 200,
   "result": {
-    "orderListId": 1274512,
+    "order_list_id": 1274512,
     "contingencyType": "OCO",
     "listStatusType": "ALL_DONE",
     "listOrderStatus": "ALL_DONE",
@@ -5038,21 +5038,21 @@ Matching Engine
     "orders": [
       {
         "symbol": "BTCUSDT",
-        "orderId": 12569138901,
-        "clientOrderId": "BqtFCj5odMoWtSqGk2X9tU"
+        "order_id": 12569138901,
+        "client_order_id": "BqtFCj5odMoWtSqGk2X9tU"
       },
       {
         "symbol": "BTCUSDT",
-        "orderId": 12569138902,
-        "clientOrderId": "jLnZpj5enfMXTuhKB1d0us"
+        "order_id": 12569138902,
+        "client_order_id": "jLnZpj5enfMXTuhKB1d0us"
       }
     ],
     "orderReports": [
       {
         "symbol": "BTCUSDT",
-        "orderId": 12569138901,
-        "orderListId": 1274512,
-        "clientOrderId": "BqtFCj5odMoWtSqGk2X9tU",
+        "order_id": 12569138901,
+        "order_list_id": 1274512,
+        "client_order_id": "BqtFCj5odMoWtSqGk2X9tU",
         "transactTime": 1660801720215,
         "price": "23410.00000000",
         "origQty": "0.00650000",
@@ -5067,9 +5067,9 @@ Matching Engine
       },
       {
         "symbol": "BTCUSDT",
-        "orderId": 12569138902,
-        "orderListId": 1274512,
-        "clientOrderId": "jLnZpj5enfMXTuhKB1d0us",
+        "order_id": 12569138902,
+        "order_list_id": 1274512,
+        "client_order_id": "jLnZpj5enfMXTuhKB1d0us",
         "transactTime": 1660801720215,
         "price": "23420.00000000",
         "origQty": "0.00650000",
@@ -5139,7 +5139,7 @@ Database
   "status": 200,
   "result": [
     {
-      "orderListId": 0,
+      "order_list_id": 0,
       "contingencyType": "OCO",
       "listStatusType": "EXEC_STARTED",
       "listOrderStatus": "EXECUTING",
@@ -5149,13 +5149,13 @@ Database
       "orders": [
         {
           "symbol": "BTCUSDT",
-          "orderId": 4,
-          "clientOrderId": "CUhLgTXnX5n2c0gWiLpV4d"
+          "order_id": 4,
+          "client_order_id": "CUhLgTXnX5n2c0gWiLpV4d"
         },
         {
           "symbol": "BTCUSDT",
-          "orderId": 5,
-          "clientOrderId": "1ZqG7bBuYwaF4SU8CwnwHm"
+          "order_id": 5,
+          "client_order_id": "1ZqG7bBuYwaF4SU8CwnwHm"
         }
       ]
     }
@@ -5233,9 +5233,9 @@ Matching Engine
   "result": [
     {
       "symbol": "BTCUSDT",
-      "orderId": 2,
-      "orderListId": -1,
-      "clientOrderId": "sBI1KM6nNtOfj5tccZSKly",
+      "order_id": 2,
+      "order_list_id": -1,
+      "client_order_id": "sBI1KM6nNtOfj5tccZSKly",
       "transactTime": 1689149087774,
       "price": "31000.00000000",
       "origQty": "0.50000000",
@@ -5557,7 +5557,7 @@ Query information about all your orders – active, canceled, filled – filtere
 Name                | Type    | Mandatory | Description
 ------------------- | ------- | --------- | ------------
 `symbol`            | STRING  | YES       |
-`orderId`           | INT     | NO        | Order ID to begin at
+`order_id`           | INT     | NO        | Order ID to begin at
 `startTime`         | INT     | NO        |
 `endTime`           | INT     | NO        |
 `limit`             | INT     | NO        | Default 500; max 1000
@@ -5568,11 +5568,11 @@ Name                | Type    | Mandatory | Description
 
 Notes:
 
-* If `startTime` and/or `endTime` are specified, `orderId` is ignored.
+* If `startTime` and/or `endTime` are specified, `order_id` is ignored.
 
   Orders are filtered by `time` of the last execution status update.
 
-* If `orderId` is specified, return orders with order ID >= `orderId`.
+* If `order_id` is specified, return orders with order ID >= `order_id`.
 
 * If no condition is specified, the most recent orders are returned.
 
@@ -5595,9 +5595,9 @@ Note that some fields are optional and included only for orders that set them.
   "result": [
     {
       "symbol": "BTCUSDT",
-      "orderId": 12569099453,
-      "orderListId": -1,
-      "clientOrderId": "4d96324ff9d44481926157",
+      "order_id": 12569099453,
+      "order_list_id": -1,
+      "client_order_id": "4d96324ff9d44481926157",
       "price": "23416.10000000",
       "origQty": "0.00847000",
       "executedQty": "0.00847000",
@@ -5688,7 +5688,7 @@ Status reports for OCOs are identical to [`orderList.status`](#query-oco-user_da
   "status": 200,
   "result": [
     {
-      "orderListId": 1274512,
+      "order_list_id": 1274512,
       "contingencyType": "OCO",
       "listStatusType": "EXEC_STARTED",
       "listOrderStatus": "EXECUTING",
@@ -5698,13 +5698,13 @@ Status reports for OCOs are identical to [`orderList.status`](#query-oco-user_da
       "orders": [
         {
           "symbol": "BTCUSDT",
-          "orderId": 12569138901,
-          "clientOrderId": "BqtFCj5odMoWtSqGk2X9tU"
+          "order_id": 12569138901,
+          "client_order_id": "BqtFCj5odMoWtSqGk2X9tU"
         },
         {
           "symbol": "BTCUSDT",
-          "orderId": 12569138902,
-          "clientOrderId": "jLnZpj5enfMXTuhKB1d0us"
+          "order_id": 12569138902,
+          "client_order_id": "jLnZpj5enfMXTuhKB1d0us"
         }
       ]
     }
@@ -5748,7 +5748,7 @@ Query information about all your trades, filtered by time range.
 Name                | Type    | Mandatory | Description
 ------------------- | ------- | --------- | ------------
 `symbol`            | STRING  | YES       |
-`orderId`           | INT     | NO        |
+`order_id`           | INT     | NO        |
 `startTime`         | INT     | NO        |
 `endTime`           | INT     | NO        |
 `fromId`            | INT     | NO        | First trade ID to query
@@ -5766,9 +5766,9 @@ Notes:
 
   `fromId` cannot be used together with `startTime` and `endTime`.
 
-* If `orderId` is specified, only trades related to that order are returned.
+* If `order_id` is specified, only trades related to that order are returned.
 
-  `startTime` and `endTime` cannot be used together with `orderId`.
+  `startTime` and `endTime` cannot be used together with `order_id`.
 
 * If no condition is specified, the most recent trades are returned.
 
@@ -5785,8 +5785,8 @@ Memory => Database
     {
       "symbol": "BTCUSDT",
       "id": 1650422481,
-      "orderId": 12569099453,
-      "orderListId": -1,
+      "order_id": 12569099453,
+      "order_list_id": -1,
       "price": "23416.10000000",
       "qty": "0.00635000",
       "quoteQty": "148.69223500",
@@ -5800,8 +5800,8 @@ Memory => Database
     {
       "symbol": "BTCUSDT",
       "id": 1650422482,
-      "orderId": 12569099453,
-      "orderListId": -1,
+      "order_id": 12569099453,
+      "order_list_id": -1,
       "price": "23416.50000000",
       "qty": "0.00212000",
       "quoteQty": "49.64298000",
@@ -5834,7 +5834,7 @@ Memory => Database
   "method": "myPreventedMatches",
   "params": {
     "symbol": "BTCUSDT",
-    "orderId": 35,
+    "order_id": 35,
     "apiKey": "vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A",
     "signature": "c5a5ffb79fd4f2e10a92f895d488943a57954edf5933bde3338dfb6ea6d6eefc",
     "timestamp": 1673923281052
@@ -5847,9 +5847,9 @@ Displays the list of orders that were expired due to STP.
 These are the combinations supported:
 
 * `symbol` + `preventedMatchId`
-* `symbol` + `orderId`
-* `symbol` + `orderId` + `fromPreventedMatchId` (`limit` will default to 500)
-* `symbol` + `orderId` + `fromPreventedMatchId` + `limit`
+* `symbol` + `order_id`
+* `symbol` + `order_id` + `fromPreventedMatchId` (`limit` will default to 500)
+* `symbol` + `order_id` + `fromPreventedMatchId` + `limit`
 
 **Parameters:**
 
@@ -5857,7 +5857,7 @@ Name                | Type   | Mandatory    | Description
 ------------        | ----   | ------------ | ------------
 symbol              | STRING | YES          |
 preventedMatchId    |LONG    | NO           |
-orderId             |LONG    | NO           |
+order_id             |LONG    | NO           |
 fromPreventedMatchId|LONG    | NO           |
 limit               |INT     | NO           | Default: `500`; Max: `1000`
 recv_window          | LONG   | NO           | The value cannot be greater than `60000`
@@ -5869,7 +5869,7 @@ Case                            | Weight
 ----                            | -----
 If `symbol` is invalid          | 2
 Querying by `preventedMatchId`  | 2
-Querying by `orderId`           | 20
+Querying by `order_id`           | 20
 
 **Data Source:**
 
@@ -5915,7 +5915,7 @@ Database
   "method": "myAllocations",
   "params": {
     "symbol": "BTCUSDT",
-    "orderId": 500,
+    "order_id": 500,
     "apiKey": "vmPUZE6mv9SD5VNHk4HlWFsOr6aKE2zvsw0MuIgwCIPy6utIco14y7Ju91duEh8A",
     "signature": "c5a5ffb79fd4f2e10a92f895d488943a57954edf5933bde3338dfb6ea6d6eefc",
     "timestamp": 1673923281052
@@ -5937,7 +5937,7 @@ Name                       | Type  |Mandatory | Description
 `endTime`                  |LONG   |No        |
 `fromAllocationId`         |INT    |No        |
 `limit`                    |INT    |No        |Default 500;Max 1000
-`orderId`                  |LONG   |No        |
+`order_id`                  |LONG   |No        |
 `recv_window`               |LONG   |No        |The value cannot be greater than `60000`
 `timestamp`                |LONG   |No        |
 
@@ -5950,8 +5950,8 @@ Parameters                                  | Response |
 `symbol` + `endTime`                        | newest allocations until `endTime` |
 `symbol` + `startTime` + `endTime`          | allocations within the time range |
 `symbol` + `fromAllocationId`               | allocations by allocation ID |
-`symbol` + `orderId`                        | allocations related to an order starting with oldest |
-`symbol` + `orderId` + `fromAllocationId`   | allocations related to an order by allocation ID |
+`symbol` + `order_id`                        | allocations related to an order starting with oldest |
+`symbol` + `order_id` + `fromAllocationId`   | allocations related to an order by allocation ID |
 
 **Note:** The time between `startTime` and `endTime` can't be longer than 24 hours.
 
@@ -5969,8 +5969,8 @@ Database
       "symbol": "BTCUSDT",
       "allocationId": 0,
       "allocationType": "SOR",
-      "orderId": 500,
-      "orderListId": -1,
+      "order_id": 500,
+      "order_list_id": -1,
       "price": "1.00000000",
       "qty": "0.10000000",
       "quoteQty": "0.10000000",

@@ -13,4 +13,7 @@ pub mod load_env;
 mod binance_error;
 mod ticker_price;
 pub(crate) mod deserialization;
-mod exchange_info;
+pub mod exchange_info;
+pub mod margin_client;
+pub mod order_response;
+mod cancel_order_response;

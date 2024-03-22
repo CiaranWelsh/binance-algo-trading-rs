@@ -37,9 +37,9 @@ BTCUSDP quantity 1 price 29,000
 ```javascript
 {
   "symbol": "BTCUSDT",
-  "orderId": 2,
-  "orderListId": -1,
-  "clientOrderId": "sBI1KM6nNtOfj5tccZSKly",
+  "order_id": 2,
+  "order_list_id": -1,
+  "client_order_id": "sBI1KM6nNtOfj5tccZSKly",
   "transactTime": 1689149087774,
   "price": "31000.00000000",
   "origQty": "0.50000000",
@@ -101,9 +101,9 @@ BTCUSDP quantity 1 price 29,000
 ```javascript
 {
   "symbol": "BTCUSDT",
-  "orderId": 2,
-  "orderListId": -1,
-  "clientOrderId": "tHonoNjWfOSaKiTygN3bfY",
+  "order_id": 2,
+  "order_list_id": -1,
+  "client_order_id": "tHonoNjWfOSaKiTygN3bfY",
   "transactTime": 1689146154686,
   "price": "31000.00000000",
   "origQty": "5.00000000",
@@ -178,9 +178,9 @@ BTCUSDP quantity 1 price 29,000
 ```javascript
 {
   "symbol": "BTCUSDT",
-  "orderId": 2,
-  "orderListId": -1,
-  "clientOrderId": "jdFYWTNyzplbNvVJEzQa0o",
+  "order_id": 2,
+  "order_list_id": -1,
+  "client_order_id": "jdFYWTNyzplbNvVJEzQa0o",
   "transactTime": 1689149513461,
   "price": "0.00000000",
   "origQty": "11.00000000",
@@ -278,9 +278,9 @@ BTCUSDP quantity 5 price 28,000
 ```javascript
 {
   "symbol": "BTCUSDT",
-  "orderId": 1,
-  "orderListId": -1,
-  "clientOrderId": "W1iXSng1fS77dvanQJDGA5",
+  "order_id": 1,
+  "order_list_id": -1,
+  "client_order_id": "W1iXSng1fS77dvanQJDGA5",
   "transactTime": 1689147920113,
   "price": "29000.00000000",
   "origQty": "10.00000000",
@@ -364,8 +364,8 @@ BTCUSDP quantity 5 price 28,000
     "symbol": "BTCUSDT",            // Symbol the order was submitted to
     "allocationId": 0,    
     "allocationType": "SOR",
-    "orderId": 2,       
-    "orderListId": -1,
+    "order_id": 2,       
+    "order_list_id": -1,
     "price": "30000.00000000",      // Price of the fill
     "qty": "5.00000000",            // Quantity of the fill
     "quoteQty": "150000.00000000",

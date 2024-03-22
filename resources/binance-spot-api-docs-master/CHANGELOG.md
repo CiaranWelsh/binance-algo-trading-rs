@@ -188,7 +188,7 @@ Please refer to the table for more details:
 |`GET /api/v3/myTrades`  <br> `myTrades`|10|20|
 |`GET /api/v3/myAllocations`  <br> `myAllocations` |10|20|
 |`GET /api/v3/myPreventedMatches`  <br> `myPreventedMatches`  - **Using `preventedMatchId`** | 1 | 2
-|`GET /api/v3/myPreventedMatches`  <br> `myPreventedMatches`  - **Using `orderId`**|10|20|
+|`GET /api/v3/myPreventedMatches`  <br> `myPreventedMatches`  - **Using `order_id`**|10|20|
 |`GET /api/v3/account` <br> `account.status` |10 |20|
 |`GET /api/v3/rateLimit/order` <br> `account.rate_limits.orders`|20|40|
 |`GET /api/v3/exchangeInfo` <br> `exchangeInfo`|10|20|
@@ -630,7 +630,7 @@ REST API
         * When using `endTime` only, this will return trades before that time, up to the `limit` provided.
         * If `limit` not provided, regardless of used in combination or sent individually, the endpoint will use the default limit.
 * Changes to `GET /api/v3/myTrades`
-    * Fixed a bug where `symbol` + `orderId` combination would return all trades even if the number of trades went beyond the `500` default limit.
+    * Fixed a bug where `symbol` + `order_id` combination would return all trades even if the number of trades went beyond the `500` default limit.
     * Previous behavior: The API would send specific error messages depending on the combination of parameters sent. E.g:
 
         ```json
@@ -647,19 +647,19 @@ REST API
                 "msg": "Combination of optional parameters invalid."
             }
         ```
-    * Added a new combination of supported parameters: `symbol` + `orderId` + `fromId`.
+    * Added a new combination of supported parameters: `symbol` + `order_id` + `fromId`.
     * The following combinations of parameters were previously supported but no longer accepted, as these combinations were only taking `fromId` into consideration, ignoring `startTime` and `endTime`:
         * `symbol` + `fromId` + `startTime`
         * `symbol` + `fromId` + `endTime`
         * `symbol` + `fromId` + `startTime` + `endTime`
     * Thus, these are the supported combinations of parameters:
         * `symbol`
-        * `symbol` + `orderId`
+        * `symbol` + `order_id`
         * `symbol` + `startTime`
         * `symbol` + `endTime`
         * `symbol` + `fromId`
         * `symbol` + `startTime` + `endTime`
-        * `symbol`+ `orderId` + `fromId`
+        * `symbol`+ `order_id` + `fromId`
 
 **Note:** These new fields will appear approximately a week from the release date.
 
@@ -961,7 +961,7 @@ USER DATA STREAM
 * Add a [YAML file](https://github.com/binance/binance-api-swagger) with OpenApi specification on the RESTful API.
 
 ## 2021-08-12
-* GET `api/v3/myTrades` has a new optional field `orderId`
+* GET `api/v3/myTrades` has a new optional field `order_id`
 
 ---
 
@@ -1210,7 +1210,7 @@ By end of Q1 2020, the following endpoints will be removed from the API. The doc
 
     * Canceling an OCO
         * Canceling either order leg will cancel the entire OCO.
-        * The entire OCO can be canceled via the ```orderListId``` or the ```listClientOrderId```.
+        * The entire OCO can be canceled via the ```order_list_id``` or the ```listClientOrderId```.
 
     * New Enums for OCO:
         1. ```ListStatusType```
@@ -1242,7 +1242,7 @@ By end of Q1 2020, the following endpoints will be removed from the API. The doc
 * GET api/v1/exchangeInfo has a new parameter `ocoAllowed`.
 
 ### USER DATA STREAM
-* ```executionReport``` event now contains "g" which has the ```orderListId```; it will be set to -1 for non-OCO orders.
+* ```executionReport``` event now contains "g" which has the ```order_list_id```; it will be set to -1 for non-OCO orders.
 * New Event Type ```listStatus```; ```listStatus``` is sent on an update to any OCO order.
 * New Event Type ```outboundAccountPosition```; ```outboundAccountPosition``` is sent any time an account's balance changes and contains the assets that could have changed by the event that generated the balance change (a deposit, withdrawal, trade, order placement, or cancellation).
 

@@ -125,7 +125,7 @@ listenKey | STRING | YES
   "e": "executionReport",        // 事件类型
   "E": 1499405658658,            // 事件时间
   "s": "ETHBTC",                 // 交易对
-  "c": "mUvoqJxFIILMdfAW5iGSOW", // clientOrderId
+  "c": "mUvoqJxFIILMdfAW5iGSOW", // client_order_id
   "S": "BUY",                    // 订单方向
   "o": "LIMIT",                  // 订单类型
   "f": "GTC",                    // 有效方式
@@ -138,7 +138,7 @@ listenKey | STRING | YES
   "x": "NEW",                    // 本次事件的具体执行类型
   "X": "NEW",                    // 订单的当前状态
   "r": "NONE",                   // 订单被拒绝的原因
-  "i": 4293153,                  // orderId
+  "i": 4293153,                  // order_id
   "l": "0.00000000",             // 订单末次成交量
   "z": "0.00000000",             // 订单累计已成交量
   "L": "0.00000000",             // 订单末次成交价格
@@ -291,8 +291,8 @@ listenKey | STRING | YES
   "O": [
     {
       "s": "ETHBTC",                // 交易对
-      "i": 17,                      // orderId
-      "c": "AJYsMjErWJesZvqlJCTUgL" // clientOrderId
+      "i": 17,                      // order_id
+      "c": "AJYsMjErWJesZvqlJCTUgL" // client_order_id
     },
     {
       "s": "ETHBTC",

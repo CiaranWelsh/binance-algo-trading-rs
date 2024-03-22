@@ -73,7 +73,7 @@ async fn main() {
     trace!("stop_loss_price: {:?}", stop_loss_price);
     trace!("position_size: {:?} {}", position_size, base);
 
-    let mo = MarketOrder::new_with_base_asset(symbol.clone(), Side::Buy, position_size);
+    let mo = MarketOrder::new_with_base_asset(symbol.as_str(), Side::Buy, position_size);
 
     trace!("Market Order: {:?}", mo);
     let resp = spot_client.create_market_order(mo.clone()).await;
