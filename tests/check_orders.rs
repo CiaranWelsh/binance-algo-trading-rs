@@ -72,12 +72,12 @@ mod integration_tests {
 
         // Generate a timestamp
         let timestamp = BinanceClient::generate_timestamp().unwrap();
-        
-        let current_eth_price = binance_client.get_current_price(symbol).await 
+
+        let current_eth_price = binance_client.get_current_price(symbol).await
             .expect("No eth price");
-        
+
         let stop_price = round(current_eth_price.price * 1.2, 2);
-        
+
         trace!("stop price: {:?}", stop_price);
 
         // Define a sell limit order
@@ -85,8 +85,8 @@ mod integration_tests {
         let sell_limit_order = LimitOrder::new(
             symbol,
             Side::Sell,
-            0.01, 
-            stop_price, 
+            0.01,
+            stop_price,
             timestamp,
         );
 
@@ -94,10 +94,10 @@ mod integration_tests {
         let result = spot_orders.create_limit_order(sell_limit_order).await
             .expect("Failed to create sell limit order");
         trace!("order respo: {:?}", result);
-        
+
         // thread::sleep(Duration::from_secs(5));
         let cancel_order_result = spot_orders.cancel_order(symbol, result.order_id).await;
-        
+
         cancel_order_result.expect("Failed to cancel order");
 
     }
@@ -112,7 +112,7 @@ mod integration_tests {
         let symbol = "ETHUSDT";
 
         let binance_client = BinanceClient::new(vars.api_key, vars.api_secret, false).await;
-        
+
         // Initialize SpotOrders
         let spot_orders = SpotClient::new(&binance_client);
 
@@ -126,10 +126,10 @@ mod integration_tests {
         // Attempt to create a buy market order
         let result = spot_orders.create_market_order(buy_market_order).await
             .unwrap();
-        
+
         trace!("order response: {:?}", result);
-        
-        
+
+
     }
 
     #[tokio::test]
@@ -140,7 +140,7 @@ mod integration_tests {
         let vars = EnvVars::new();
         let symbol = "ETHUSDT";
         let binance_client = BinanceClient::new(vars.api_key, vars.api_secret, false).await;
-        
+
         // Initialize SpotOrders
         let spot_orders = SpotClient::new(&binance_client);
 
@@ -205,20 +205,20 @@ mod integration_tests {
         let symbol = "ETHUSDT";
         let binance_client = BinanceClient::new(vars.api_key, vars.api_secret, false).await;
         let spot_orders = SpotClient::new(&binance_client);
-        
+
         binance_client.cancel_all_open_orders(symbol).await.expect("Failed to cancel open orders");
 
         let current_price = binance_client.get_current_price(symbol)
             .await.expect("No current price");
-        
-        
+
+
         let quantity = 0.01;
         let stop_price = round(current_price.price*1.2, 2); // Above current market price for buy stop-limit
         let limit_price = round(current_price.price*1.25, 2); // The price at which you actually wish to buy
         let stop_limit_order = StopLimitOrder::new(
             symbol, Side::Buy, quantity, limit_price, stop_price, TimeInForce::GTC,
         );
-        
+
         trace!("Stop limit order: {:?}", serde_json::to_string(&stop_limit_order));
 
         let result = spot_orders.create_stop_limit_order(stop_limit_order).await
