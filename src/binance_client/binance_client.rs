@@ -23,6 +23,7 @@ use crate::binance_client::account::trades::Trade;
 use crate::binance_client::binance_error::BinanceError;
 use crate::binance_client::database_client::DatabaseClient;
 use crate::binance_client::exchange_info::ExchangeInfo;
+use crate::binance_client::position_size::round;
 use crate::binance_client::streams::binance_stream::BinanceStreamTypes;
 use crate::binance_client::streams::kline_data::KlineMessage;
 use crate::binance_client::ticker_price::TickerPrice;
@@ -279,7 +280,7 @@ impl BinanceClient {
     pub async fn get_current_price(&self, symbol: &str) -> Result<TickerPrice, IOError> {
         let request_url = format!("{}/v3/ticker/price?symbol={}", self.api_url, symbol);
 
-        let response = self.client
+        let mut ticker_price = self.client
             .get(&request_url)
             .send()
             .await
@@ -287,8 +288,7 @@ impl BinanceClient {
             .json::<TickerPrice>()
             .await
             .map_err(|e| IOError::new(ErrorKind::Other, e.to_string()))?;
-
-        Ok(response)
+        Ok(ticker_price)
     }
 
     pub async fn get_listen_key(&self) -> Result<String, IOError> {
